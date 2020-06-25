@@ -6,8 +6,9 @@ class problem(object):
         self.obj_solver=mdp()
         self.obj_manifold.set_environment()
         self.obj_solver.set_S(self.obj_manifold.manifold['X'])
-        self.obj_solver.set_R(self.obj_manifold.manifold['Rewards'])
+
         self.obj_solver.set_adjacency_list(self.obj_manifold.manifold['Topology'])
+        self.obj_solver.start_mdp()
         self.obj_solver.visualize_network()
 
 if __name__ == '__main__':

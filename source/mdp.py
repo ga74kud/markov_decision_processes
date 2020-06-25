@@ -1,14 +1,24 @@
 import igraph as ig
-
+import numpy as np
 
 class mdp(object):
     def __init__(self, **kwargs):
-        self.mdp= {'S': None, 'adjacency_list': None, 'R': None}
+        self.mdp= {'S': ['A', 'B', 'C'], 'action': ['s', 'g'], 'adjacency_list': None, 'R': [3, 2, 1], 'N': 3, 'gamma': 0.9}
+        self.mdp['T'] = {('A', 's'): [0.8, 0.1, 0.1],
+                         ('B', 's'): [0.1, 0.8, 0.1],
+                         ('C', 's'): [0.1, 0.1, 0.8],
+                         ('A', 'g'): [0.0, 0.8, 0.2],
+                         ('B', 'g'): [0.2, 0.0, 0.8],
+                         ('C', 'g'): [0.8, 0.2, 0.0]}
+        self.mdp['pi'] = {'A': 's', 'B': 's', 'C': 'g'}
+        self.U = [0, 0, 0]
 
     def set_S(self, S):
         self.mdp['S']=S
     def set_R(self, R):
         self.mdp['R']=R
+    def set_T(self, T):
+        self.mdp['T']=T
     def set_adjacency_list(self, list):
         new_list=[]
         for i in list:
@@ -16,6 +26,38 @@ class mdp(object):
             b = self.mdp['S'].index(i[1])
             new_list.append((a,b))
         self.mdp['adjacency_list']=new_list
+
+    def policy_evaluation(self):
+        for k in range(1, self.mdp['N']):
+            for kp, p in enumerate(self.mdp['S']):
+                state_action=(p, self.mdp['pi'][p])
+                prob_dict=self.mdp['T'][state_action]
+                bds=self.mdp['gamma']*np.sum([a * b for a, b in zip(self.U, prob_dict)])
+                idx=np.int(np.random.choice(len(self.mdp['S']), 1, p=prob_dict))
+                self.U[kp]=self.mdp['R'][idx]+bds
+        return self.U
+
+    def policy_iteration(self):
+        for k in range(1, self.mdp['N']):
+            actual_U=self.policy_evaluation()
+            all_Us=np.zeros((len(self.mdp['action']), len(self.mdp['S'])))
+            for ka, act_a in enumerate(self.mdp['action']):
+                for kp, p in enumerate(self.mdp['S']):
+                    state_action=(p, act_a)
+                    prob_dict=self.mdp['T'][state_action]
+                    bds=self.mdp['gamma']*np.sum([a * b for a, b in zip(actual_U, prob_dict)])
+                    idx = np.int(np.random.choice(len(self.mdp['S']), 1, p=prob_dict))
+                    all_Us[ka][kp]=self.mdp['R'][idx] + bds
+            self.get_new_policy(np.array(all_Us))
+    def get_new_policy(self, all_Us):
+        idx=np.argmax(all_Us, axis=0)
+        for ka, qrt in enumerate(self.mdp['pi'].keys()):
+            self.mdp['pi'][qrt]=self.mdp['action'][idx[ka]]
+      
+
+
+    def start_mdp(self):
+        self.policy_iteration()
 
     def visualize_network(self):
         g = ig.Graph(self.mdp['adjacency_list'])
