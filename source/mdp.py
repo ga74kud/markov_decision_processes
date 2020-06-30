@@ -3,7 +3,7 @@ import numpy as np
 
 class mdp(object):
     def __init__(self, **kwargs):
-        self.mdp= {'S': ['A', 'B', 'C'], 'action': ['s', 'g'], 'adjacency_list': None, 'R': [3, 2, 1], 'N': 3, 'gamma': 0.9}
+        self.mdp= {'S': ['A', 'B', 'C'], 'action': ['s', 'g'], 'adjacency_list': None, 'R': [30, 2, 1], 'N': 2, 'gamma': 0.9}
         self.mdp['T'] = {('A', 's'): [0.8, 0.1, 0.1],
                          ('B', 's'): [0.1, 0.8, 0.1],
                          ('C', 's'): [0.1, 0.1, 0.8],
@@ -11,7 +11,7 @@ class mdp(object):
                          ('B', 'g'): [0.2, 0.0, 0.8],
                          ('C', 'g'): [0.8, 0.2, 0.0]}
         self.mdp['pi'] = {'A': 's', 'B': 's', 'C': 'g'}
-        self.U = [0, 0, 0]
+        self.mdp['U'] = [0] * len(self.mdp['S'])
 
     def set_S(self, S):
         self.mdp['S']=S
@@ -32,10 +32,10 @@ class mdp(object):
             for kp, p in enumerate(self.mdp['S']):
                 state_action=(p, self.mdp['pi'][p])
                 prob_dict=self.mdp['T'][state_action]
-                bds=self.mdp['gamma']*np.sum([a * b for a, b in zip(self.U, prob_dict)])
+                bds=self.mdp['gamma']*np.sum([a * b for a, b in zip(self.mdp['U'], prob_dict)])
                 idx=np.int(np.random.choice(len(self.mdp['S']), 1, p=prob_dict))
-                self.U[kp]=self.mdp['R'][idx]+bds
-        return self.U
+                self.mdp['U'][kp]=self.mdp['R'][idx]+bds
+            return self.mdp['U']
 
     def policy_iteration(self):
         for k in range(1, self.mdp['N']):
@@ -57,7 +57,21 @@ class mdp(object):
 
 
     def start_mdp(self):
-        self.policy_iteration()
+        count=1
+        while(1):
+            oldU=self.mdp['U'][:]
+            self.policy_iteration()
+            if(np.sum(np.array(self.mdp['U'])-np.array(oldU))<10e-3):
+                print("Convergence")
+                print(count)
+                print(self.mdp['pi'])
+                print(self.mdp['U'])
+                break
+            elif(count>1000):
+                print("No Convergence")
+                break
+
+            count+=1
 
     def visualize_network(self):
         g = ig.Graph(self.mdp['adjacency_list'])
