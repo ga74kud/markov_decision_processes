@@ -19,8 +19,18 @@ class mdp(object):
 
         #self.mdp['pi'] = {'A': 's', 'B': 's', 'C': 'g'}
         self.mdp['pi']=None
+        self.mdp['U'] = None
+    def set_T(self, Transition):
+        self.mdp['T']=Transition
+    def set_U(self):
         self.mdp['U'] = [0] * len(self.mdp['S'])
-
+    def set_action(self, action):
+        self.mdp['action']=action
+    def set_pi(self):
+        a={}
+        for i in self.mdp['S']:
+            a[i]=self.mdp['action'][0]
+        self.mdp['pi']=a
     def set_S(self, S):
         self.mdp['S']=S
     def set_R(self, R):
