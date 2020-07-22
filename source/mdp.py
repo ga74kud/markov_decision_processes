@@ -3,14 +3,22 @@ import numpy as np
 
 class mdp(object):
     def __init__(self, **kwargs):
-        self.mdp= {'S': ['A', 'B', 'C'], 'action': ['s', 'g'], 'adjacency_list': None, 'R': [30, 2, 1], 'N': 2, 'gamma': 0.9}
-        self.mdp['T'] = {('A', 's'): [0.8, 0.1, 0.1],
-                         ('B', 's'): [0.1, 0.8, 0.1],
-                         ('C', 's'): [0.1, 0.1, 0.8],
-                         ('A', 'g'): [0.0, 0.8, 0.2],
-                         ('B', 'g'): [0.2, 0.0, 0.8],
-                         ('C', 'g'): [0.8, 0.2, 0.0]}
-        self.mdp['pi'] = {'A': 's', 'B': 's', 'C': 'g'}
+        self.mdp= {'S': None, #States
+                   'action': None, #Action set
+                   'adjacency_list': None, #Topology
+                   'R': None, #Rewards
+                   'N': 2, #Rewards
+                   'gamma': 0.9}
+        self.mdp['T']=None
+        #self.mdp['T'] = {('A', 's'): [0.8, 0.1, 0.1],
+                         #('B', 's'): [0.1, 0.8, 0.1],
+                         #('C', 's'): [0.1, 0.1, 0.8],
+                         #('A', 'g'): [0.0, 0.8, 0.2],
+                         #('B', 'g'): [0.2, 0.0, 0.8],
+                         #('C', 'g'): [0.8, 0.2, 0.0]}
+
+        #self.mdp['pi'] = {'A': 's', 'B': 's', 'C': 'g'}
+        self.mdp['pi']=None
         self.mdp['U'] = [0] * len(self.mdp['S'])
 
     def set_S(self, S):
