@@ -103,20 +103,38 @@ class mdp(object):
         g.vs["reward"]= self.mdp['R']
         g.vs["label"] = g.vs["name"]
         vec=np.array(self.mdp['U'])
-        codebook, _ = kmeans(vec, 11)  # three clusters
+        p=np.var(vec)
+        if(p==0):
+            print('error')
+            exit()
+        color_dict = {0: "blue", 1: "green", 2: "cyan", 3: "yellow", 4: "pink", 5: "orange", 6: "red"}
+        codebook, _ = kmeans(vec, len(color_dict))
         cluster_indices, _ = vq(vec, codebook)
-        color_dict = {0: "blue", 1: "green", 2: "cyan", 3: "yellow", 4: "pink", 5: "pink", 6: "pink", 7: "pink", 8: "pink", 9: "orange", 10: "red"}
-        #g.vs["color"] = [color_dict[r] for r in g.vs["reward"]]
+        sel=[]
+        for qrti in range(0, len(color_dict.keys())):
+            tre=qrti==cluster_indices
+            sel.append(np.max(vec[tre]))
+        sel=np.array(sel)
+        sort_idx=np.argsort(sel)
+        new_cluster_indices=[np.nan]*len(cluster_indices)
+        for count, qrt in enumerate(sort_idx):
+            act_idx_bool=sort_idx[count]==cluster_indices
+            act_idx=np.where(act_idx_bool)
+            act_idx=act_idx[0].tolist()
+            for t in act_idx:
+                new_cluster_indices[t]=count
         col_r = np.round(np.linspace(255, 0, len(vec)))
         col_g = np.round(np.linspace(0, 255, len(vec)))
         col_b = np.zeros(len(vec))
-        g.vs["color"]=[color_dict[r] for r in cluster_indices]
-        palette = ig.ClusterColoringPalette(100)
-        colors = [palette[index] for index in cluster_indices]
+        transp=np.ones(len(vec))
+        allCol=np.transpose(np.vstack((col_r, col_g, col_b, transp)))
+        #g.vs["color"]=[color_dict[r] for r in cluster_indices]
+        #palette = ig.ClusterColoringPalette(len(vec))
+        colors = [color_dict[index] for index in new_cluster_indices]
         g.vs["color"] = colors
-        #[(0,1), (0,2), (2,3), (3,4), (4,2), (2,5), (5,0), (6,3), (5,6)])
-        #g.layout_fruchterman_reingold()
-        ig.plot(g, bbox = (3000, 3000), margin = 20)
+        layout=g.layout("large_graph")
+
+        ig.plot(g, margin = 20,bbox = (3000, 3000), layout=layout)
 
 
 
