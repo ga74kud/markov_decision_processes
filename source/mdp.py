@@ -1,6 +1,6 @@
 import igraph as ig
 import numpy as np
-
+from scipy.cluster.vq import kmeans, vq
 class mdp(object):
     def __init__(self, **kwargs):
         self.mdp= {'S': None, #States
@@ -85,7 +85,7 @@ class mdp(object):
         while(1):
             oldU=self.mdp['U'][:]
             self.policy_iteration()
-            if(np.sum(np.array(self.mdp['U'])-np.array(oldU))<10e-3):
+            if(np.sum(np.array(self.mdp['U'])-np.array(oldU))<10e-9):
                 print("Convergence")
                 print(count)
                 print(self.mdp['pi'])
@@ -102,9 +102,21 @@ class mdp(object):
         g.vs["name"] = self.mdp['S']
         g.vs["reward"]= self.mdp['R']
         g.vs["label"] = g.vs["name"]
+        vec=np.array(self.mdp['U'])
+        codebook, _ = kmeans(vec, 11)  # three clusters
+        cluster_indices, _ = vq(vec, codebook)
         color_dict = {0: "blue", 1: "green", 2: "cyan", 3: "yellow", 4: "pink", 5: "pink", 6: "pink", 7: "pink", 8: "pink", 9: "orange", 10: "red"}
         #g.vs["color"] = [color_dict[r] for r in g.vs["reward"]]
-        g.vs["color"]="green"
+        col_r = np.round(np.linspace(255, 0, len(vec)))
+        col_g = np.round(np.linspace(0, 255, len(vec)))
+        col_b = np.zeros(len(vec))
+        g.vs["color"]=[color_dict[r] for r in cluster_indices]
+        palette = ig.ClusterColoringPalette(100)
+        colors = [palette[index] for index in cluster_indices]
+        g.vs["color"] = colors
         #[(0,1), (0,2), (2,3), (3,4), (4,2), (2,5), (5,0), (6,3), (5,6)])
-        ig.plot(g, bbox = (300, 300), margin = 20)
+        #g.layout_fruchterman_reingold()
+        ig.plot(g, bbox = (3000, 3000), margin = 20)
+
+
 
