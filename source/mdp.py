@@ -10,6 +10,8 @@ class mdp(object):
                    'N': 2, #Rewards
                    'gamma': 0.9}
         self.mdp['T']=None
+
+
         #self.mdp['T'] = {('A', 's'): [0.8, 0.1, 0.1],
                          #('B', 's'): [0.1, 0.8, 0.1],
                          #('C', 's'): [0.1, 0.1, 0.8],
@@ -33,8 +35,12 @@ class mdp(object):
         self.mdp['pi']=a
     def set_S(self, S):
         self.mdp['S']=S
-    def set_R(self, R):
-        self.mdp['R']=R
+    def set_R(self, dictR):
+        val=list(dictR.values())
+        keys=dictR.keys()
+        self.mdp['R']=np.zeros(len(self.mdp['S']))
+        for idx, q in enumerate(keys):
+            self.mdp['R'][int(q)]=val[idx]
     def set_T(self, T):
         self.mdp['T']=T
     def set_adjacency_list(self, list):
@@ -97,7 +103,8 @@ class mdp(object):
         g.vs["reward"]= self.mdp['R']
         g.vs["label"] = g.vs["name"]
         color_dict = {0: "blue", 1: "green", 2: "cyan", 3: "yellow", 4: "pink", 5: "pink", 6: "pink", 7: "pink", 8: "pink", 9: "orange", 10: "red"}
-        g.vs["color"] = [color_dict[r] for r in g.vs["reward"]]
+        #g.vs["color"] = [color_dict[r] for r in g.vs["reward"]]
+        g.vs["color"]="green"
         #[(0,1), (0,2), (2,3), (3,4), (4,2), (2,5), (5,0), (6,3), (5,6)])
         ig.plot(g, bbox = (300, 300), margin = 20)
 
