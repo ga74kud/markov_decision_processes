@@ -1,6 +1,6 @@
 {
   "name": "simple_grid",
-  "amount_states": 200000,
-  "xdir": 500,
-  "ydir": 400
+  "amount_states": 20,
+  "xdir": 5,
+  "ydir": 4
 }
