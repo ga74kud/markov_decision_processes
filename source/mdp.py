@@ -3,93 +3,85 @@ import numpy as np
 from scipy.cluster.vq import kmeans, vq
 class mdp(object):
     def __init__(self, **kwargs):
-        self.mdp= {'S': None, #States
+        self.mdp_dict= {'S': None, #States
                    'action': None, #Action set
                    'adjacency_list': None, #Topology
                    'R': None, #Rewards
-                   'N': 2, #Rewards
                    'gamma': 0.9}
-        self.mdp['T']=None
-
-
-        #self.mdp['T'] = {('A', 's'): [0.8, 0.1, 0.1],
-                         #('B', 's'): [0.1, 0.8, 0.1],
-                         #('C', 's'): [0.1, 0.1, 0.8],
-                         #('A', 'g'): [0.0, 0.8, 0.2],
-                         #('B', 'g'): [0.2, 0.0, 0.8],
-                         #('C', 'g'): [0.8, 0.2, 0.0]}
-
-        #self.mdp['pi'] = {'A': 's', 'B': 's', 'C': 'g'}
-        self.mdp['pi']=None
-        self.mdp['U'] = None
+        self.mdp_dict['T']=None
+        self.mdp_dict['pi']=None
+        self.mdp_dict['U'] = None
+        self.param = {'n_optimal_trajectory': 30, # optimal trajectory
+                      'N': 2, #Time Horizont
+                      }
     def set_T(self, Transition):
-        self.mdp['T']=Transition
+        self.mdp_dict['T']=Transition
     def set_U(self):
-        self.mdp['U'] = [0] * len(self.mdp['S'])
+        self.mdp_dict['U'] = [0] * len(self.mdp_dict['S'])
     def set_action(self, action):
-        self.mdp['action']=action
+        self.mdp_dict['action']=action
     def set_pi(self):
         a={}
-        for i in self.mdp['S']:
-            a[i]=self.mdp['action'][0]
-        self.mdp['pi']=a
+        for i in self.mdp_dict['S']:
+            a[i]=self.mdp_dict['action'][0]
+        self.mdp_dict['pi']=a
     def set_S(self, S):
-        self.mdp['S']=S
+        self.mdp_dict['S']=S
     def set_R(self, dictR):
         val=list(dictR.values())
         keys=dictR.keys()
-        self.mdp['R']=np.zeros(len(self.mdp['S']))
+        self.mdp_dict['R']=np.zeros(len(self.mdp_dict['S']))
         for idx, q in enumerate(keys):
-            self.mdp['R'][int(q)]=val[idx]
+            self.mdp_dict['R'][int(q)]=val[idx]
     def set_T(self, T):
-        self.mdp['T']=T
+        self.mdp_dict['T']=T
     def set_adjacency_list(self, list):
         new_list=[]
         for i in list:
-            a = self.mdp['S'].index(i[0])
-            b = self.mdp['S'].index(i[1])
+            a = self.mdp_dict['S'].index(i[0])
+            b = self.mdp_dict['S'].index(i[1])
             new_list.append((a,b))
-        self.mdp['adjacency_list']=new_list
+        self.mdp_dict['adjacency_list']=new_list
 
     def policy_evaluation(self):
-        for k in range(1, self.mdp['N']):
-            for kp, p in enumerate(self.mdp['S']):
-                state_action=(p, self.mdp['pi'][p])
-                prob_dict=self.mdp['T'][state_action]
-                bds=self.mdp['gamma']*np.sum([a * b for a, b in zip(self.mdp['U'], prob_dict)])
-                idx=np.int(np.random.choice(len(self.mdp['S']), 1, p=prob_dict))
-                self.mdp['U'][kp]=self.mdp['R'][idx]+bds
-            return self.mdp['U']
+        for k in range(1, self.param['N']):
+            for kp, p in enumerate(self.mdp_dict['S']):
+                state_action=(p, self.mdp_dict['pi'][p])
+                prob_dict=self.mdp_dict['T'][state_action]
+                bds=self.mdp_dict['gamma']*np.sum([a * b for a, b in zip(self.mdp_dict['U'], prob_dict)])
+                idx=np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=prob_dict))
+                self.mdp_dict['U'][kp]=self.mdp_dict['R'][idx]+bds
+            return self.mdp_dict['U']
 
     def policy_iteration(self):
-        for k in range(1, self.mdp['N']):
+        for k in range(1, self.param['N']):
             actual_U=self.policy_evaluation()
-            all_Us=np.zeros((len(self.mdp['action']), len(self.mdp['S'])))
-            for ka, act_a in enumerate(self.mdp['action']):
-                for kp, p in enumerate(self.mdp['S']):
+            all_Us=np.zeros((len(self.mdp_dict['action']), len(self.mdp_dict['S'])))
+            for ka, act_a in enumerate(self.mdp_dict['action']):
+                for kp, p in enumerate(self.mdp_dict['S']):
                     state_action=(p, act_a)
-                    prob_dict=self.mdp['T'][state_action]
-                    bds=self.mdp['gamma']*np.sum([a * b for a, b in zip(actual_U, prob_dict)])
-                    idx = np.int(np.random.choice(len(self.mdp['S']), 1, p=prob_dict))
-                    all_Us[ka][kp]=self.mdp['R'][idx] + bds
+                    prob_dict=self.mdp_dict['T'][state_action]
+                    bds=self.mdp_dict['gamma']*np.sum([a * b for a, b in zip(actual_U, prob_dict)])
+                    idx = np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=prob_dict))
+                    all_Us[ka][kp]=self.mdp_dict['R'][idx] + bds
             self.get_new_policy(np.array(all_Us))
     def get_new_policy(self, all_Us):
         idx=np.argmax(all_Us, axis=0)
-        for ka, qrt in enumerate(self.mdp['pi'].keys()):
-            self.mdp['pi'][qrt]=self.mdp['action'][idx[ka]]
+        for ka, qrt in enumerate(self.mdp_dict['pi'].keys()):
+            self.mdp_dict['pi'][qrt]=self.mdp_dict['action'][idx[ka]]
       
 
 
     def start_mdp(self):
         count=1
         while(1):
-            oldU=self.mdp['U'][:]
+            oldU=self.mdp_dict['U'][:]
             self.policy_iteration()
-            if(np.sum(np.array(self.mdp['U'])-np.array(oldU))<10e-9):
+            if(np.sum(np.array(self.mdp_dict['U'])-np.array(oldU))<10e-9):
                 print("Convergence")
                 print(count)
-                print(self.mdp['pi'])
-                print(self.mdp['U'])
+                print(self.mdp_dict['pi'])
+                print(self.mdp_dict['U'])
                 break
             elif(count>1000):
                 print("No Convergence")
@@ -98,11 +90,11 @@ class mdp(object):
             count+=1
 
     def visualize_network(self):
-        g = ig.Graph(self.mdp['adjacency_list'])
-        g.vs["name"] = self.mdp['S']
-        g.vs["reward"]= self.mdp['R']
+        g = ig.Graph(self.mdp_dict['adjacency_list'])
+        g.vs["name"] = self.mdp_dict['S']
+        g.vs["reward"]= self.mdp_dict['R']
         g.vs["label"] = g.vs["name"]
-        vec=np.array(self.mdp['U'])
+        vec=np.array(self.mdp_dict['U'])
         p=np.var(vec)
         if(p==0):
             print('error')
@@ -135,6 +127,25 @@ class mdp(object):
         layout=g.layout("large_graph")
 
         ig.plot(g, margin = 20,bbox = (3000, 3000), layout=layout)
+    def get_trajectory(self, start_node):
+        ideal_path=[]
+        ideal_path.append(str(start_node))
+        policy=self.mdp_dict['pi']
+        count=0
+        while(1):
+            act_node=ideal_path[-1]
+            action=policy[str(act_node)]
+            if(count>self.param['n_optimal_trajectory']):
+                break
+            else:
+                count+=1
+            abc=self.mdp_dict['T']
+            act_trans=abc[(act_node, str(action))]
+            next_node=np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=act_trans))
+            ideal_path.append(str(next_node))
+        print('ideal_path')
+        print(ideal_path)
+        return ideal_path
 
 
 
