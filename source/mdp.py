@@ -7,12 +7,11 @@ class mdp(object):
                    'action': None, #Action set
                    'adjacency_list': None, #Topology
                    'R': None, #Rewards
-                   'gamma': 0.9}
+                   'gamma': 0.8}
         self.mdp_dict['T']=None
         self.mdp_dict['pi']=None
         self.mdp_dict['U'] = None
-        self.param = {'n_optimal_trajectory': 30, # optimal trajectory
-                      'N': 2, #Time Horizont
+        self.param = {'n_optimal_trajectory': 40, # optimal trajectory
                       }
     def set_T(self, Transition):
         self.mdp_dict['T']=Transition
@@ -20,10 +19,10 @@ class mdp(object):
         self.mdp_dict['U'] = [0] * len(self.mdp_dict['S'])
     def set_action(self, action):
         self.mdp_dict['action']=action
-    def set_pi(self):
+    def set_init_pi(self):
         a={}
         for i in self.mdp_dict['S']:
-            a[i]=self.mdp_dict['action'][0]
+            a[i]=self.mdp_dict['action'][i][0]
         self.mdp_dict['pi']=a
     def set_S(self, S):
         self.mdp_dict['S']=S
@@ -40,11 +39,12 @@ class mdp(object):
         for i in list:
             a = self.mdp_dict['S'].index(i[0])
             b = self.mdp_dict['S'].index(i[1])
-            new_list.append((a,b))
+            new_list.append((a, b))
+            new_list.append((a, a))
+            #new_list.append((b, a))
         self.mdp_dict['adjacency_list']=new_list
 
     def policy_evaluation(self):
-        for k in range(1, self.param['N']):
             for kp, p in enumerate(self.mdp_dict['S']):
                 state_action=(p, self.mdp_dict['pi'][p])
                 prob_dict=self.mdp_dict['T'][state_action]
@@ -54,30 +54,36 @@ class mdp(object):
             return self.mdp_dict['U']
 
     def policy_iteration(self):
-        for k in range(1, self.param['N']):
+
             actual_U=self.policy_evaluation()
-            all_Us=np.zeros((len(self.mdp_dict['action']), len(self.mdp_dict['S'])))
-            for ka, act_a in enumerate(self.mdp_dict['action']):
-                for kp, p in enumerate(self.mdp_dict['S']):
+
+
+            for kp, p in enumerate(self.mdp_dict['S']):
+                all_Us = np.zeros(len(self.mdp_dict['action'][p]))
+                for ka, act_a in enumerate(self.mdp_dict['action'][p]):
                     state_action=(p, act_a)
                     prob_dict=self.mdp_dict['T'][state_action]
                     bds=self.mdp_dict['gamma']*np.sum([a * b for a, b in zip(actual_U, prob_dict)])
                     idx = np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=prob_dict))
-                    all_Us[ka][kp]=self.mdp_dict['R'][idx] + bds
-            self.get_new_policy(np.array(all_Us))
-    def get_new_policy(self, all_Us):
+                    all_Us[ka]=self.mdp_dict['R'][idx] + bds
+                self.get_new_policy(np.array(all_Us), kp)
+    def get_new_policy(self, all_Us, act_node):
         idx=np.argmax(all_Us, axis=0)
-        for ka, qrt in enumerate(self.mdp_dict['pi'].keys()):
-            self.mdp_dict['pi'][qrt]=self.mdp_dict['action'][idx[ka]]
+        act_node_name=self.mdp_dict['S'][act_node]
+        self.mdp_dict['pi'][act_node_name]=self.mdp_dict['action'][act_node_name][idx]
       
 
 
     def start_mdp(self):
-        count=1
+        count=0
         while(1):
             oldU=self.mdp_dict['U'][:]
             self.policy_iteration()
+            if (np.sum(np.array(self.mdp_dict['U']))==0):
+                count += 1
+                continue
             if(np.sum(np.array(self.mdp_dict['U'])-np.array(oldU))<10e-9):
+
                 print("Convergence")
                 print(count)
                 print(self.mdp_dict['pi'])
@@ -103,9 +109,11 @@ class mdp(object):
         codebook, _ = kmeans(vec, len(color_dict))
         cluster_indices, _ = vq(vec, codebook)
         sel=[]
-        for qrti in range(0, len(color_dict.keys())):
+        am_max_cluster=np.max(cluster_indices)
+        for qrti in range(0, am_max_cluster+1):
             tre=qrti==cluster_indices
-            sel.append(np.max(vec[tre]))
+            new_candi=np.max(vec[tre])
+            sel.append(new_candi)
         sel=np.array(sel)
         sort_idx=np.argsort(sel)
         new_cluster_indices=[np.nan]*len(cluster_indices)
@@ -127,22 +135,23 @@ class mdp(object):
         layout=g.layout("large_graph")
 
         ig.plot(g, margin = 20,bbox = (3000, 3000), layout=layout)
-    def get_trajectory(self, start_node):
+    def get_trajectory(self):
+        start_node=self.mdp_dict['S'][0]
         ideal_path=[]
         ideal_path.append(str(start_node))
         policy=self.mdp_dict['pi']
         count=0
         while(1):
             act_node=ideal_path[-1]
-            action=policy[str(act_node)]
+            action=policy[act_node]
             if(count>self.param['n_optimal_trajectory']):
                 break
             else:
                 count+=1
             abc=self.mdp_dict['T']
-            act_trans=abc[(act_node, str(action))]
+            act_trans=abc[(act_node, action)]
             next_node=np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=act_trans))
-            ideal_path.append(str(next_node))
+            ideal_path.append(self.mdp_dict['S'][next_node])
         print('ideal_path')
         print(ideal_path)
         return ideal_path
