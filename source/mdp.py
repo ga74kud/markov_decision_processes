@@ -7,12 +7,11 @@ class mdp(object):
                    'action': None, #Action set
                    'adjacency_list': None, #Topology
                    'R': None, #Rewards
-                   'gamma': 0.9}
+                   'gamma': 0.1}
         self.mdp_dict['T']=None
         self.mdp_dict['pi']=None
         self.mdp_dict['U'] = None
-        self.param = {'n_optimal_trajectory': 30, # optimal trajectory
-                      'N': 2, #Time Horizont
+        self.param = {'n_optimal_trajectory': 40, # optimal trajectory
                       }
     def set_T(self, Transition):
         self.mdp_dict['T']=Transition
@@ -46,7 +45,6 @@ class mdp(object):
         self.mdp_dict['adjacency_list']=new_list
 
     def policy_evaluation(self):
-        for k in range(1, self.param['N']):
             for kp, p in enumerate(self.mdp_dict['S']):
                 state_action=(p, self.mdp_dict['pi'][p])
                 prob_dict=self.mdp_dict['T'][state_action]
@@ -56,7 +54,7 @@ class mdp(object):
             return self.mdp_dict['U']
 
     def policy_iteration(self):
-        for k in range(1, self.param['N']):
+
             actual_U=self.policy_evaluation()
 
 
@@ -82,6 +80,7 @@ class mdp(object):
             oldU=self.mdp_dict['U'][:]
             self.policy_iteration()
             if (np.sum(np.array(self.mdp_dict['U']))==0):
+                count += 1
                 continue
             if(np.sum(np.array(self.mdp_dict['U'])-np.array(oldU))<10e-9):
 
@@ -110,9 +109,11 @@ class mdp(object):
         codebook, _ = kmeans(vec, len(color_dict))
         cluster_indices, _ = vq(vec, codebook)
         sel=[]
-        for qrti in range(0, len(color_dict.keys())):
+        am_max_cluster=np.max(cluster_indices)
+        for qrti in range(0, am_max_cluster+1):
             tre=qrti==cluster_indices
-            sel.append(np.max(vec[tre]))
+            new_candi=np.max(vec[tre])
+            sel.append(new_candi)
         sel=np.array(sel)
         sort_idx=np.argsort(sel)
         new_cluster_indices=[np.nan]*len(cluster_indices)
