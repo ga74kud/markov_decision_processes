@@ -7,7 +7,7 @@ class mdp(object):
                    'action': None, #Action set
                    'adjacency_list': None, #Topology
                    'R': None, #Rewards
-                   'gamma': 0.1}
+                   'gamma': 0.8}
         self.mdp_dict['T']=None
         self.mdp_dict['pi']=None
         self.mdp_dict['U'] = None
