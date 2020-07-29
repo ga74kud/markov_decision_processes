@@ -54,10 +54,7 @@ class mdp(object):
             return self.mdp_dict['U']
 
     def policy_iteration(self):
-
             actual_U=self.policy_evaluation()
-
-
             for kp, p in enumerate(self.mdp_dict['S']):
                 all_Us = np.zeros(len(self.mdp_dict['action'][p]))
                 for ka, act_a in enumerate(self.mdp_dict['action'][p]):
@@ -128,13 +125,12 @@ class mdp(object):
         col_b = np.zeros(len(vec))
         transp=np.ones(len(vec))
         allCol=np.transpose(np.vstack((col_r, col_g, col_b, transp)))
-        #g.vs["color"]=[color_dict[r] for r in cluster_indices]
-        #palette = ig.ClusterColoringPalette(len(vec))
         colors = [color_dict[index] for index in new_cluster_indices]
         g.vs["color"] = colors
         layout=g.layout("large_graph")
-
-        ig.plot(g, margin = 20,bbox = (3000, 3000), layout=layout)
+        visual_style = {}
+        visual_style["edge_curved"] = False
+        ig.plot(g, margin = 20,bbox = (3000, 3000), layout=layout, **visual_style)
     def get_trajectory(self):
         start_node=self.mdp_dict['S'][0]
         ideal_path=[]
