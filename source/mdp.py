@@ -134,10 +134,13 @@ class mdp(object):
         allCol=np.transpose(np.vstack((col_r, col_g, col_b, transp)))
         colors = [color_dict[index] for index in new_cluster_indices]
         g.vs["color"] = colors
+
         layout = ig.Layout(self.mdp_dict['P'])
+        g.vs["vertex_size"] = 20
+
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, margin = 20,bbox = (3000, 3000), layout=layout, **visual_style)
+        ig.plot(g, layout=layout, **visual_style)#margin = 20,bbox = (3000, 3000), layout=layout,
     def get_trajectory(self):
         start_node=self.mdp_dict['S'][0]
         ideal_path=[]
