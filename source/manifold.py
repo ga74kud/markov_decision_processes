@@ -4,8 +4,8 @@ from input import *
 class manifold(object):
     def __init__(self, **kwargs):
         self.manifold= {'X': None, 'Topology': [], 'Atlas': None, 'Policy': None, 'Adjacency': None, 'amount_states': None,
-                        'Actions': {}}
-        self.param={'option_topology': 'norm2 distance'}
+                        'Actions': {}, 'Position': None}
+        self.param={'option_topology': 'const_neigh', 'neighbour_distance': 1.2}
 
     def check_new_cand(self, new_candidate):
         if (new_candidate in self.manifold['Topology']):
@@ -13,7 +13,6 @@ class manifold(object):
         else:
             self.manifold['Topology'].append(new_candidate)
     def set_environment_by_json(self):
-        f = open('../input/puntigam.json', "r")
         f = open('../input/reachable_meta_states.json', "r")
         data = json.loads(f.read())
         self.manifold['amount_states']=len(data['points'])
@@ -22,9 +21,25 @@ class manifold(object):
             self.manifold['Topology']=[tuple(data['topology'][qrt]) for qrt in data['topology']]
         elif(self.param['option_topology']=='norm2 distance'):
             self.get_topology_by_norm2_distance(data['points'])
-
+        elif (self.param['option_topology'] == 'const_neigh'):
+            self.get_topology_by_neighbors(data['points'])
         self.get_adjacency(self.manifold['amount_states'])
         self.set_neighbour_actions()
+    def get_topology_by_neighbors(self, dictDat):
+        abc_keys=list(dictDat.keys())
+        abc=list(dictDat.values())
+        self.manifold['Position']=[tuple(abc[i]) for i in range(0, len(abc))]
+        x = np.array([pt[0] for pt in abc])
+        y = np.array([pt[1] for pt in abc])
+        d=np.sqrt(np.square(x - x.reshape(-1, 1)) + np.square(y - y.reshape(-1, 1)))
+        for idx in range(0, np.size(d,1)):
+            dbd=np.argsort(d[:, idx])
+            my_idx=abc_keys[idx]
+            self.manifold['Topology'].append((my_idx, my_idx))
+            for st_idx in range(1, 4):
+                st=dbd[st_idx]
+                self.manifold['Topology'].append((my_idx, abc_keys[st]))
+                self.manifold['Topology'].append((abc_keys[st], my_idx))
     def get_topology_by_norm2_distance(self, dictDat):
         abc=list(dictDat.keys())
 
@@ -36,7 +51,7 @@ class manifold(object):
                 val2=np.array(dictDat[b])
                 diff=val1-val2
                 dist = np.linalg.norm(diff)
-                if(dist<=1.2):
+                if(dist<=self.param['neighbour_distance']):
                     self.manifold['Topology'].append((a, b))
                     self.manifold['Topology'].append((b, a))
 

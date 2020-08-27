@@ -7,14 +7,18 @@ class mdp(object):
                    'action': None, #Action set
                    'adjacency_list': None, #Topology
                    'R': None, #Rewards
-                   'gamma': 0.8}
+                   'gamma': 0.95, #discount factor
+                   'P': None #Positions
+                    }
         self.mdp_dict['T']=None
         self.mdp_dict['pi']=None
         self.mdp_dict['U'] = None
         self.param = {'n_optimal_trajectory': 40, # optimal trajectory
                       }
-    def set_T(self, Transition):
-        self.mdp_dict['T']=Transition
+    def set_position_list(self, position):
+        self.mdp_dict['P']=position
+    def set_T(self, transition):
+        self.mdp_dict['T']=transition
     def set_U(self):
         self.mdp_dict['U'] = [0] * len(self.mdp_dict['S'])
     def set_action(self, action):
@@ -73,6 +77,7 @@ class mdp(object):
 
     def start_mdp(self):
         count=0
+        count2=0
         while(1):
             oldU=self.mdp_dict['U'][:]
             self.policy_iteration()
@@ -80,7 +85,9 @@ class mdp(object):
                 count += 1
                 continue
             if(np.sum(np.array(self.mdp_dict['U'])-np.array(oldU))<10e-9):
-
+                count += 1
+                count2+=1
+            if(count2>10):
                 print("Convergence")
                 print(count)
                 print(self.mdp_dict['pi'])
@@ -127,7 +134,7 @@ class mdp(object):
         allCol=np.transpose(np.vstack((col_r, col_g, col_b, transp)))
         colors = [color_dict[index] for index in new_cluster_indices]
         g.vs["color"] = colors
-        layout=g.layout("large_graph")
+        layout = ig.Layout(self.mdp_dict['P'])
         visual_style = {}
         visual_style["edge_curved"] = False
         ig.plot(g, margin = 20,bbox = (3000, 3000), layout=layout, **visual_style)
