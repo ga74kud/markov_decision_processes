@@ -9,7 +9,9 @@ class visualizer(object):
 
     def new_problem(self):
         obj=problem()
-        obj.single_run({'24': 1000})
+        obj.set_manifold()
+        obj.set_solver()
+        obj.start_mdp({'24': 10})
         return obj
 
 if __name__ == '__main__':
