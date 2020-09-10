@@ -1,5 +1,7 @@
 from source.manifold import *
 from source.pomdp import *
+from source.reachability import *
+
 class problem(object):
     def __init__(self, **kwargs):
         self.obj_manifold=None
@@ -7,10 +9,13 @@ class problem(object):
     def set_manifold(self):
         self.obj_manifold=manifold()
         self.obj_manifold.set_environment_by_json()
-        self.obj_solver=pomdp()
-    def set_solver(self):
+
+    def set_solver(self, type):
+        if(type=='pomdp'):
+            self.obj_solver=pomdp()
+        elif(type=='reachability'):
+            self.obj_solver = reachability()
         self.obj_solver.set_S(self.obj_manifold.manifold['X'])
-        #
         self.obj_solver.set_adjacency_list(self.obj_manifold.manifold['Topology'])
         self.obj_solver.set_position_list(self.obj_manifold.manifold['Position'])
         self.obj_solver.set_U()

@@ -8,10 +8,11 @@ class visualizer(object):
         self.problem.obj_solver.visualize_network()
 
     def new_problem(self):
+        problem_type={'type':'pomdp', 'rewards': {'24': 10}}
         obj=problem()
         obj.set_manifold()
-        obj.set_solver()
-        obj.start_mdp({'24': 10})
+        obj.set_solver(problem_type['type'])
+        obj.start_mdp(problem_type['rewards'])
         return obj
 
 if __name__ == '__main__':
