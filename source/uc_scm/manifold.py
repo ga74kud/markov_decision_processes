@@ -29,9 +29,9 @@ class manifold(object):
         r=Normal(x, 0, 1)
         y=x
         print(E(r))
-        f=implemented_function('scm_1', lambda inp: inp[0]+inp[1])
-        lam_f=lambdify(inp, f(inp))
-        print(lam_f([2, 3]))
+        f=[implemented_function('scm_1', lambda inp: inp[0]+inp[1]), implemented_function('scm_2', lambda inp: inp[0]-inp[1])]
+        lam_f=lambdify(inp, [f[0](inp), f[1](inp)])
+        print(lam_f([x, 3]))
         b=1
 
 
