@@ -26,12 +26,21 @@ class manifold(object):
         self.set_neighbour_actions()
     def get_topology_by_scm(self, data):
         x, y, nx, ny, inp=sympy.symbols('x y nx ny inp')
+        scm_1="x+nx+i1"
+        scm_2="y+nx+i1"
+
+        a=sympy.sympify("x+nx+i1")
+        b = sympy.sympify("y+nx+i1")
+        #a=a.subs(sympy.symbols("i1"), 3)
         r=Normal(x, 0, 1)
         y=x
         print(E(r))
-        f=[implemented_function('scm_1', lambda inp: inp[0]+inp[1]), implemented_function('scm_2', lambda inp: inp[0]-inp[1])]
+        f=[implemented_function('scm_1', lambda inp: a.subs([(sympy.symbols("i1"), inp[0]), (sympy.symbols("nx"), inp[1])])),
+           implemented_function('scm_2', lambda inp: b.subs([(sympy.symbols("i1"), inp[0]), (sympy.symbols("nx"), inp[1])]))]
         lam_f=lambdify(inp, [f[0](inp), f[1](inp)])
         print(lam_f([x, 3]))
+        erg=lam_f([x, 3])
+        x.subs
         b=1
 
 
