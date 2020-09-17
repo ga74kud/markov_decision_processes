@@ -1,6 +1,6 @@
-from source.manifold import *
-from source.pomdp import *
-from source.reachability import *
+from source.uc_pomdp.manifold import *
+from source.uc_pomdp.pomdp import *
+from source.uc_pomdp.reachability import *
 
 class problem(object):
     def __init__(self, **kwargs):
@@ -12,7 +12,7 @@ class problem(object):
 
     def set_solver(self, type):
         if(type=='pomdp'):
-            self.obj_solver=pomdp()
+            self.obj_solver=pomdp_class()
         elif(type=='reachability'):
             self.obj_solver = reachability()
         self.obj_solver.set_S(self.obj_manifold.manifold['X'])

@@ -1,4 +1,4 @@
-from source.mdp import *
+from source.uc_pomdp.mdp import *
 
 
 class reachability(mdp):

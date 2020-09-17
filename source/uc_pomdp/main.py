@@ -1,6 +1,5 @@
 import seaborn as sns
-from source.problem import *
-
+from source.uc_pomdp.problem import *
 class visualizer(object):
     def __init__(self, **kwargs):
         self.problem=self.new_problem()
