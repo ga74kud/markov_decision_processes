@@ -7,7 +7,7 @@ from sympy.utilities.lambdify import *
 
 class manifold(object):
     def __init__(self, **kwargs):
-        self.manifold= {'X': None, 'Topology': [], 'Atlas': None, 'Policy': None, 'Adjacency': None, 'amount_states': None,
+        self.manifold= {'X': None, 'Topology': [], 'Adjacency': None, 'amount_states': None,
                         'Actions': {}, 'Position': None}
         self.param={'option_topology': 'const_neigh', 'neighbour_distance': 1.2}
 

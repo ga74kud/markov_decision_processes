@@ -9,13 +9,10 @@ class problem(object):
         self.obj_manifold=manifold()
         self.obj_manifold.set_environment_by_json()
 
-    def set_solver(self, type):
+    def set_solver(self):
         self.obj_solver=scm_class()
 
-    def start_mdp(self, R_dict):
-        self.obj_solver.set_R(R_dict)
-        self.obj_solver.start_mdp()
-        self.obj_solver.get_trajectory()
+
 
 if __name__ == '__main__':
     obj = problem()
