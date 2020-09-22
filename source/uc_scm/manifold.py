@@ -17,16 +17,21 @@ class manifold(object):
         else:
             self.manifold['Topology'].append(new_candidate)
 
-    def old(self):
-        x, y, nx, ny, inp=sympy.symbols('x y nx ny inp')
-        scm_1 = sympy.sympify("x+nx+i1")
-        scm_2 = sympy.sympify("y+nx+i1")
-        f=[implemented_function('scm_1', lambda inp: scm_1.subs([(sympy.symbols("i1"), inp[0]), (sympy.symbols("nx"), inp[1])])),
-           implemented_function('scm_2', lambda inp: scm_2.subs([(sympy.symbols("i1"), inp[0]), (sympy.symbols("nx"), inp[1])]))]
+    def get_scm_function(self, input):
+        inp=sympy.symbols('r')
+        scm = input["scm"]
+        scms=list(scm.values())
+        dictionary = input["variables"]
+        abc = list(input.values())
+        symb=list(dictionary.values())
+        symb=sympy.symbols(symb)
+        scm_1 = sympy.sympify(scms[0])
+        scm_2 = sympy.sympify(scms[1])
+        f=[implemented_function('scm_1', lambda inp: scm_1.subs([((symb[0]), inp[0]), ((symb[1]), inp[1])])),
+           implemented_function('scm_2', lambda inp: scm_2.subs([((symb[0]), inp[0]), ((symb[1]), inp[1])]))]
         lam_f=lambdify(inp, [f[0](inp), f[1](inp)])
-        print(lam_f([x, 3]))
-        erg=lam_f([x, 3])
-        x.subs
+        print(lam_f([symb[0], 3]))
+        erg=lam_f([8, 3])
         b=1
 
 
@@ -64,21 +69,16 @@ class manifold(object):
         test_symmetry=np.allclose(self.manifold['Adjacency'], self.manifold['Adjacency'].T, rtol=1e-05, atol=1e-08)
         print('symmetry')
         print(test_symmetry)
-    def set_environment_by_json(self):
-        f = open('../../input/scm_easy.json', "r")
-        data = json.loads(f.read())
-        self.manifold['amount_states'] = len(data['states'])
-        self.manifold['X'] = [qrt for qrt in data['states']]
-        self.get_topology_by_scm(data['states'], data['edges'])
-        self.get_adjacency(self.manifold['amount_states'])
-        self.set_neighbour_actions()
+
     def get_topology_by_scm(self, data):
-        abc_keys = list(data.keys())
-        abc = list(data.values())
+        scm=data["scm"]
+        dictionary=data["variables"]
+        abc_keys = list(scm.keys())
+        abc = list(scm.values())
         topology=[]
         for idx, qrt in enumerate(abc):
             for idx2, qrt2 in enumerate(abc):
-                if abc_keys[idx] in qrt2:
+                if dictionary[abc_keys[idx]] in qrt2:
                     topology.append([abc_keys[idx], abc_keys[idx2]])
         return topology
     def split_by_delim(self, dat):
@@ -89,7 +89,8 @@ class manifold(object):
         data = json.loads(f.read())
         self.manifold['amount_states'] = len(data['scm'])
         self.manifold['X'] = [qrt for qrt in data['scm']]
-        self.manifold['Topology']=self.get_topology_by_scm(data['scm'])
+        self.manifold['Topology']=self.get_topology_by_scm(data)
+        self.get_scm_function(data)
         self.get_adjacency(self.manifold['amount_states'])
         self.set_neighbour_actions()
     def old2(self, dictDat, edges):
