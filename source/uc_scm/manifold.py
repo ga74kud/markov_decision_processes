@@ -25,10 +25,11 @@ class manifold(object):
         abc = list(input.values())
         symb=list(dictionary.values())
         symb=sympy.symbols(symb)
-        scm_1 = sympy.sympify(scms[0])
-        scm_2 = sympy.sympify(scms[1])
-        f=[implemented_function('scm_1', lambda inp: scm_1.subs([((symb[0]), inp[0]), ((symb[1]), inp[1])])),
-           implemented_function('scm_2', lambda inp: scm_2.subs([((symb[0]), inp[0]), ((symb[1]), inp[1])]))]
+        scm_sympy = sympy.sympify(scms)
+        f=[]
+        for q, qi in enumerate(scm_sympy):
+            new_fun=implemented_function('scm_'+str(q), lambda inp: qi.subs([((symb[0]), inp[0]), ((symb[1]), inp[1])]))
+            f.append(new_fun)
         lam_f=lambdify(inp, [f[0](inp), f[1](inp)])
         print(lam_f([symb[0], 3]))
         erg=lam_f([8, 3])
