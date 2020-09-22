@@ -33,6 +33,8 @@ class manifold(object):
         lam_f=lambdify(inp, [f[0](inp), f[1](inp)])
         print(lam_f([symb[0], 3]))
         erg=lam_f([8, 3])
+        erg=lam_f([Normal('M', 0, 1), Normal('N', 0, 1)])
+        expectation=E(erg)
         b=1
 
 
