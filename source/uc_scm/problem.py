@@ -7,12 +7,13 @@ class problem(object):
         self.obj_solver=None
     def set_manifold(self):
         self.obj_manifold=manifold()
-        self.obj_manifold.scm_import_json()
 
         #self.obj_manifold.get_topology_by_scm()
 
     def set_solver(self):
         self.obj_solver=scm_class()
+        self.obj_solver.set_manifold(self.obj_manifold)
+        self.obj_solver.scm_import_json()
 
 
 
