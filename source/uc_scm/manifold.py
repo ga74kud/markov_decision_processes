@@ -2,7 +2,6 @@ import json
 import numpy as np
 import sympy
 from sympy.stats import *
-from input import *
 from sympy.utilities.lambdify import *
 
 class manifold(object):
@@ -17,25 +16,24 @@ class manifold(object):
         else:
             self.manifold['Topology'].append(new_candidate)
 
-    def get_scm_function(self, input):
-        inp=sympy.symbols('r')
-        scm = input["scm"]
-        scms=list(scm.values())
+    def get_scm_function(self, input, values):
+        all_exp=[]
+        all_var = []
+        scms=list(input["scm"].values())
         dictionary = input["variables"]
-        abc = list(input.values())
-        symb=list(dictionary.values())
-        symb=sympy.symbols(symb)
+        symb=sympy.symbols(list(dictionary.values()))
         scm_sympy = sympy.sympify(scms)
-        f=[]
         for q, qi in enumerate(scm_sympy):
-            new_fun=implemented_function('scm_'+str(q), lambda inp: qi.subs([((symb[0]), inp[0]), ((symb[1]), inp[1])]))
-            f.append(new_fun)
-        lam_f=lambdify(inp, [f[0](inp), f[1](inp)])
-        print(lam_f([symb[0], 3]))
-        erg=lam_f([8, 3])
-        erg=lam_f([Normal('M', 0, 1), Normal('N', 0, 1)])
-        expectation=E(erg)
-        b=1
+            expectation_scm, variance_scm=self.get_expected_val_scm(input, q, qi, symb, values)
+            all_exp.append(expectation_scm)
+            all_var.append(variance_scm)
+        return all_exp
+    def get_expected_val_scm(self, input, q, qi, symb, values):
+        a = sympy.symbols('a')
+        new_fun=implemented_function('scm_'+str(q), lambda inp: qi.subs([(symb[i], inp[i]) for i in range(0, len(inp))]))
+        lam_f=lambdify(a, new_fun(a))
+        erg=lam_f(values)
+        return E(erg), variance(erg)
 
 
     def set_neighbour_actions(self):
@@ -93,7 +91,7 @@ class manifold(object):
         self.manifold['amount_states'] = len(data['scm'])
         self.manifold['X'] = [qrt for qrt in data['scm']]
         self.manifold['Topology']=self.get_topology_by_scm(data)
-        self.get_scm_function(data)
+        self.get_scm_function(data, [Normal('M', 2, 1), Normal('N', 3, 1)])
         self.get_adjacency(self.manifold['amount_states'])
         self.set_neighbour_actions()
     def old2(self, dictDat, edges):
