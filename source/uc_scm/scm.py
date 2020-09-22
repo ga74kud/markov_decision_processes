@@ -24,38 +24,27 @@ class scm_class(object):
         f = open('../../input/structuralCausalModels.json', "r")
         self.data = json.loads(f.read())
         self.manifold['amount_states'] = len(self.data['scm'])
-        self.manifold['X'] = [qrt for qrt in self.data['scm']]
+        self.manifold['X'] = [qrt for qrt in self.data['variables']]
         self.manifold['Topology']=self.get_topology_by_scm(self.data)
         t=self.get_scm_function(self.data, [Normal('M', 2, 1), Normal('N', 3, 1), Normal('O', 4, 1)])
         print(t)
-        self.get_adjacency(self.manifold['amount_states'])
-        self.set_neighbour_actions()
+        #self.get_adjacency(self.manifold['amount_states'])
+        #self.set_neighbour_actions()
     def get_topology_by_scm(self, data):
         scm=data["scm"]
         dictionary=data["variables"]
-        abc_keys = list(scm.keys())
+        list_values=list(dictionary.values())
+        abc_keys = list(dictionary.keys())
         abc = list(scm.values())
         topology=[]
-        for idx, qrt in enumerate(abc):
+        for idx, qrt in enumerate(list_values):
             for idx2, qrt2 in enumerate(abc):
-                if (idx == 3 and idx2==1):
-                    b = 1
-                check_val=dictionary[abc_keys[idx]]
+                check_val=qrt
                 check_str=qrt2.find(check_val)
                 if (check_str != -1):
                     topology.append([abc_keys[idx], abc_keys[idx2]])
         return topology
 
-    def odl(self):
-        f = open('../../input/structuralCausalModels.json', "r")
-        data = json.loads(f.read())
-        self.manifold['amount_states'] = len(data['scm'])
-        self.manifold['X'] = [qrt for qrt in data['scm']]
-        self.manifold['Topology']=self.get_topology_by_scm(data)
-        t=self.get_scm_function(data, [Normal('M', 2, 1), Normal('N', 3, 1), Normal('O', 4, 1)])
-        print(t)
-        self.get_adjacency(self.manifold['amount_states'])
-        self.set_neighbour_actions()
 
     def get_scm_function(self, input, values):
         all_exp=[]
