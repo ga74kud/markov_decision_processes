@@ -17,7 +17,7 @@ class manifold(object):
         else:
             self.manifold['Topology'].append(new_candidate)
 
-    def get_topology_by_scm(self):
+    def old(self):
         x, y, nx, ny, inp=sympy.symbols('x y nx ny inp')
         scm_1 = sympy.sympify("x+nx+i1")
         scm_2 = sympy.sympify("y+nx+i1")
@@ -69,7 +69,7 @@ class manifold(object):
         data = json.loads(f.read())
         self.manifold['amount_states'] = len(data['states'])
         self.manifold['X'] = [qrt for qrt in data['states']]
-        self.get_topology_by_neighbors(data['states'], data['edges'])
+        self.get_topology_by_scm(data['states'], data['edges'])
         self.get_adjacency(self.manifold['amount_states'])
         self.set_neighbour_actions()
     def get_topology_by_scm(self, data):
@@ -78,11 +78,12 @@ class manifold(object):
         topology=[]
         for idx, qrt in enumerate(abc):
             for idx2, qrt2 in enumerate(abc):
-                nodes2 = qrt2
-                matching = [True for s in nodes2 if abc_keys[idx] in s]
-                if(matching!=[]):
+                if abc_keys[idx] in qrt2:
                     topology.append([abc_keys[idx], abc_keys[idx2]])
         return topology
+    def split_by_delim(self, dat):
+        first = dat.split('+')
+        second = [s.split('-') for s in first]
     def scm_import_json(self):
         f = open('../../input/structuralCausalModels.json', "r")
         data = json.loads(f.read())
@@ -91,7 +92,7 @@ class manifold(object):
         self.manifold['Topology']=self.get_topology_by_scm(data['scm'])
         self.get_adjacency(self.manifold['amount_states'])
         self.set_neighbour_actions()
-    def get_topology_by_neighbors(self, dictDat, edges):
+    def old2(self, dictDat, edges):
         abc_keys = list(dictDat.keys())
         abc = list(dictDat.values())
         self.manifold['Position'] = [tuple(abc[i]) for i in range(0, len(abc))]
