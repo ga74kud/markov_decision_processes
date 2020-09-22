@@ -36,9 +36,13 @@ class scm_class(object):
         abc_keys = list(scm.keys())
         abc = list(scm.values())
         topology=[]
-        for idx, qrt in enumerate(dictionary):
+        for idx, qrt in enumerate(abc):
             for idx2, qrt2 in enumerate(abc):
-                if dictionary[abc_keys[idx]] in qrt2:
+                if (idx == 3 and idx2==1):
+                    b = 1
+                check_val=dictionary[abc_keys[idx]]
+                check_str=qrt2.find(check_val)
+                if (check_str != -1):
                     topology.append([abc_keys[idx], abc_keys[idx2]])
         return topology
 
@@ -88,7 +92,7 @@ class scm_class(object):
         nodes=self.manifold['X']
         nodes_name=[self.data['variables'][i] for i in nodes]
         adjacency=self.set_adjacency_list(nodes, self.manifold['Topology'])
-        g = ig.Graph(adjacency)
+        g = ig.Graph(adjacency, directed=True)
         g.vs["name"] = nodes_name
         g.vs["label"] = g.vs["name"]
         g.vs["vertex_size"] = 20
