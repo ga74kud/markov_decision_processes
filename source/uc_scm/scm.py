@@ -9,6 +9,7 @@ import json
 class scm_class(object):
     def __init__(self, **kwargs):
         self.manifold=None
+        self.data=None
     def set_manifold(self, manifold):
         self.manifold=manifold.manifold
 
@@ -18,16 +19,14 @@ class scm_class(object):
             a = nodes.index(i[0])
             b = nodes.index(i[1])
             new_list.append((a, b))
-            #new_list.append((a, a))
-            # new_list.append((b, a))
         return new_list
     def scm_import_json(self):
         f = open('../../input/structuralCausalModels.json', "r")
-        data = json.loads(f.read())
-        self.manifold['amount_states'] = len(data['scm'])
-        self.manifold['X'] = [qrt for qrt in data['scm']]
-        self.manifold['Topology']=self.get_topology_by_scm(data)
-        t=self.get_scm_function(data, [Normal('M', 2, 1), Normal('N', 3, 1), Normal('O', 4, 1)])
+        self.data = json.loads(f.read())
+        self.manifold['amount_states'] = len(self.data['scm'])
+        self.manifold['X'] = [qrt for qrt in self.data['scm']]
+        self.manifold['Topology']=self.get_topology_by_scm(self.data)
+        t=self.get_scm_function(self.data, [Normal('M', 2, 1), Normal('N', 3, 1), Normal('O', 4, 1)])
         print(t)
         self.get_adjacency(self.manifold['amount_states'])
         self.set_neighbour_actions()
@@ -37,13 +36,13 @@ class scm_class(object):
         abc_keys = list(scm.keys())
         abc = list(scm.values())
         topology=[]
-        for idx, qrt in enumerate(abc):
+        for idx, qrt in enumerate(dictionary):
             for idx2, qrt2 in enumerate(abc):
                 if dictionary[abc_keys[idx]] in qrt2:
                     topology.append([abc_keys[idx], abc_keys[idx2]])
         return topology
 
-    def scm_import_json(self):
+    def odl(self):
         f = open('../../input/structuralCausalModels.json', "r")
         data = json.loads(f.read())
         self.manifold['amount_states'] = len(data['scm'])
@@ -85,11 +84,12 @@ class scm_class(object):
         print('symmetry')
         print(test_symmetry)
 
-    def visualize_network(self, obj):
-        nodes=obj.manifold['X']
-        adjacency=self.set_adjacency_list(nodes, obj.manifold['Topology'])
+    def visualize_network(self):
+        nodes=self.manifold['X']
+        nodes_name=[self.data['variables'][i] for i in nodes]
+        adjacency=self.set_adjacency_list(nodes, self.manifold['Topology'])
         g = ig.Graph(adjacency)
-        g.vs["name"] = nodes
+        g.vs["name"] = nodes_name
         g.vs["label"] = g.vs["name"]
         g.vs["vertex_size"] = 20
         visual_style = {}
