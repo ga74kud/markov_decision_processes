@@ -140,7 +140,9 @@ class mdp(object):
 
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, layout=layout, **visual_style)#margin = 20,bbox = (3000, 3000), layout=layout,
+        ig.plot(g, layout=layout, **visual_style)
+        b=2
+        #margin = 20,bbox = (3000, 3000), layout=layout,
     def get_trajectory(self):
         start_node=self.mdp_dict['S'][0]
         ideal_path=[]
