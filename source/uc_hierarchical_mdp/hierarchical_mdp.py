@@ -203,7 +203,8 @@ class hierarchical_mdp(object):
 
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, layout=layout, **visual_style)
+        out=ig.plot(g, layout=layout, **visual_style)
+        out.save('../../output/cortex.png')
         b=1
 
     def visualize_network_body(self):
@@ -247,8 +248,8 @@ class hierarchical_mdp(object):
 
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, layout=layout, **visual_style)
-        d=1
+        out=ig.plot(g, layout=layout, **visual_style)
+        out.save('../../output/body.png')
 
     def get_trajectory_body(self):
         start_node=self.mdp_dict['S'][0]
