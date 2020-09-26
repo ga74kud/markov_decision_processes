@@ -32,7 +32,7 @@ class hierarchical_mdp(object):
     def set_T_cortex(self, transition):
         self.mdp_dict['T_cortex']=transition
     def set_U(self):
-        self.mdp_dict['U'] = [0] * len(self.mdp_dict['S'])
+        self.mdp_dict['U'] = [[0] * len(self.mdp_dict['S']), [0] * len(self.mdp_dict['C'])]
     def set_action(self, action_body):
         self.mdp_dict['action_body']=action_body
     def set_action_body(self, action_body):
@@ -90,38 +90,37 @@ class hierarchical_mdp(object):
             for kp, p in enumerate(self.mdp_dict['C']):
                 state_action=(p, self.mdp_dict['pi_cortex'][p])
                 prob_dict=self.mdp_dict['T_cortex'][state_action]
-                bds=self.mdp_dict['gamma_cortex']*np.sum([a * b for a, b in zip(self.mdp_dict['U'], prob_dict)])
+                bds=self.mdp_dict['gamma_cortex']*np.sum([a * b for a, b in zip(self.mdp_dict['U'][1], prob_dict)])
                 idx=np.int(np.random.choice(len(self.mdp_dict['C']), 1, p=prob_dict))
-                self.mdp_dict['U'][kp]=self.mdp_dict['R_cortex'][idx]+bds
-            return self.mdp_dict['U']
+                self.mdp_dict['U'][1][kp]=self.mdp_dict['R_cortex'][idx]+bds
     def policy_evaluation_body(self):
             for kp, p in enumerate(self.mdp_dict['S']):
                 state_action=(p, self.mdp_dict['pi_body'][p])
                 prob_dict=self.mdp_dict['T_body'][state_action]
-                bds=self.mdp_dict['gamma_body']*np.sum([a * b for a, b in zip(self.mdp_dict['U'], prob_dict)])
+                bds=self.mdp_dict['gamma_body']*np.sum([a * b for a, b in zip(self.mdp_dict['U'][0], prob_dict)])
                 idx=np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=prob_dict))
-                self.mdp_dict['U'][kp]=self.mdp_dict['R_body'][idx]+bds
-            return self.mdp_dict['U']
+                self.mdp_dict['U'][0][kp]=self.mdp_dict['R_body'][idx]+bds
+
 
     def policy_iteration_body(self):
-            actual_U=self.policy_evaluation_body()
+            self.policy_evaluation_body()
             for kp, p in enumerate(self.mdp_dict['S']):
                 all_Us = np.zeros(len(self.mdp_dict['action_body'][p]))
                 for ka, act_a in enumerate(self.mdp_dict['action_body'][p]):
                     state_action=(p, act_a)
                     prob_dict=self.mdp_dict['T_body'][state_action]
-                    bds=self.mdp_dict['gamma_body']*np.sum([a * b for a, b in zip(actual_U, prob_dict)])
+                    bds=self.mdp_dict['gamma_body']*np.sum([a * b for a, b in zip(self.mdp_dict['U'][0], prob_dict)])
                     idx = np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=prob_dict))
                     all_Us[ka]=self.mdp_dict['R_body'][idx] + bds
                 self.get_new_policy_body(np.array(all_Us), kp)
     def policy_iteration_cortex(self):
-            actual_U=self.policy_evaluation_cortex()
+            self.policy_evaluation_cortex()
             for kp, p in enumerate(self.mdp_dict['S']):
                 all_Us = np.zeros(len(self.mdp_dict['action_cortex'][p]))
                 for ka, act_a in enumerate(self.mdp_dict['action_cortex'][p]):
                     state_action=(p, act_a)
                     prob_dict=self.mdp_dict['T_cortex'][state_action]
-                    bds=self.mdp_dict['gamma_cortex']*np.sum([a * b for a, b in zip(actual_U, prob_dict)])
+                    bds=self.mdp_dict['gamma_cortex']*np.sum([a * b for a, b in zip(self.mdp_dict['U'][1], prob_dict)])
                     idx = np.int(np.random.choice(len(self.mdp_dict['C']), 1, p=prob_dict))
                     all_Us[ka]=self.mdp_dict['R_cortex'][idx] + bds
                 self.get_new_policy_cortex(np.array(all_Us), kp)
@@ -140,13 +139,14 @@ class hierarchical_mdp(object):
         count=0
         count2=0
         while(1):
-            oldU=self.mdp_dict['U'][:]
+            oldUBody=self.mdp_dict['U'][0][:]
+            oldUCortex = self.mdp_dict['U'][1][:]
             self.policy_iteration_body()
             self.policy_iteration_cortex()
-            if (np.sum(np.array(self.mdp_dict['U']))==0):
+            if (np.sum(np.array(self.mdp_dict['U'][0]))==0 or np.sum(np.array(self.mdp_dict['U'][1]))==0):
                 count += 1
                 continue
-            if(np.sum(np.array(self.mdp_dict['U'])-np.array(oldU))<10e-9):
+            if(np.sum(np.array(self.mdp_dict['U'][0])-np.array(oldUBody))+np.sum(np.array(self.mdp_dict['U'][1])-np.array(oldUCortex))<10e-9):
                 count += 1
                 count2+=1
             if(count2>10):
@@ -154,7 +154,8 @@ class hierarchical_mdp(object):
                 print(count)
                 print(self.mdp_dict['pi_cortex'])
                 print(self.mdp_dict['pi_body'])
-                print(self.mdp_dict['U'])
+                print(self.mdp_dict['U'][0])
+                print(self.mdp_dict['U'][1])
                 break
             elif(count>1000):
                 print("No Convergence")
@@ -167,7 +168,7 @@ class hierarchical_mdp(object):
         g.vs["name"] = self.mdp_dict['C']
         g.vs["reward"]= self.mdp_dict['R_cortex']
         g.vs["label"] = g.vs["name"]
-        vec=np.array(self.mdp_dict['U'])
+        vec=np.array(self.mdp_dict['U'][1])
         p=np.var(vec)
         if(p==0):
             print('error')
@@ -205,14 +206,13 @@ class hierarchical_mdp(object):
         visual_style["edge_curved"] = False
         out=ig.plot(g, layout=layout, **visual_style)
         out.save('../../output/cortex.png')
-        b=1
 
     def visualize_network_body(self):
         g = ig.Graph(self.mdp_dict['adjacency_body'])
         g.vs["name"] = self.mdp_dict['C']
         g.vs["reward"]= self.mdp_dict['R_body']
         g.vs["label"] = g.vs["name"]
-        vec=np.array(self.mdp_dict['U'])
+        vec=np.array(self.mdp_dict['U'][0])
         p=np.var(vec)
         if(p==0):
             print('error')

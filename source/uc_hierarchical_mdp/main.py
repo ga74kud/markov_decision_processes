@@ -8,7 +8,7 @@ class visualizer(object):
         self.problem.obj_solver.visualize_network_body()
 
     def new_problem(self):
-        problem_type={'rewards_body': {'24': 10}, 'rewards_cortex': {'10': 10}}
+        problem_type={'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
         obj=problem()
         obj.set_manifold()
         obj.set_solver()
