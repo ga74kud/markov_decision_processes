@@ -1,5 +1,5 @@
-from source.uc_hierarchical_mdp.manifold import *
-from source.uc_hierarchical_mdp.hierarchical_mdp import *
+from source.usecases.uc_cognitive_mdp.manifold import *
+from source.usecases.uc_cognitive_mdp.hierarchical_mdp import *
 
 class problem(object):
     def __init__(self, **kwargs):

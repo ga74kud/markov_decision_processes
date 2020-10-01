@@ -1,6 +1,6 @@
-from source.uc_pomdp.manifold import *
-from source.uc_pomdp.pomdp import *
-from source.uc_pomdp.reachability import *
+from source.usecases.uc_pomdp.manifold import *
+from source.usecases.uc_pomdp.pomdp import *
+from source.usecases.uc_pomdp.reachability import *
 
 class problem(object):
     def __init__(self, **kwargs):
