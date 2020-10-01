@@ -1,0 +1,3 @@
+{
+  "simulation_1": {"problem_type":{"type":"pomdp", "rewards": {"24": 10}}}
+}

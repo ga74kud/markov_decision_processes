@@ -1,13 +1,12 @@
-import seaborn as sns
-from source.uc_pomdp.problem import *
-class visualizer(object):
-    def __init__(self, **kwargs):
-        self.problem=self.new_problem()
+from source.usecases.uc_pomdp.problem import *
+class service_POMDP(object):
+    def __init__(self, problem):
+        self.problem=self.new_problem(problem)
     def show_graph(self):
         self.problem.obj_solver.visualize_network()
 
-    def new_problem(self):
-        problem_type={'type':'pomdp', 'rewards': {'24': 10}}
+    def new_problem(self, problem_type):
+        #problem_type={'type':'pomdp', 'rewards': {'24': 10}}
         obj=problem()
         obj.set_manifold()
         obj.set_solver(problem_type['type'])
@@ -15,5 +14,5 @@ class visualizer(object):
         return obj
 
 if __name__ == '__main__':
-    obj=visualizer()
+    obj=service_POMDP()
     obj.show_graph()
