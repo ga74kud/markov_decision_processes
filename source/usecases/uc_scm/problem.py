@@ -1,5 +1,5 @@
-from source.uc_scm.manifold import *
-from source.uc_scm.scm import *
+from source.usecases.uc_scm.manifold import *
+from source.usecases.uc_scm.scm import *
 
 class problem(object):
     def __init__(self, **kwargs):
@@ -9,7 +9,7 @@ class problem(object):
     def set_manifold(self):
         self.obj_manifold=manifold()
 
-    def set_solver(self):
+    def set_solver(self, problem_type):
         self.obj_solver=scm_class()
         self.obj_solver.set_manifold(self.obj_manifold)
         self.obj_solver.scm_import_json()

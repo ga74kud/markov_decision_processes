@@ -2,12 +2,12 @@ import igraph as ig
 import sympy
 from sympy.stats import *
 from sympy.utilities.lambdify import *
-from source.uc_pomdp.pomdp import *
+from source.usecases.uc_pomdp.pomdp import *
 import json
 
 
 class scm_class(object):
-    def __init__(self, **kwargs):
+    def __init__(self):
         self.manifold=None
         self.data=None
     def set_manifold(self, manifold):

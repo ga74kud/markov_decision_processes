@@ -2,6 +2,8 @@
 bin/
 lib/
 venv/
+third_party/
+third_party/*
 *venv/
 tmp/
 *tmp/*
@@ -17,3 +19,4 @@ tmp/
 *.egg-info*
 *.gif
 *.pkl
+*.png
