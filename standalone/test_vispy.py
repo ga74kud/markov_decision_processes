@@ -126,8 +126,7 @@ class Canvas(app.Canvas):
         data['a_fg_color'] = 1, 0, 0, 1  #Umrandung
         data['a_size'] = np.random.uniform(5*ps, 10*ps, n)
 
-        dati=np.array([[0, 0, 0], [2, 2, 2]],np.float32)
-        arris=visuals.ArrowVisual(dati, color='b', width=6, arrow_size=30.0),
+
         u_linewidth = 1
         u_antialias = 1
 
@@ -166,8 +165,8 @@ class Canvas(app.Canvas):
                 self.timer.start()
 
     def on_timer(self, event):
-        self.theta += .5
-        self.phi += .5
+        self.theta += 0.01
+        self.phi += 0.01
         self.model = np.dot(rotate(self.theta, (0, 0, 1)),
                             rotate(self.phi, (0, 1, 0)))
         self.program['u_model'] = self.model
