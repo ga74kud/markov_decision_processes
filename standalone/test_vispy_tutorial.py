@@ -3,7 +3,7 @@ from vispy import app, gloo
 import time
 
 
-N=300
+N=3000
 data = np.zeros(N, [('a_lifetime', np.float32),
                     ('a_vec', np.float32, 2)])
 vertex = """
@@ -64,7 +64,6 @@ class Canvas(app.Canvas):
         if time.time() - self._starttime > 1.5:
             self._new_draw()
     def _new_draw(self):
-        N = 300
         vec = self.compute_circle(N)
         lifetime=np.random.normal(2.0, 0.5, (N,))
         data['a_lifetime'] = lifetime
