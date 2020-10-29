@@ -21,7 +21,7 @@ class scm_class(object):
             new_list.append((a, b))
         return new_list
     def scm_import_json(self):
-        f = open('../../input/structuralCausalModels.json', "r")
+        f = open('../../input/old/structuralCausalModels.json', "r")
         self.data = json.loads(f.read())
         self.manifold['amount_states'] = len(self.data['scm'])
         self.manifold['X'] = [qrt for qrt in self.data['variables']]

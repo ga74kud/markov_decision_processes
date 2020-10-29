@@ -13,7 +13,7 @@ class manifold(object):
         else:
             self.manifold['Topology'].append(new_candidate)
     def set_environment_by_json(self):
-        f = open('../../input/reachable_meta_states.json', "r")
+        f = open('../../input/old/reachable_meta_states.json', "r")
         data = json.loads(f.read())
         self.manifold['amount_states']=len(data['points'])
         self.manifold['X']=[qrt for qrt in data['points']]

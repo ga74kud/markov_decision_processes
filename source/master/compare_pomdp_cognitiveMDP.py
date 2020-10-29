@@ -7,9 +7,9 @@ from source.usecases.uc_scm.uc_scm_main import *
 class service_handler(object):
     def __init__(self, **kwargs):
         None
-    def get_map(self):
+    def get_reach_hull(self, init_position, max_values):
         obj=service_map_handling()
-        obj.show_prob_example()
+        obj.reachability(init_position, max_values)
     def use_all_solvers(self):
         problem={'type': 'pomdp', 'rewards': {'24': 10}}
         service_POMDP(problem)
@@ -19,5 +19,8 @@ class service_handler(object):
         service_scmMDP(problem_type)
 
 if __name__ == '__main__':
+    init_position=np.array([0, 0])
+    max_values=np.array([5, 5, .4, .4])
     obj=service_handler()
-    #obj.get_map()
+    obj.get_reach_hull(init_position, max_values)
+    obj.use_all_solvers()

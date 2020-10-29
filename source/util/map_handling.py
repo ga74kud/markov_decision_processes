@@ -44,6 +44,8 @@ class service_map_handling(object):
              sp.interpolating_spline(spline_degree, x, DataPointsDomain, DataPointsRangeY)]
         val=[[f[0].subs({x:i}), f[1].subs({x:i})] for i in np.linspace(0, 1, amount_points)]
         return val
+    def reachability(self, init_position, max_values):
+        None
 
 
 if __name__ == '__main__':
