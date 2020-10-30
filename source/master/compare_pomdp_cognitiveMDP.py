@@ -9,7 +9,7 @@ class service_handler(object):
         None
     def get_reach_hull(self, init_position, max_values):
         obj=service_map_handling()
-        obj.reachability(init_position, max_values)
+        service_map_handling.load_map()
     def use_all_solvers(self):
         problem={'type': 'pomdp', 'rewards': {'24': 10}}
         service_POMDP(problem)
