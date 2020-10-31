@@ -22,5 +22,5 @@ if __name__ == '__main__':
     init_position=np.array([0, 0])
     max_values=np.array([5, 5, .4, .4])
     obj=service_handler()
-    obj.get_reach_hull(init_position, max_values)
+    #obj.get_reach_hull(init_position, max_values)
     obj.use_all_solvers()

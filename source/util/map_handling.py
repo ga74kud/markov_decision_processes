@@ -35,7 +35,6 @@ class service_map_handling(object):
         P=[[[np.ravel(X)[i], np.ravel(Y)[i]]] for i in range(0, len(np.ravel(X)))]
         btc=1
     def spline_of_points(self, data, spline_degree, amount_points):
-
         DataPointsDomain = np.linspace(0, 1, len(data))
         DataPointsRangeX = [i[0] for i in data]
         DataPointsRangeY = [i[1] for i in data]
