@@ -4,15 +4,31 @@ import numpy as np
 import scipy as sp
 import _pickle as cPickle
 from array import array
-
-
+import pandas as pd
+import dask.array as da
+import dask_ml.cluster as daml
+from dask.distributed import Client
+import matplotlib.pyplot as plt
 def preprocessing():
     input_file="/home/michael/ros/vifware_data_puntigam/pcd/puntigam_v1.pcd"
     cloud = PyntCloud.from_file(input_file)
     converted_triangle_mesh = cloud.to_instance("pyvista", mesh=True)
     abc=np.array(converted_triangle_mesh.points)
-    bd=sp.spatial.distance.cdist(abc, [[35, 50, 0]])<40
+    dataset = pd.DataFrame({'x': abc[:, 0], 'y': abc[:, 1], 'z': abc[:, 2]})
+
+    #fig, ax = plt.subplots()
+    #ax.scatter(x[::10000, 0], x[::10000, 1], marker='.', c=km.labels_[::10000],
+    #           cmap='viridis', alpha=0.25)
+    bd=sp.spatial.distance.cdist(abc, [[35, 50, 0]])<20
+
     compressed_data=[abc[i] for i in range(0, len(abc)) if bd[i]==True]
+    x = da.from_array(compressed_data, chunks=(18000, 3))
+    km = daml.KMeans(n_clusters=100)
+    km.fit(x)
+    fig, ax = plt.subplots()
+    ax.scatter(x[:, 0], x[:, 1], marker='.', c=km.labels_[:],
+               cmap='viridis', alpha=0.1)
+    plt.show()
     newSelObject=pv.PolyData(compressed_data)
     pv.save_meshio("new.ply", newSelObject)
     output_file = open('file.bin', 'wb')
@@ -38,7 +54,7 @@ def classify_to_meta():
     data = saved_data["data"]
     semantic_label = saved_data["label"]
     npdata=np.array([(data[i][0], data[i][1], data[i][2]) for i in range(0, len(data))])
-    ref=np.array([(npdata[i,:], semantic_label[i]) for i in range(0, len(npdata)) if npdata[i,2]>1.0 and npdata[i,2]<14])
+    ref=np.array([(npdata[i,:], semantic_label[i]) for i in range(0, len(npdata)) if npdata[i,2]>-1000.0 and npdata[i,2]<1400])
     #D=sp.spatial.distance.cdist(ref, ref)
     #scores = saved_data["scores"]
     return ref
@@ -63,10 +79,10 @@ def show_pyvista(ref):
         volume = reducedMesh.delaunay_3d()
 
         # Extract some grade of the volume
-        ore = volume.threshold_percent(20)
-        reducedMesh_voxel = pv.voxelize(ore, density=reducedMesh.length / 200, check_surface=False)
-        p.add_mesh(reducedMesh, opacity=0.5, point_size=1,render_points_as_spheres=True)
-        p.add_mesh(reducedMesh_voxel, opacity=0.2, color="black")
+        #ore = volume.threshold_percent(20)
+        #reducedMesh_voxel = pv.voxelize(ore, density=reducedMesh.length / 200, check_surface=False)
+        p.add_mesh(reducedMesh, opacity=0.5, point_size=3,render_points_as_spheres=True)
+        #p.add_mesh(reducedMesh_voxel, opacity=0.2, color="black")
     p.show_grid()
     p.show(screenshot='city2.png')
 
