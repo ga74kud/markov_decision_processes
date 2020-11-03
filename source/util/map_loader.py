@@ -25,10 +25,11 @@ def preprocessing():
     x = da.from_array(compressed_data, chunks=(18000, 3))
     km = daml.KMeans(n_clusters=100)
     km.fit(x)
-    fig, ax = plt.subplots()
-    ax.scatter(x[:, 0], x[:, 1], marker='.', c=km.labels_[:],
+    if(0):
+        fig, ax = plt.subplots()
+        ax.scatter(x[:, 0], x[:, 1], marker='.', c=km.labels_[:],
                cmap='viridis', alpha=0.1)
-    plt.show()
+    #plt.show()
     newSelObject=pv.PolyData(compressed_data)
     pv.save_meshio("new.ply", newSelObject)
     output_file = open('file.bin', 'wb')
@@ -37,7 +38,7 @@ def preprocessing():
     output_file.close()
     data_segmentation = {"point": np.array(compressed_data), "label_to_names": None}
 
-    dict = {"data": compressed_data, "label": np.ones((np.size(compressed_data, 0), 1)), "scores": None}
+    dict = {"data": compressed_data, "label": np.ones((np.size(compressed_data, 0), 1)), "scores": None, "dask_data": x, "kmeans": km}
     write_pickle(dict, 'important')
 def write_pickle(data, file_name):
     file = open(file_name, 'wb')
@@ -46,42 +47,48 @@ def write_pickle(data, file_name):
 
 
 def show_semantic_dataset():
-    ref=classify_to_meta()
-    show_pyvista(ref)
+    ref, km=classify_to_meta()
+    show_pyvista(ref, km)
 
 def classify_to_meta():
     saved_data=open_preprocessed_data()
     data = saved_data["data"]
     semantic_label = saved_data["label"]
+    km = saved_data["kmeans"]
+    dask_data=saved_data["dask_data"]
     npdata=np.array([(data[i][0], data[i][1], data[i][2]) for i in range(0, len(data))])
     ref=np.array([(npdata[i,:], semantic_label[i]) for i in range(0, len(npdata)) if npdata[i,2]>-1000.0 and npdata[i,2]<1400])
     #D=sp.spatial.distance.cdist(ref, ref)
     #scores = saved_data["scores"]
-    return ref
+    daski=(km, dask_data)
+    return ref, daski
 def open_preprocessed_data():
-    file = open('important', 'rb')
+    file = open('/home/michael/PycharmProjects/voting_reinforcement_learning/source/util/important', 'rb')
     saved_data = cPickle.load(file)
     file.close()
     return saved_data
-
-def show_pyvista(ref):
-    data=ref[:,0]
-    semantic_label=ref[:,1]
+def find_data_by_idx(a, b, idx):
+    da.where(a==b[idx])
+def show_pyvista(ref, dask_input):
+    km=dask_input[0]
+    data=dask_input[1].compute()
     p = pv.Plotter()
-    single_classes = np.unique(semantic_label)
+    semantic_label = km.labels_
+    single_classes=np.unique(semantic_label.compute())
+
+
     #test=reducedMesh.compute_normals(inplace=True)  # this activates the normals as well
-
-    for wlt in range(0, len(single_classes)):
-        sel_idx=np.where(semantic_label==single_classes[wlt])
-        new_dat=np.array([(data[i][0], data[i][1], data[i][2]) for i in sel_idx[0]])
+    p.add_mesh(km.cluster_centers_, opacity=1, point_size=12, render_points_as_spheres=True, color="red")
+    for wlt in range(0, 100):
+        sel_idx=da.where(semantic_label==wlt)[0].compute()
+        new_dat=np.array([(data[i][0], data[i][1], data[i][2]) for i in sel_idx])
         reducedMesh = pv.PolyData(new_dat)
-        reducedMesh["elevation"] = new_dat[:,2]
-        volume = reducedMesh.delaunay_3d()
-
+        #reducedMesh["elevation"] = new_dat[:,2]
+        #volume = reducedMesh.delaunay_3d()
         # Extract some grade of the volume
         #ore = volume.threshold_percent(20)
         #reducedMesh_voxel = pv.voxelize(ore, density=reducedMesh.length / 200, check_surface=False)
-        p.add_mesh(reducedMesh, opacity=0.5, point_size=3,render_points_as_spheres=True)
+        p.add_mesh(reducedMesh, opacity=0.5, point_size=3,render_points_as_spheres=True, color=np.random.randn(3))
         #p.add_mesh(reducedMesh_voxel, opacity=0.2, color="black")
     p.show_grid()
     p.show(screenshot='city2.png')
@@ -96,6 +103,6 @@ def show_single():
     p.show(screenshot='red.png')
 
 if __name__ == '__main__':
-    if(1):
+    if(0):
         preprocessing()
     show_semantic_dataset()

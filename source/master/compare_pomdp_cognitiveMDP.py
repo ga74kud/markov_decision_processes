@@ -3,6 +3,7 @@ from source.util.map_handling import *
 from source.usecases.uc_pomdp.uc_pomdp_main import *
 from source.usecases.uc_cognitive_mdp.uc_cognitive_mdp_main import *
 from source.usecases.uc_scm.uc_scm_main import *
+from source.util.map_loader import *
 
 class service_handler(object):
     def __init__(self, **kwargs):
@@ -19,8 +20,10 @@ class service_handler(object):
         service_scmMDP(problem_type)
 
 if __name__ == '__main__':
+    show_semantic_dataset()
     init_position=np.array([0, 0])
     max_values=np.array([5, 5, .4, .4])
     obj=service_handler()
     #obj.get_reach_hull(init_position, max_values)
     obj.use_all_solvers()
+
