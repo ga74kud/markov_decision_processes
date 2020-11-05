@@ -1,6 +1,7 @@
 from source.util.map_handling import *
 from source.usecases.uc_pomdp.uc_pomdp_main import *
 from source.util.map_loader import *
+from source.util.visualizer import *
 
 class service_handler(object):
     def __init__(self, **kwargs):
@@ -12,7 +13,6 @@ class service_handler(object):
         return FILE_DIR
     def use_all_solvers(self):
         self.use_mdp()
-        b=2
     def use_cognitive_mdp(self):
         None
         # problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
@@ -30,11 +30,16 @@ class service_handler(object):
         return ideal_path
 
 if __name__ == '__main__':
+    obj_visual=service_visualizer()
+    obj_visual.init_plotter()
+    obj_visual.show_grid()
+
     obj_map=map_loader()
     ref, daski=obj_map.classify_to_meta()
     obj_map.save_semantic_kmeans(daski)
     obj_service=service_handler()
     obj_service.use_all_solvers()
-    obj_map.show_pyvista(ref, daski)
-    obj_map.show_plot()
+    queue_to_plot=obj_map.pointcloud_with_kmeans(ref, daski)
+    obj_visual.add_meshes_from_queue(queue_to_plot)
+    obj_visual.show_plot()
 

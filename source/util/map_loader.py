@@ -83,29 +83,34 @@ class map_loader(object):
         return saved_data
     def find_data_by_idx(self, a, b, idx):
         da.where(a==b[idx])
-    def show_pyvista(self, ref, dask_input):
+    def pointcloud_with_kmeans(self, ref, dask_input):
+        to_mesh=[]
         km=dask_input[0]
         data=dask_input[1].compute()
-        self.p = pv.Plotter()
+        #self.p = pv.Plotter()
         semantic_label = km.labels_
         single_classes=np.unique(semantic_label.compute())
-        self.p.add_mesh(km.cluster_centers_, opacity=1, point_size=12, render_points_as_spheres=True, color="red")
+        #self.p.add_mesh(km.cluster_centers_, opacity=1, point_size=12, render_points_as_spheres=True, color="red")
+        to_mesh.append({"actor_name": "kmeans_cluster_center", "to_plot": km.cluster_centers_, "opacity": 1,
+                        "point_size": 12, "render_points_as_spheres":True, "color":"red"})
         for wlt in range(0, 100):
             sel_idx=da.where(semantic_label==wlt)[0].compute()
             new_dat=np.array([(data[i][0], data[i][1], data[i][2]) for i in sel_idx])
             reducedMesh = pv.PolyData(new_dat)
-            self.p.add_mesh(reducedMesh, opacity=0.05, point_size=3,render_points_as_spheres=True, color=np.random.randn(3))
-        self.p.show_grid()
-    def show_plot(self):
-        self.p.show(screenshot='city2.png')
+            to_mesh.append({"actor_name": "poin_cloud_kmeans"+str(wlt), "to_plot": reducedMesh, "opacity": 0.05,
+                            "color": np.random.randn(3)})
+            #self.p.add_mesh(reducedMesh, opacity=0.05, point_size=3,render_points_as_spheres=True, color=np.random.randn(3))
+        #self.p.show_grid()
+        return to_mesh
+
     def show_single(self):
         input_file = "haltestelle.ply"
         cloud = PyntCloud.from_file(input_file)
         converted_triangle_mesh = cloud.to_instance("pyvista", mesh=True)
-        p = pv.Plotter()
-        p.add_mesh(converted_triangle_mesh, show_edges=True, color=np.random.rand(3), opacity=0.5)
-        p.show_grid()
-        p.show(screenshot='red.png')
+        #p = pv.Plotter()
+        #p.add_mesh(converted_triangle_mesh, show_edges=True, color=np.random.rand(3), opacity=0.5)
+        #p.show_grid()
+        #p.show(screenshot='red.png')
 
 if __name__ == '__main__':
     obj=map_loader()
