@@ -14,7 +14,8 @@ class service_POMDP(object):
         self.obj.set_solver(self.problem_type["type"])
     def start_mdp(self):
         R_dict={"24": 10}
-        self.obj.start_mdp_solver(R_dict)
+        ideal_path=self.obj.start_mdp_solver(R_dict)
+        return ideal_path
 
 if __name__ == '__main__':
     obj=service_POMDP()

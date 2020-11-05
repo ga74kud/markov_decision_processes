@@ -19,10 +19,6 @@ def preprocessing():
     converted_triangle_mesh = cloud.to_instance("pyvista", mesh=True)
     abc=np.array(converted_triangle_mesh.points)
     dataset = pd.DataFrame({'x': abc[:, 0], 'y': abc[:, 1], 'z': abc[:, 2]})
-
-    #fig, ax = plt.subplots()
-    #ax.scatter(x[::10000, 0], x[::10000, 1], marker='.', c=km.labels_[::10000],
-    #           cmap='viridis', alpha=0.25)
     bd=sp.spatial.distance.cdist(abc, [[35, 50, 0]])<20
 
     compressed_data=[abc[i] for i in range(0, len(abc)) if bd[i]==True]
@@ -74,8 +70,6 @@ def classify_to_meta():
     dask_data=saved_data["dask_data"]
     npdata=np.array([(data[i][0], data[i][1], data[i][2]) for i in range(0, len(data))])
     ref=np.array([(npdata[i,:], semantic_label[i]) for i in range(0, len(npdata)) if npdata[i,2]>-1000.0 and npdata[i,2]<1400])
-    #D=sp.spatial.distance.cdist(ref, ref)
-    #scores = saved_data["scores"]
     daski=(km, dask_data)
     return ref, daski
 def open_preprocessed_data():
