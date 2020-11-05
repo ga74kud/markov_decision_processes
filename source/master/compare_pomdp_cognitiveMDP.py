@@ -4,7 +4,12 @@ from source.util.map_loader import *
 
 class service_handler(object):
     def __init__(self, **kwargs):
-        None
+        self.json_paths={"kmeans_center": self.get_kmeans_center_json()}
+    def get_kmeans_center_json(self):
+        ROOT_DIR = "/home/michael/PycharmProjects/voting_reinforcement_learning/"
+        ENVIRONMENT_DIR = ROOT_DIR + "input/environment/"
+        FILE_DIR = ENVIRONMENT_DIR + "/a_puntigam_tram_station.json"
+        return FILE_DIR
     def use_all_solvers(self):
         self.use_mdp()
         b=2
@@ -20,7 +25,7 @@ class service_handler(object):
         problem={'type': 'pomdp', 'rewards': {'24': 10}}
         obj_pomdp=service_POMDP()
         obj_pomdp.set_problem_type(problem)
-        obj_pomdp.new_problem()
+        obj_pomdp.new_problem(self.json_paths["kmeans_center"])
         ideal_path=obj_pomdp.start_mdp()
         return ideal_path
 

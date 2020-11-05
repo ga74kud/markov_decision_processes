@@ -6,9 +6,9 @@ class problem(object):
     def __init__(self, **kwargs):
         self.obj_manifold=None
         self.obj_solver=None
-    def set_manifold(self):
+    def set_manifold(self, FILE_DIR):
         self.obj_manifold=manifold()
-        self.obj_manifold.set_environment_by_json()
+        self.obj_manifold.set_environment_by_json(FILE_DIR)
 
     def set_solver(self, type):
         if(type=='pomdp'):
