@@ -8,10 +8,14 @@ class service_handler(object):
     def use_all_solvers(self):
         self.use_mdp()
         b=2
-        #problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
-        #service_CognitiveMDP(problem_type)
-        #problem_type = {'type': 'scm'}
-        #service_scmMDP(problem_type)
+    def use_cognitive_mdp(self):
+        None
+        # problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
+        # service_CognitiveMDP(problem_type)
+    def use_scm(self):
+        None
+        # problem_type = {'type': 'scm'}
+        # service_scmMDP(problem_type)
     def use_mdp(self):
         problem={'type': 'pomdp', 'rewards': {'24': 10}}
         obj_pomdp=service_POMDP()
