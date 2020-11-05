@@ -12,10 +12,7 @@ class manifold(object):
             None
         else:
             self.manifold['Topology'].append(new_candidate)
-    def set_environment_by_json(self):
-        ROOT_DIR = "/home/michael/PycharmProjects/voting_reinforcement_learning/"
-        ENVIRONMENT_DIR = ROOT_DIR + "input/environment/"
-        FILE_DIR = ENVIRONMENT_DIR + "/data.json"
+    def set_environment_by_json(self, FILE_DIR):
         f = open(FILE_DIR, "r")
         data = json.loads(f.read())
         self.manifold['amount_states']=len(data['points'])

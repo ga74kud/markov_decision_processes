@@ -8,9 +8,9 @@ class service_POMDP(object):
     def set_problem_type(self, problem_type):
         self.problem_type["type"]=problem_type['type']
         self.problem_type["rewards"]=problem_type['rewards']
-    def new_problem(self):
+    def new_problem(self, FILE_DIR):
         self.obj=problem()
-        self.obj.set_manifold()
+        self.obj.set_manifold(FILE_DIR)
         self.obj.set_solver(self.problem_type["type"])
     def start_mdp(self):
         R_dict={"24": 10}

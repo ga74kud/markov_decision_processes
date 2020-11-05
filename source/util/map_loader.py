@@ -57,7 +57,7 @@ class map_loader(object):
     def save_semantic_kmeans(self, km):
         ROOT_DIR = "/home/michael/PycharmProjects/voting_reinforcement_learning/"
         ENVIRONMENT_DIR = ROOT_DIR + "input/environment/"
-        FILE_DIR=ENVIRONMENT_DIR+"/data.json"
+        FILE_DIR=ENVIRONMENT_DIR+"/a_puntigam_tram_station.json"
         abc=list(km[0].cluster_centers_)
         d=dict()
         for a,b in enumerate(abc):
