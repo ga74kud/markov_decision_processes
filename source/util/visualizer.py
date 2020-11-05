@@ -10,7 +10,10 @@ class service_visualizer(object):
         self.add_queue(queue_to_plot["point_cloud_kmeans"])
     def add_queue(self, queue):
         for wlt in range(0, len(queue)):
-            self.p.add_mesh(queue[wlt]["to_plot"], opacity=queue[wlt]["opacity"])
+            if(queue[wlt]["highlighted"]==True):
+                self.p.add_mesh(queue[wlt]["to_plot"], opacity=queue[wlt]["opacity"], color="green")
+            else:
+                self.p.add_mesh(queue[wlt]["to_plot"], opacity=queue[wlt]["opacity"])
     def show_grid(self):
         self.p.show_grid()
     def show_plot(self):
