@@ -5,7 +5,7 @@ class manifold(object):
     def __init__(self, **kwargs):
         self.manifold= {'X': None, 'Topology': [], 'Atlas': None, 'Policy': None, 'Adjacency': None, 'amount_states': None,
                         'Actions': {}, 'Position': None}
-        self.param={'option_topology': 'const_neigh', 'neighbour_distance': 1.2}
+        self.param={'option_topology': 'const_neigh', 'neighbour_distance': 12}
 
     def check_new_cand(self, new_candidate):
         if (new_candidate in self.manifold['Topology']):
@@ -13,7 +13,10 @@ class manifold(object):
         else:
             self.manifold['Topology'].append(new_candidate)
     def set_environment_by_json(self):
-        f = open('../../input/old/reachable_meta_states.json', "r")
+        ROOT_DIR = "/home/michael/PycharmProjects/voting_reinforcement_learning/"
+        ENVIRONMENT_DIR = ROOT_DIR + "input/environment/"
+        FILE_DIR = ENVIRONMENT_DIR + "/data.json"
+        f = open(FILE_DIR, "r")
         data = json.loads(f.read())
         self.manifold['amount_states']=len(data['points'])
         self.manifold['X']=[qrt for qrt in data['points']]

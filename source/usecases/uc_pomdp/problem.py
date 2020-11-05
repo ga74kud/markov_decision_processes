@@ -22,7 +22,7 @@ class problem(object):
         self.obj_solver.set_action(self.obj_manifold.manifold["Actions"])
         self.obj_solver.set_init_pi()
         self.obj_solver.set_T(self.obj_manifold.get_probability_nodes())
-    def start_mdp(self, R_dict):
+    def start_mdp_solver(self, R_dict):
         self.obj_solver.set_R(R_dict)
         self.obj_solver.start_mdp()
         self.obj_solver.get_trajectory()

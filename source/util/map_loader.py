@@ -9,6 +9,10 @@ import dask.array as da
 import dask_ml.cluster as daml
 from dask.distributed import Client
 import matplotlib.pyplot as plt
+import json
+import os
+import sys
+
 def preprocessing():
     input_file="/home/michael/ros/vifware_data_puntigam/pcd/puntigam_v1.pcd"
     cloud = PyntCloud.from_file(input_file)
@@ -46,9 +50,21 @@ def write_pickle(data, file_name):
     file.close()
 
 
-def show_semantic_dataset():
+def load_semantic_dataset():
     ref, km=classify_to_meta()
-    show_pyvista(ref, km)
+    return km
+
+def save_semantic_kmeans(km):
+    ROOT_DIR = "/home/michael/PycharmProjects/voting_reinforcement_learning/"
+    ENVIRONMENT_DIR = ROOT_DIR + "input/environment/"
+    FILE_DIR=ENVIRONMENT_DIR+"/data.json"
+    abc=list(km[0].cluster_centers_)
+    d=dict()
+    for a,b in enumerate(abc):
+        d['%03d' % a]=b.tolist()
+    data_input={"points": d}
+    with open(FILE_DIR, 'w') as f:
+        json.dump(data_input, f)
 
 def classify_to_meta():
     saved_data=open_preprocessed_data()
@@ -75,21 +91,12 @@ def show_pyvista(ref, dask_input):
     p = pv.Plotter()
     semantic_label = km.labels_
     single_classes=np.unique(semantic_label.compute())
-
-
-    #test=reducedMesh.compute_normals(inplace=True)  # this activates the normals as well
     p.add_mesh(km.cluster_centers_, opacity=1, point_size=12, render_points_as_spheres=True, color="red")
     for wlt in range(0, 100):
         sel_idx=da.where(semantic_label==wlt)[0].compute()
         new_dat=np.array([(data[i][0], data[i][1], data[i][2]) for i in sel_idx])
         reducedMesh = pv.PolyData(new_dat)
-        #reducedMesh["elevation"] = new_dat[:,2]
-        #volume = reducedMesh.delaunay_3d()
-        # Extract some grade of the volume
-        #ore = volume.threshold_percent(20)
-        #reducedMesh_voxel = pv.voxelize(ore, density=reducedMesh.length / 200, check_surface=False)
         p.add_mesh(reducedMesh, opacity=0.5, point_size=3,render_points_as_spheres=True, color=np.random.randn(3))
-        #p.add_mesh(reducedMesh_voxel, opacity=0.2, color="black")
     p.show_grid()
     p.show(screenshot='city2.png')
 
