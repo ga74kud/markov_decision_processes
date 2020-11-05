@@ -28,6 +28,7 @@ class service_handler(object):
         obj_pomdp.set_problem_type(problem)
         obj_pomdp.new_problem(self.json_paths["kmeans_center"])
         ideal_path=obj_pomdp.start_mdp()
+
         return ideal_path
 
 if __name__ == '__main__':

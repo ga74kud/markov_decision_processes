@@ -92,13 +92,17 @@ class map_loader(object):
         #self.p.add_mesh(km.cluster_centers_, opacity=1, point_size=12, render_points_as_spheres=True, color="red")
 
         for wlt in range(0, 100):
-            to_mesh["km_center"].append({"actor_name": str(wlt), "to_plot": km.cluster_centers_[wlt],
-                                         "opacity": 1, "point_size": 12, "render_points_as_spheres":True, "color":"red"})
+
             sel_idx=da.where(semantic_label==wlt)[0].compute()
             new_dat=np.array([(data[i][0], data[i][1], data[i][2]) for i in sel_idx])
             reducedMesh = pv.PolyData(new_dat)
+
+            to_mesh["km_center"].append({"actor_name": str(wlt), "to_plot": km.cluster_centers_[wlt],
+                                         "opacity": 1, "point_size": 12, "render_points_as_spheres": True,
+                                         "color": "red",
+                                         "highlighted": False})
             to_mesh["point_cloud_kmeans"].append({"actor_name": str(wlt), "to_plot": reducedMesh,
-                                                  "opacity": 0.05, "color": np.random.randn(3)})
+                                                  "opacity": 0.05, "color": np.random.randn(3), "highlighted": False})
             #self.p.add_mesh(reducedMesh, opacity=0.05, point_size=3,render_points_as_spheres=True, color=np.random.randn(3))
         #self.p.show_grid()
         return to_mesh
