@@ -18,9 +18,11 @@ class service_handler(object):
         #service_scmMDP(problem_type)
 
 if __name__ == '__main__':
-    ref, daski=classify_to_meta()
-    save_semantic_kmeans(daski)
-    obj=service_handler()
-    obj.use_all_solvers()
-    show_pyvista(ref, daski)
+    obj_map=map_loader()
+    ref, daski=obj_map.classify_to_meta()
+    obj_map.save_semantic_kmeans(daski)
+    obj_service=service_handler()
+    obj_service.use_all_solvers()
+    obj_map.show_pyvista(ref, daski)
+    obj_map.show_plot()
 
