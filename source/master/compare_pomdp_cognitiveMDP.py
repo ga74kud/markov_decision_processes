@@ -13,6 +13,7 @@ class service_handler(object):
         return FILE_DIR
     def use_all_solvers(self):
         optimal_path_mdp=self.use_mdp()
+        return optimal_path_mdp
     def use_cognitive_mdp(self):
         None
         # problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
@@ -38,8 +39,8 @@ if __name__ == '__main__':
     ref, daski=obj_map.classify_to_meta()
     obj_map.save_semantic_kmeans(daski)
     obj_service=service_handler()
-    obj_service.use_all_solvers()
-    queue_to_plot=obj_map.pointcloud_with_kmeans(ref, daski)
+    optimal_mdp=obj_service.use_all_solvers()
+    queue_to_plot=obj_map.pointcloud_with_kmeans(ref, daski, optimal_mdp)
 
     obj_visual.add_meshes_from_queue(queue_to_plot)
     obj_visual.show_plot()

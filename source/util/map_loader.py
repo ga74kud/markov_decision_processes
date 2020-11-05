@@ -83,8 +83,8 @@ class map_loader(object):
         return saved_data
     def find_data_by_idx(self, a, b, idx):
         da.where(a==b[idx])
-    def pointcloud_with_kmeans(self, ref, dask_input):
-        to_mesh=[]
+    def pointcloud_with_kmeans(self, ref, dask_input, optimal_mdp):
+        to_mesh= {"km_center": [], "point_cloud_kmeans": []}
         km=dask_input[0]
         data=dask_input[1].compute()
         semantic_label = km.labels_
@@ -92,13 +92,13 @@ class map_loader(object):
         #self.p.add_mesh(km.cluster_centers_, opacity=1, point_size=12, render_points_as_spheres=True, color="red")
 
         for wlt in range(0, 100):
-            to_mesh.append({"actor_name": "km_center"+str(wlt), "to_plot": km.cluster_centers_[wlt], "opacity": 1,
-                        "point_size": 12, "render_points_as_spheres":True, "color":"red"})
+            to_mesh["km_center"].append({"actor_name": str(wlt), "to_plot": km.cluster_centers_[wlt],
+                                         "opacity": 1, "point_size": 12, "render_points_as_spheres":True, "color":"red"})
             sel_idx=da.where(semantic_label==wlt)[0].compute()
             new_dat=np.array([(data[i][0], data[i][1], data[i][2]) for i in sel_idx])
             reducedMesh = pv.PolyData(new_dat)
-            to_mesh.append({"actor_name": "poin_cloud_kmeans"+str(wlt), "to_plot": reducedMesh, "opacity": 0.05,
-                            "color": np.random.randn(3)})
+            to_mesh["point_cloud_kmeans"].append({"actor_name": str(wlt), "to_plot": reducedMesh,
+                                                  "opacity": 0.05, "color": np.random.randn(3)})
             #self.p.add_mesh(reducedMesh, opacity=0.05, point_size=3,render_points_as_spheres=True, color=np.random.randn(3))
         #self.p.show_grid()
         return to_mesh
