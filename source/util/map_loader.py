@@ -87,13 +87,13 @@ class map_loader(object):
         to_mesh=[]
         km=dask_input[0]
         data=dask_input[1].compute()
-        #self.p = pv.Plotter()
         semantic_label = km.labels_
         single_classes=np.unique(semantic_label.compute())
         #self.p.add_mesh(km.cluster_centers_, opacity=1, point_size=12, render_points_as_spheres=True, color="red")
-        to_mesh.append({"actor_name": "kmeans_cluster_center", "to_plot": km.cluster_centers_, "opacity": 1,
-                        "point_size": 12, "render_points_as_spheres":True, "color":"red"})
+
         for wlt in range(0, 100):
+            to_mesh.append({"actor_name": "km_center"+str(wlt), "to_plot": km.cluster_centers_[wlt], "opacity": 1,
+                        "point_size": 12, "render_points_as_spheres":True, "color":"red"})
             sel_idx=da.where(semantic_label==wlt)[0].compute()
             new_dat=np.array([(data[i][0], data[i][1], data[i][2]) for i in sel_idx])
             reducedMesh = pv.PolyData(new_dat)
