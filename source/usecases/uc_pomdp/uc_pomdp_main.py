@@ -15,6 +15,7 @@ class service_POMDP(object):
     def start_mdp(self):
         R_dict={"24": 10}
         ideal_path=self.obj.start_mdp_solver(R_dict)
+        ideal_path = np.array([np.int(ideal_path[i]) for i in range(0, len(ideal_path))])
         return ideal_path
 
 if __name__ == '__main__':
