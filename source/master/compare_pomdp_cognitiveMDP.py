@@ -12,7 +12,7 @@ class service_handler(object):
         FILE_DIR = ENVIRONMENT_DIR + "/a_puntigam_tram_station.json"
         return FILE_DIR
     def use_all_solvers(self):
-        self.use_mdp()
+        optimal_path_mdp=self.use_mdp()
     def use_cognitive_mdp(self):
         None
         # problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
@@ -40,6 +40,7 @@ if __name__ == '__main__':
     obj_service=service_handler()
     obj_service.use_all_solvers()
     queue_to_plot=obj_map.pointcloud_with_kmeans(ref, daski)
+
     obj_visual.add_meshes_from_queue(queue_to_plot)
     obj_visual.show_plot()
 
