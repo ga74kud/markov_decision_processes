@@ -17,15 +17,16 @@ import sys
 class map_loader(object):
     def __init__(self, **kwargs):
         None
-    def preprocessing(self):
-        input_file="/home/michael/ros/vifware_data_puntigam/pcd/puntigam_v1.pcd"
+    def preprocessing(self, input_file):
+        #input_file="/home/michael/ros/vifware_data_puntigam/pcd/puntigam_v1.pcd"
         cloud = PyntCloud.from_file(input_file)
         converted_triangle_mesh = cloud.to_instance("pyvista", mesh=True)
         abc=np.array(converted_triangle_mesh.points)
         dataset = pd.DataFrame({'x': abc[:, 0], 'y': abc[:, 1], 'z': abc[:, 2]})
-        bd=sp.spatial.distance.cdist(abc, [[35, 50, 0]])<20
+        #bd=sp.spatial.distance.cdist(abc, [[35, 50, 0]])<20
 
-        compressed_data=[abc[i] for i in range(0, len(abc)) if bd[i]==True]
+        #compressed_data=[abc[i] for i in range(0, len(abc)) if bd[i]==True]
+        compressed_data=abc
         x = da.from_array(compressed_data, chunks=(18000, 3))
         km = daml.KMeans(n_clusters=100)
         km.fit(x)
@@ -43,7 +44,7 @@ class map_loader(object):
         data_segmentation = {"point": np.array(compressed_data), "label_to_names": None}
 
         dict = {"data": compressed_data, "label": np.ones((np.size(compressed_data, 0), 1)), "scores": None, "dask_data": x, "kmeans": km}
-        write_pickle(dict, 'important')
+        self.write_pickle(dict, 'important')
     def write_pickle(self, data, file_name):
         file = open(file_name, 'wb')
         cPickle.dump(data, file)
@@ -122,6 +123,7 @@ class map_loader(object):
 
 if __name__ == '__main__':
     obj=map_loader()
-    if(0):
-        obj.preprocessing()
+    input_file="/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
+    if(1):
+        obj.preprocessing(input_file)
     obj.show_semantic_dataset()
