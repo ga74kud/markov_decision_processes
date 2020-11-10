@@ -126,4 +126,4 @@ if __name__ == '__main__':
     input_file="/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
     if(1):
         obj.preprocessing(input_file)
-    obj.show_semantic_dataset()
+    #obj.show_semantic_dataset()
