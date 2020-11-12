@@ -23,3 +23,5 @@ tmp/
 _site*
 *.bin
 tmp/
+important
+new.ply

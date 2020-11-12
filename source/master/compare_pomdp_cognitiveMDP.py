@@ -36,7 +36,10 @@ if __name__ == '__main__':
     obj_visual.init_plotter()
     obj_visual.show_grid()
 
+    input_file="/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
     obj_map=map_loader()
+    if(0):
+        obj_map.preprocessing(input_file)
     ref, daski=obj_map.classify_to_meta()
     obj_map.save_semantic_kmeans(daski)
     obj_service=service_handler()

@@ -78,7 +78,7 @@ class map_loader(object):
         daski=(km, dask_data)
         return ref, daski
     def open_preprocessed_data(self):
-        file = open('/home/michael/PycharmProjects/voting_reinforcement_learning/source/util/important', 'rb')
+        file = open('/home/michael/PycharmProjects/voting_reinforcement_learning/tmp/important', 'rb')
         saved_data = cPickle.load(file)
         file.close()
         return saved_data
