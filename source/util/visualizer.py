@@ -5,15 +5,13 @@ class service_visualizer(object):
         self.p=None
     def init_plotter(self):
         self.p = pv.Plotter()
-    def add_meshes_from_queue(self, queue_to_plot):
-        self.add_queue(queue_to_plot["km_center"])
-        self.add_queue(queue_to_plot["point_cloud_kmeans"])
     def add_queue(self, queue):
         for wlt in range(0, len(queue)):
-            if(queue[wlt]["highlighted"]==True):
-                self.p.add_mesh(queue[wlt]["to_plot"], opacity=queue[wlt]["opacity"], color="green")
-            else:
-                self.p.add_mesh(queue[wlt]["to_plot"], opacity=queue[wlt]["opacity"])
+            to_plot=queue[wlt]
+            a=pv.PolyData(to_plot["to_plot"])
+            b=to_plot["opacity"]
+            c=to_plot["color"]
+            self.p.add_mesh(a, opacity=b, color=c)
     def show_grid(self):
         self.p.show_grid()
     def show_plot(self):

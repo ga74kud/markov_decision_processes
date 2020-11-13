@@ -1,50 +1,47 @@
 import pyvista as pv
 from pyntcloud import PyntCloud
 import numpy as np
-import scipy as sp
 import _pickle as cPickle
 from array import array
 import pandas as pd
 import dask.array as da
 import dask_ml.cluster as daml
-from dask.distributed import Client
 import matplotlib.pyplot as plt
+import source.util.data_input_loader as util_io
 import json
-import os
-import sys
-
 
 class map_loader(object):
     def __init__(self, **kwargs):
         None
-    def preprocessing(self, input_file):
-        #input_file="/home/michael/ros/vifware_data_puntigam/pcd/puntigam_v1.pcd"
+
+    def preprocessing_pcd(self, input_file):
         cloud = PyntCloud.from_file(input_file)
         converted_triangle_mesh = cloud.to_instance("pyvista", mesh=True)
-        abc=np.array(converted_triangle_mesh.points)
+        abc = np.array(converted_triangle_mesh.points)
         dataset = pd.DataFrame({'x': abc[:, 0], 'y': abc[:, 1], 'z': abc[:, 2]})
-        #bd=sp.spatial.distance.cdist(abc, [[35, 50, 0]])<20
-
-        #compressed_data=[abc[i] for i in range(0, len(abc)) if bd[i]==True]
-        compressed_data=abc
+        compressed_data = abc
         x = da.from_array(compressed_data, chunks=(18000, 3))
         km = daml.KMeans(n_clusters=100)
         km.fit(x)
-        if(0):
+        if (0):
             fig, ax = plt.subplots()
             ax.scatter(x[:, 0], x[:, 1], marker='.', c=km.labels_[:],
-               cmap='viridis', alpha=0.1)
-        #plt.show()
-        newSelObject=pv.PolyData(compressed_data)
+                       cmap='viridis', alpha=0.1)
+        # plt.show()
+        newSelObject = pv.PolyData(compressed_data)
         pv.save_meshio("new.ply", newSelObject)
         output_file = open('file.bin', 'wb')
         float_array = array('d', np.random.rand(3))
         float_array.tofile(output_file)
         output_file.close()
-        data_segmentation = {"point": np.array(compressed_data), "label_to_names": None}
-
-        dict = {"data": compressed_data, "label": np.ones((np.size(compressed_data, 0), 1)), "scores": None, "dask_data": x, "kmeans": km}
-        self.write_pickle(dict, 'important')
+    def preprocessing_json(self, input_file):
+        compressed_data = util_io.get_from_json(input_file)
+        compressed_data=util_io.read_json_dictionary(compressed_data['points'])
+        return compressed_data
+    def preprocessing(self, input_file):
+        if(input_file[-4:]=="json"):
+            compressed_data=self.preprocessing_json(input_file)
+        return compressed_data
     def write_pickle(self, data, file_name):
         file = open(file_name, 'wb')
         cPickle.dump(data, file)

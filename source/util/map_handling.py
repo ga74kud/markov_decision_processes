@@ -7,6 +7,7 @@ from sympy.stats import *
 from sympy.utilities.lambdify import *
 from scipy.spatial import distance
 
+
 class service_map_handling(object):
     def __init__(self, **kwargs):
         None
@@ -33,7 +34,6 @@ class service_map_handling(object):
         y_grid=np.linspace(0, 5, 20)
         X,Y=np.meshgrid(x_grid,y_grid)
         P=[[[np.ravel(X)[i], np.ravel(Y)[i]]] for i in range(0, len(np.ravel(X)))]
-        btc=1
     def spline_of_points(self, data, spline_degree, amount_points):
         DataPointsDomain = np.linspace(0, 1, len(data))
         DataPointsRangeX = [i[0] for i in data]
@@ -43,8 +43,6 @@ class service_map_handling(object):
              sp.interpolating_spline(spline_degree, x, DataPointsDomain, DataPointsRangeY)]
         val=[[f[0].subs({x:i}), f[1].subs({x:i})] for i in np.linspace(0, 1, amount_points)]
         return val
-    def reachability(self, init_position, max_values):
-        None
 
 
 if __name__ == '__main__':
