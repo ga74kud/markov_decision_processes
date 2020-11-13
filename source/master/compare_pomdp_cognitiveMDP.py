@@ -16,15 +16,13 @@ class service_handler(object):
         optimal_path_mdp=self.use_mdp(input_file)
         return optimal_path_mdp
     def use_cognitive_mdp(self):
-        None
-        # problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
-        # service_CognitiveMDP(problem_type)
+        problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
+        self.service_CognitiveMDP(problem_type)
     def use_scm(self):
-        None
-        # problem_type = {'type': 'scm'}
-        # service_scmMDP(problem_type)
+        problem_type = {'type': 'scm'}
+        self.service_scmMDP(problem_type)
     def use_mdp(self, input_file):
-        problem={'type': 'pomdp', 'rewards': {'24': 10}}
+        problem={'type': 'pomdp', 'rewards': {'24': 1000}}
         obj_pomdp=service_POMDP()
         obj_pomdp.set_problem_type(problem)
         obj_pomdp.new_problem(input_file)

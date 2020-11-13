@@ -13,18 +13,20 @@ def map_for_queue(map):
     queue_list = []
     for idx, wlt in enumerate(map):
         queue_list.append({"actor_name": "map"+str(idx), "to_plot": wlt,
-                           "opacity": .6, "point_size": 6, "render_points_as_spheres": True, "color": "red"})
+                           "opacity": .6, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
 def trajectory_for_queue(map, trajectory):
     queue_list=[]
     cmap=get_colormap("cividis")
     col_idx=np.floor(np.linspace(0, np.size(cmap, 0)-1, len(trajectory)))
+    ball_size=np.linspace(12, 20, len(trajectory))
     for wlt in range(0, len(trajectory)):
         act_idx=trajectory[wlt]
         new_point=map[act_idx, :]
         crow=np.int(col_idx[wlt])
-        queue_list.append({"actor_name": "mdp_traj"+str(wlt), "to_plot": new_point, "opacity": 1, "point_size": 12, "color": cmap[crow,:]})
+        queue_list.append({"actor_name": "mdp_traj"+str(wlt), "to_plot": new_point, "opacity": 1,
+                           "render_points_as_spheres": True, "point_size": ball_size[wlt], "color": cmap[crow,:]})
     return queue_list
 
 def get_colormap(colmap):

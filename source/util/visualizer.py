@@ -12,7 +12,8 @@ class service_visualizer(object):
             b=to_plot["opacity"]
             c = to_plot["color"]
             d = to_plot["point_size"]
-            self.p.add_mesh(a, opacity=b, color=c, point_size=d)
+            e = to_plot["render_points_as_spheres"]
+            self.p.add_mesh(a, opacity=b, color=c, point_size=d, render_points_as_spheres=e)
     def show_grid(self):
         self.p.show_grid()
     def show_plot(self):
