@@ -10,8 +10,9 @@ class service_visualizer(object):
             to_plot=queue[wlt]
             a=pv.PolyData(to_plot["to_plot"])
             b=to_plot["opacity"]
-            c=to_plot["color"]
-            self.p.add_mesh(a, opacity=b, color=c)
+            c = to_plot["color"]
+            d = to_plot["point_size"]
+            self.p.add_mesh(a, opacity=b, color=c, point_size=d)
     def show_grid(self):
         self.p.show_grid()
     def show_plot(self):

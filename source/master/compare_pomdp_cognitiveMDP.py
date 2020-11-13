@@ -2,6 +2,7 @@ from source.usecases.uc_pomdp.uc_pomdp_main import *
 from source.util.map_loader import *
 from source.util.visualizer import *
 import source.util.data_input_loader as util_io
+from collections import OrderedDict
 
 class service_handler(object):
     def __init__(self, **kwargs):
@@ -35,9 +36,13 @@ if __name__ == '__main__':
     # which environment model provided
     input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
     input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/reachable_meta_states.json"
+
+    # object from visualizer class
     obj_visual = service_visualizer()
     obj_visual.init_plotter()
     obj_visual.show_grid()
+
+    cmap=np.array(plt.get_cmap("plasma").colors)
 
     # object from environment class
     obj_map=map_loader()
@@ -64,7 +69,7 @@ if __name__ == '__main__':
     #all_queue_to_plot.append(new_queue)
 
 
-    # object from visualizer class
+
 
     obj_visual.show_plot()
 
