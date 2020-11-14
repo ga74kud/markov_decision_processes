@@ -2,6 +2,7 @@ from source.usecases.uc_pomdp.uc_pomdp_main import *
 from source.util.map_loader import *
 from source.util.visualizer import *
 import source.util.data_input_loader as util_io
+from input.get_data import *
 from collections import OrderedDict
 
 class service_handler(object):
@@ -31,12 +32,10 @@ class service_handler(object):
         return ideal_path
 
 if __name__ == '__main__':
-    # which environment model provided
-    input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
-    input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/reachable_meta_states.json"
-    #input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/regular_grid.json"
-
-
+    # object from data handler
+    obj_data_handler=service_data()
+    input_file=obj_data_handler.get_input_file()
+    obj_data=service_data()
     # object from visualizer class
     obj_visual = service_visualizer()
     obj_visual.init_plotter()
