@@ -36,7 +36,10 @@ class map_loader(object):
         output_file.close()
     def preprocessing_json(self, input_file):
         compressed_data = util_io.get_from_json(input_file)
-        compressed_data=util_io.read_json_dictionary(compressed_data['points'])
+        if(compressed_data["type"]=="point_list"):
+            compressed_data=util_io.read_json_point_list(compressed_data['points'])
+        elif(compressed_data["type"]=="regular_grid"):
+            compressed_data = util_io.read_json_regular_grid(compressed_data['points'])
         return compressed_data
     def preprocessing(self, input_file):
         if(input_file[-4:]=="json"):

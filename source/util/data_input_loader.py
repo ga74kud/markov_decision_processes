@@ -6,7 +6,7 @@ def get_from_json(input_file):
     f = open(input_file, "r")
     data = json.loads(f.read())
     return data
-def read_json_dictionary(input_dictionary):
+def read_json_point_list(input_dictionary):
     return np.array([i for i in input_dictionary.values()])
 
 def map_for_queue(map):

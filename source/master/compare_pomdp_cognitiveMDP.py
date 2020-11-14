@@ -34,6 +34,8 @@ if __name__ == '__main__':
     # which environment model provided
     input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
     input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/reachable_meta_states.json"
+    #input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/regular_grid.json"
+
 
     # object from visualizer class
     obj_visual = service_visualizer()
