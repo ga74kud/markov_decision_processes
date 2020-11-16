@@ -18,7 +18,7 @@ class service_handler(object):
         problem_type = {'type': 'scm'}
         self.service_scmMDP(problem_type)
     def use_mdp(self, input_file):
-        problem={'type': 'mdp', 'rewards': {'300': 5642}}
+        problem={'type': 'mdp', 'rewards': {'316': 100000}}
         obj_mdp=service_MDP()
         obj_mdp.set_problem_type(problem)
         obj_mdp.new_problem(input_file)
