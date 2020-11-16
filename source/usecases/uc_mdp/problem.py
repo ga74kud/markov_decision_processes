@@ -24,7 +24,7 @@ class problem(object):
         R_dict=problem["rewards"]
         self.obj_solver.set_R(R_dict)
         self.obj_solver.start_mdp()
-        ideal_path=self.obj_solver.get_trajectory()
+        ideal_path=self.obj_solver.get_trajectory(R_dict)
         return ideal_path
 
 if __name__ == '__main__':

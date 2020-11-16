@@ -3,5 +3,8 @@
   {
     "xgrid_dim": 20,
     "ygrid_dim": 20
+  },
+  "mdp": {
+    "limit_optimal_traj": 40
   }
 }

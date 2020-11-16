@@ -7,13 +7,13 @@ class mdp(object):
                    'action': None, #Action set
                    'adjacency_list': None, #Topology
                    'R': None, #Rewards
-                   'gamma': 0.95, #discount factor
+                   'gamma': 0.7, #discount factor
                    'P': None #Positions
                     }
         self.mdp_dict['T']=None
         self.mdp_dict['pi']=None
         self.mdp_dict['U'] = None
-        self.param = {'n_optimal_trajectory': 40, # optimal trajectory
+        self.param = {'n_optimal_trajectory': 40000, # optimal trajectory
                       }
     def set_position_list(self, position):
         self.mdp_dict['P']=position
@@ -140,8 +140,9 @@ class mdp(object):
         visual_style = {}
         visual_style["edge_curved"] = False
         ig.plot(g, layout=layout, **visual_style)
-    def get_trajectory(self):
+    def get_trajectory(self, R_dict):
         start_node=self.mdp_dict['S'][0]
+        r_target_values=list(R_dict.keys())
         ideal_path=[]
         ideal_path.append(str(start_node))
         policy=self.mdp_dict['pi']
@@ -150,6 +151,8 @@ class mdp(object):
             act_node=ideal_path[-1]
             action=policy[act_node]
             if(count>self.param['n_optimal_trajectory']):
+                break
+            if(act_node in r_target_values):
                 break
             else:
                 count+=1
