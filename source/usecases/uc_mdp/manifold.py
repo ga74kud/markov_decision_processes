@@ -5,7 +5,7 @@ class manifold(object):
     def __init__(self, **kwargs):
         self.manifold= {'X': None, 'Topology': [], 'Atlas': None, 'Policy': None, 'Adjacency': None, 'amount_states': None,
                         'Actions': {}, 'Position': None}
-        self.param={'option_topology': 'const_neigh', 'neighbour_distance': 12}
+        self.param={'option_topology': 'const_neigh', 'amount_neigh': 4, 'neighbour_distance': 1.2}
 
     def check_new_cand(self, new_candidate):
         if (new_candidate in self.manifold['Topology']):
@@ -19,9 +19,11 @@ class manifold(object):
         self.manifold['X']=[qrt for qrt in data['points']]
         if('topology' in data):
             self.manifold['Topology']=[tuple(data['topology'][qrt]) for qrt in data['topology']]
-        elif(self.param['option_topology']=='norm2 distance'):
+        elif(self.param['option_topology']=='norm2distance'):
+            # fixed by distance
             self.get_topology_by_norm2_distance(data['points'])
         elif (self.param['option_topology'] == 'const_neigh'):
+            #fixed amount of neighbours
             self.get_topology_by_neighbors(data['points'])
         self.get_adjacency(self.manifold['amount_states'])
         self.set_neighbour_actions()
@@ -36,7 +38,7 @@ class manifold(object):
             dbd=np.argsort(d[:, idx])
             my_idx=abc_keys[idx]
             self.manifold['Topology'].append((my_idx, my_idx))
-            for st_idx in range(1, 4):
+            for st_idx in range(1, self.param['amount_neigh']):
                 st=dbd[st_idx]
                 self.manifold['Topology'].append((my_idx, abc_keys[st]))
                 self.manifold['Topology'].append((abc_keys[st], my_idx))
