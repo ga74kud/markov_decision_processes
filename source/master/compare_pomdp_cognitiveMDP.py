@@ -1,4 +1,4 @@
-from source.usecases.uc_pomdp.uc_pomdp_main import *
+from source.usecases.uc_mdp.uc_mdp_main import *
 from source.util.map_loader import *
 from source.util.visualizer import *
 import source.util.data_input_loader as util_io
@@ -8,11 +8,6 @@ from collections import OrderedDict
 class service_handler(object):
     def __init__(self, **kwargs):
         None
-    def get_kmeans_center_json(self):
-        ROOT_DIR = "/home/michael/PycharmProjects/voting_reinforcement_learning/"
-        ENVIRONMENT_DIR = ROOT_DIR + "input/environment/"
-        FILE_DIR = ENVIRONMENT_DIR + "/a_puntigam_tram_station.json"
-        return FILE_DIR
     def use_all_solvers(self, input_file):
         optimal_path_mdp=self.use_mdp(input_file)
         return optimal_path_mdp
@@ -23,11 +18,11 @@ class service_handler(object):
         problem_type = {'type': 'scm'}
         self.service_scmMDP(problem_type)
     def use_mdp(self, input_file):
-        problem={'type': 'pomdp', 'rewards': {'24': 1000}}
-        obj_pomdp=service_POMDP()
-        obj_pomdp.set_problem_type(problem)
-        obj_pomdp.new_problem(input_file)
-        ideal_path=obj_pomdp.start_mdp()
+        problem={'type': 'mdp', 'rewards': {'300': 5642}}
+        obj_mdp=service_MDP()
+        obj_mdp.set_problem_type(problem)
+        obj_mdp.new_problem(input_file)
+        ideal_path=obj_mdp.start_mdp(problem)
 
         return ideal_path
 

@@ -1,4 +1,4 @@
-from source.usecases.uc_pomdp.mdp import *
+from source.usecases.uc_mdp.mdp import *
 
 
 

@@ -1,7 +1,7 @@
-from source.usecases.uc_pomdp.problem import *
-class service_POMDP(object):
+from source.usecases.uc_mdp.problem import *
+class service_MDP(object):
     def __init__(self):
-        self.problem_type={"type": None, "Rewards": None}
+        self.problem_type={"type": None, "rewards": None}
         self.obj=None
     def show_graph(self):
         self.problem.obj_solver.visualize_network()
@@ -12,12 +12,11 @@ class service_POMDP(object):
         self.obj=problem()
         self.obj.set_manifold(FILE_DIR)
         self.obj.set_solver(self.problem_type["type"])
-    def start_mdp(self):
-        R_dict={"24": 10}
-        ideal_path=self.obj.start_mdp_solver(R_dict)
+    def start_mdp(self, problem):
+        ideal_path=self.obj.start_mdp_solver(problem)
         ideal_path = np.array([np.int(ideal_path[i]) for i in range(0, len(ideal_path))])
         return ideal_path
 
 if __name__ == '__main__':
-    obj=service_POMDP()
+    obj=service_MDP()
     obj.show_graph()

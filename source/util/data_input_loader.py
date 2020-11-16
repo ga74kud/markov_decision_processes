@@ -32,3 +32,14 @@ def trajectory_for_queue(map, trajectory):
 def get_colormap(colmap):
     cmap=plt.get_cmap(colmap).colors
     return np.array(cmap)
+
+
+def write_to_json(input_file, input_data):
+    json_object = json.dumps(input_data)
+    with open(input_file, "w") as outfile:
+        outfile.write(json_object)
+
+def get_params():
+    dirs=get_from_json("../../input/config/special_paths.json")
+    FILE_DIR=dirs["ROOT_DIR"]+dirs["PARAMS"]
+    return get_from_json(FILE_DIR)

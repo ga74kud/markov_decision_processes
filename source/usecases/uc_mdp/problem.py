@@ -1,6 +1,6 @@
-from source.usecases.uc_pomdp.manifold import *
-from source.usecases.uc_pomdp.pomdp import *
-from source.usecases.uc_pomdp.reachability import *
+from source.usecases.uc_mdp.manifold import *
+from source.usecases.uc_mdp.mdp import *
+from source.usecases.uc_mdp.reachability import *
 
 class problem(object):
     def __init__(self, **kwargs):
@@ -11,10 +11,8 @@ class problem(object):
         self.obj_manifold.set_environment_by_json(FILE_DIR)
 
     def set_solver(self, type):
-        if(type=='pomdp'):
-            self.obj_solver=pomdp_class()
-        elif(type=='reachability'):
-            self.obj_solver = reachability()
+        if(type=='mdp'):
+            self.obj_solver=mdp()
         self.obj_solver.set_S(self.obj_manifold.manifold['X'])
         self.obj_solver.set_adjacency_list(self.obj_manifold.manifold['Topology'])
         self.obj_solver.set_position_list(self.obj_manifold.manifold['Position'])
@@ -22,7 +20,8 @@ class problem(object):
         self.obj_solver.set_action(self.obj_manifold.manifold["Actions"])
         self.obj_solver.set_init_pi()
         self.obj_solver.set_T(self.obj_manifold.get_probability_nodes())
-    def start_mdp_solver(self, R_dict):
+    def start_mdp_solver(self, problem):
+        R_dict=problem["rewards"]
         self.obj_solver.set_R(R_dict)
         self.obj_solver.start_mdp()
         ideal_path=self.obj_solver.get_trajectory()
