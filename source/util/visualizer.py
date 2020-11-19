@@ -17,4 +17,4 @@ class service_visualizer(object):
     def show_grid(self):
         self.p.show_grid()
     def show_plot(self):
-        self.p.show(screenshot='city3.png')
+        self.p.show()

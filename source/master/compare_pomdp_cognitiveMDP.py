@@ -8,7 +8,9 @@ from collections import OrderedDict
 
 class service_handler(object):
     def __init__(self, **kwargs):
-        None
+        self.visuals={"obj_visual": None, "obj_vectorfield": None}
+        self.coordinates=None
+        self.dict_mdp=None
     def use_all_solvers(self, input_file):
         dict_mdp=self.use_mdp(input_file)
         return dict_mdp
@@ -30,59 +32,61 @@ class service_handler(object):
         dict_mdp=obj_mdp.start_mdp(problem)
 
         return dict_mdp
+    def get_all_visual_objects(self):
+        # object from visualizer class
+        self.visuals["obj_visual"] = service_visualizer()
+        self.visuals["obj_visual"].init_plotter()
+        self.visuals["obj_visual"].show_grid()
 
-def get_all_visual_objects():
-    # object from visualizer class
-    obj_visual = service_visualizer()
-    obj_visual.init_plotter()
-    obj_visual.show_grid()
+        # object from visualizer class
+        self.visuals["obj_vectorfield"] = service_visualizer()
+        self.visuals["obj_vectorfield"].init_plotter()
+        self.visuals["obj_vectorfield"].show_grid()
+    def get_environmental_information(self, input_file):
+        # object from environment class
+        obj_map = map_loader()
+        self.coordinates = obj_map.preprocessing(input_file)
+    def get_solver_information(self, input_file):
+        # object for solver handling
+        obj_service = service_handler()
+        self.dict_mdp = obj_service.use_all_solvers(input_file)
+    def add_visuals_queue(self):
+        # add map to queue
+        new_queue = util_io.map_for_queue(self.coordinates)
+        self.visuals["obj_visual"].add_queue(new_queue)
 
-    # object from visualizer class
-    obj_vectorfield = service_visualizer()
-    obj_vectorfield.init_plotter()
-    obj_vectorfield.show_grid()
-    return obj_visual, obj_vectorfield
+        new_queue = util_io.trajectory_for_queue(self.coordinates, self.dict_mdp["ideal_path"])
+        self.visuals["obj_visual"].add_queue(new_queue)
 
-def get_data_handlers():
+    def add_vectorfield_queue(self):
+        new_queue = util_io.map_for_queue(self.coordinates)
+        self.visuals["obj_vectorfield"].add_queue(new_queue)
+if __name__ == '__main__':
+
     # object from data handler
     obj_data_handler = service_data()
     input_file = obj_data_handler.get_input_file()
-    return obj_data_handler, input_file
-
-def get_environmental_information(input_file):
-    # object from environment class
-    obj_map = map_loader()
-
-    coordinates = obj_map.preprocessing(input_file)
-    return coordinates
-if __name__ == '__main__':
-    obj_data_handler, input_file=get_data_handlers()
-
-    #visualizer objects for plotting results
-    obj_visual, obj_vectorfield=get_all_visual_objects()
-
-    coordinates=get_environmental_information(input_file)
-
     # object for solver handling
-    obj_service=service_handler()
-    dict_mdp=obj_service.use_all_solvers(input_file)
+    obj_service = service_handler()
+
+    # visualizer objects for plotting results
+    obj_service.get_all_visual_objects()
+
+    # environmental information
+    obj_service.get_environmental_information(input_file)
+
+    # solver
+    obj_service.get_solver_information(input_file)
+
+    #add visual plot
+    obj_service.add_visuals_queue()
+    obj_service.visuals["obj_visual"].show_plot()
+
+    #add vectorfield plot
+    obj_service.add_vectorfield_queue()
+    obj_service.visuals["obj_vectorfield"].show_plot()
 
 
-    # add map to queue
-    new_queue = util_io.map_for_queue(coordinates)
-    obj_visual.add_queue(new_queue)
-
-
-    new_queue=util_io.trajectory_for_queue(coordinates, dict_mdp["ideal_path"])
-    obj_visual.add_queue(new_queue)
-    #new_queue = util_io.reach_for_queue(coordinates, reach_mdp)
-    #all_queue_to_plot.append(new_queue)
-
-    obj_visual.show_plot()
-
-    new_queue = util_io.map_for_queue(coordinates)
-    obj_vectorfield.add_queue(new_queue)
-    obj_vectorfield.show_plot()
 
     #get result trajectories
-    util_io.get_result_trajectories_mdp(dict_mdp["ideal_path"], coordinates)
+    util_io.get_result_trajectories_mdp(obj_service.dict_mdp["ideal_path"], obj_service.coordinates)
