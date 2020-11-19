@@ -48,16 +48,20 @@ def get_data_handlers():
     obj_data_handler = service_data()
     input_file = obj_data_handler.get_input_file()
     return obj_data_handler, input_file
+
+def get_environmental_information(input_file):
+    # object from environment class
+    obj_map = map_loader()
+
+    coordinates = obj_map.preprocessing(input_file)
+    return coordinates
 if __name__ == '__main__':
     obj_data_handler, input_file=get_data_handlers()
 
     #visualizer objects for plotting results
     obj_visual, obj_vectorfield=get_all_visual_objects()
 
-    # object from environment class
-    obj_map=map_loader()
-
-    coordinates=obj_map.preprocessing(input_file)
+    coordinates=get_environmental_information(input_file)
 
     # object for solver handling
     obj_service=service_handler()
