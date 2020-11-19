@@ -41,6 +41,11 @@ if __name__ == '__main__':
     obj_visual.init_plotter()
     obj_visual.show_grid()
 
+    # object from visualizer class
+    obj_vectorfield = service_visualizer()
+    obj_vectorfield.init_plotter()
+    obj_vectorfield.show_grid()
+
     cmap=np.array(plt.get_cmap("plasma").colors)
 
     # object from environment class
@@ -68,6 +73,8 @@ if __name__ == '__main__':
     #all_queue_to_plot.append(new_queue)
 
     obj_visual.show_plot()
+
+    obj_vectorfield.show_plot()
 
     #get result trajectories
     util_io.get_result_trajectories_mdp(optimal_mdp, coordinates)

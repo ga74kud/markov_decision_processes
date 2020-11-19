@@ -1,4 +1,5 @@
 {
+  "INPUT_FILE": "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/reachable_meta_states.json",
   "ROOT_DIR": "/home/michael/PycharmProjects/voting_reinforcement_learning/",
   "PARAMS": "input/config/param.json"
 }

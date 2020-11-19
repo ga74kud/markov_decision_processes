@@ -1,10 +1,17 @@
 {
-  "grid":
+  "regular":
   {
+    "grid":
+    {
     "xgrid_dim": 10,
     "ygrid_dim": 10
+    }
   },
   "result_traj": {
     "amount_sections": 2
+  },
+  "program":
+  {
+    "select_grid": "regular"
   }
 }

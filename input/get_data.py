@@ -8,18 +8,26 @@ class service_data(object):
         self.input_file=None
     def get_input_file(self):
         # which environment model provided
-        input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
-        input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/reachable_meta_states.json"
-        input_file = self.get_meshgrid_points()
+        #input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
+        #input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/reachable_meta_states.json"
+        t=util_io.get_params()
+        if(t["program"]["select_grid"]=="regular"):
+            input_file = self.get_meshgrid_points()
+        elif (t["program"]["select_grid"] == "random"):
+            input_file = self.get_random_grid_points()
         self.set_input_file(input_file)
         return input_file
         # input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/regular_grid.json"
     def set_input_file(self, input_file):
         self.input_file=input_file
-    def get_meshgrid_points(self):
-        tst=util_io.get_params()
+    def get_random_grid_points():
+        tst = util_io.get_params()
         xgrid = np.linspace(-10, 10, tst["grid"]["xgrid_dim"])
         ygrid = np.linspace(-10, 10, tst["grid"]["ygrid_dim"])
+    def get_meshgrid_points(self):
+        tst=util_io.get_params()
+        xgrid = np.linspace(-10, 10, tst["regular"]["grid"]["xgrid_dim"])
+        ygrid = np.linspace(-10, 10, tst["regular"]["grid"]["ygrid_dim"])
         X, Y=np.meshgrid(xgrid,ygrid)
         x=np.ravel(X)
         y=np.ravel(Y)
