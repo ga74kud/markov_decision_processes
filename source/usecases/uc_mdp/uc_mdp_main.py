@@ -13,9 +13,8 @@ class service_MDP(object):
         self.obj.set_manifold(FILE_DIR)
         self.obj.set_solver(self.problem_type["type"])
     def start_mdp(self, problem):
-        ideal_path=self.obj.start_mdp_solver(problem)
-        ideal_path = np.array([np.int(ideal_path[i]) for i in range(0, len(ideal_path))])
-        return ideal_path
+        dict_mdp=self.obj.start_mdp_solver(problem)
+        return dict_mdp
 
 if __name__ == '__main__':
     obj=service_MDP()

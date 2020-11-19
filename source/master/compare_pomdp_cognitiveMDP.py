@@ -10,8 +10,8 @@ class service_handler(object):
     def __init__(self, **kwargs):
         None
     def use_all_solvers(self, input_file):
-        optimal_path_mdp=self.use_mdp(input_file)
-        return optimal_path_mdp
+        dict_mdp=self.use_mdp(input_file)
+        return dict_mdp
     def use_cognitive_mdp(self):
         problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
         self.service_CognitiveMDP(problem_type)
@@ -27,9 +27,9 @@ class service_handler(object):
         obj_mdp=service_MDP()
         obj_mdp.set_problem_type(problem)
         obj_mdp.new_problem(input_file)
-        ideal_path=obj_mdp.start_mdp(problem)
+        dict_mdp=obj_mdp.start_mdp(problem)
 
-        return ideal_path
+        return dict_mdp
 
 if __name__ == '__main__':
     # object from data handler
@@ -46,7 +46,7 @@ if __name__ == '__main__':
     obj_vectorfield.init_plotter()
     obj_vectorfield.show_grid()
 
-    cmap=np.array(plt.get_cmap("plasma").colors)
+    #cmap=np.array(plt.get_cmap("plasma").colors)
 
     # object from environment class
     obj_map=map_loader()
@@ -59,7 +59,7 @@ if __name__ == '__main__':
 
     # object for solver handling
     obj_service=service_handler()
-    optimal_mdp=obj_service.use_all_solvers(input_file)
+    dict_mdp=obj_service.use_all_solvers(input_file)
 
 
     # add map to queue
@@ -67,7 +67,7 @@ if __name__ == '__main__':
     obj_visual.add_queue(new_queue)
 
 
-    new_queue=util_io.trajectory_for_queue(coordinates, optimal_mdp)
+    new_queue=util_io.trajectory_for_queue(coordinates, dict_mdp["ideal_path"])
     obj_visual.add_queue(new_queue)
     #new_queue = util_io.reach_for_queue(coordinates, reach_mdp)
     #all_queue_to_plot.append(new_queue)
@@ -79,4 +79,4 @@ if __name__ == '__main__':
     obj_vectorfield.show_plot()
 
     #get result trajectories
-    util_io.get_result_trajectories_mdp(optimal_mdp, coordinates)
+    util_io.get_result_trajectories_mdp(dict_mdp["ideal_path"], coordinates)
