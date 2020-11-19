@@ -61,6 +61,9 @@ class service_handler(object):
     def add_vectorfield_queue(self):
         new_queue = util_io.map_for_queue(self.coordinates)
         self.visuals["obj_vectorfield"].add_queue(new_queue)
+
+        new_queue = util_io.vectorfield_for_queue(self.coordinates, self.dict_mdp)
+        self.visuals["obj_vectorfield"].add_queue_vectorfield(new_queue)
 if __name__ == '__main__':
 
     # object from data handler

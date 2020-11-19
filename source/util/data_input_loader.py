@@ -18,6 +18,13 @@ def map_for_queue(map):
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
+def vectorfield_for_queue(map, mpd_dict):
+    queue_list = []
+    for idx, wlt in enumerate(map):
+        queue_list.append({"actor_name": "map" + str(idx), "to_plot": wlt,
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
+    return queue_list
+
 def trajectory_for_queue(map, trajectory):
     queue_list=[]
     cmap=get_colormap("cividis")
