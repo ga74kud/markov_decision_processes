@@ -74,6 +74,8 @@ if __name__ == '__main__':
 
     obj_visual.show_plot()
 
+    new_queue = util_io.map_for_queue(coordinates)
+    obj_vectorfield.add_queue(new_queue)
     obj_vectorfield.show_plot()
 
     #get result trajectories

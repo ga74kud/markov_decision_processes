@@ -53,7 +53,7 @@ def chunks(input, k):
 
 def get_result_trajectories_mdp(optimal_mdp, coordinates):
     param=get_params()
-    k=param["result_traj"]["amount_sections"]
+    k=param["program"]["simulation"]["amount_sections"]
     chunklist = chunks(optimal_mdp[1:-1], k)
     act_traj=list()
     act_traj.append((coordinates[optimal_mdp[0], 0], coordinates[optimal_mdp[0], 1]))

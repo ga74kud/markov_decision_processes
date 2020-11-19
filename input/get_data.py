@@ -26,8 +26,8 @@ class service_data(object):
         ygrid = np.linspace(-10, 10, tst["grid"]["ygrid_dim"])
     def get_meshgrid_points(self):
         tst=util_io.get_params()
-        xgrid = np.linspace(-10, 10, tst["regular"]["grid"]["xgrid_dim"])
-        ygrid = np.linspace(-10, 10, tst["regular"]["grid"]["ygrid_dim"])
+        xgrid = np.linspace(-10, 10, tst["environment"]["regular"]["grid"]["xgrid_dim"])
+        ygrid = np.linspace(-10, 10, tst["environment"]["regular"]["grid"]["ygrid_dim"])
         X, Y=np.meshgrid(xgrid,ygrid)
         x=np.ravel(X)
         y=np.ravel(Y)

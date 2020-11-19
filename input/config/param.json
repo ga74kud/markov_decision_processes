@@ -1,17 +1,24 @@
 {
-  "regular":
-  {
-    "grid":
-    {
-    "xgrid_dim": 10,
-    "ygrid_dim": 10
+  "environment": {
+    "regular": {
+      "grid": {
+        "xgrid_dim": 10,
+        "ygrid_dim": 10
+      }
     }
   },
-  "result_traj": {
-    "amount_sections": 2
+  "solvers": {
+    "mdp": {
+      "gamma": 0.9
+    }
   },
   "program":
   {
-    "select_grid": "regular"
+    "select_grid": "regular",
+    "simulation":
+    {
+      "amount_sections": 2,
+      "limit_counts": 3000
+    }
   }
 }

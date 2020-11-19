@@ -1,20 +1,29 @@
 import igraph as ig
 import numpy as np
 from scipy.cluster.vq import kmeans, vq
+import source.util.data_input_loader as util_io
+
 class mdp(object):
     def __init__(self, **kwargs):
         self.mdp_dict= {'S': None, #States
                    'action': None, #Action set
                    'adjacency_list': None, #Topology
                    'R': None, #Rewards
-                   'gamma': 0.7, #discount factor
+                   'gamma': None, #discount factor
                    'P': None #Positions
                     }
         self.mdp_dict['T']=None
         self.mdp_dict['pi']=None
         self.mdp_dict['U'] = None
-        self.param = {'n_optimal_trajectory': 40000, # optimal trajectory
+        self.param = {'n_optimal_trajectory': None, # optimal trajectory
                       }
+        params=util_io.get_params()
+        self.set_gamma(params["solvers"]["mdp"]["gamma"])
+        self.set_limit_simulation(params["program"]["simulation"]["limit_counts"])
+    def set_limit_simulation(self, value):
+        self.param["n_optimal_trajectory"]=value
+    def set_gamma(self, gamma):
+        self.mdp_dict["gamma"]=gamma
     def set_position_list(self, position):
         self.mdp_dict['P']=position
     def set_T(self, transition):
