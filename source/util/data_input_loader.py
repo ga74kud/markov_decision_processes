@@ -1,8 +1,9 @@
 import json
 import numpy as np
-import matplotlib.pyplot as plt
 from matplotlib import cm
 import cairo
+from scipy.interpolate import interp1d
+import matplotlib.pyplot as plt
 def get_from_json(input_file):
     f = open(input_file, "r")
     data = json.loads(f.read())
@@ -53,14 +54,39 @@ def chunks(input, k):
 def get_result_trajectories_mdp(optimal_mdp, coordinates):
     param=get_params()
     k=param["result_traj"]["amount_sections"]
+    chunklist = chunks(optimal_mdp[1:-1], k)
     act_traj=list()
-    act_traj.append(optimal_mdp[0])
-    chunklist=chunks(optimal_mdp[1:-1], k)
-    abc=[int(np.random.choice(wlt, 1)) for wlt in chunklist]
-    for x in abc:
-        act_traj.append(x)
-    act_traj.append(optimal_mdp[-1])
-    plot_cairo(act_traj, coordinates)
-def plot_cairo(act_traj, coordinates):
-    sel_coord=coordinates[act_traj, 0:1]
-    test=1
+    act_traj.append((coordinates[optimal_mdp[0], 0], coordinates[optimal_mdp[0], 1]))
+    for wlt in chunklist:
+        x = np.mean(coordinates[wlt, 0])
+        y = np.mean(coordinates[wlt, 1])
+        act_traj.append((x,y))
+    act_traj.append((coordinates[optimal_mdp[-1], 0], coordinates[optimal_mdp[-1], 1]))
+    plot_traj(act_traj)
+def plot_traj(act_traj):
+    x = [wlt[0] for wlt in act_traj]
+    y = [wlt[1] for wlt in act_traj]
+    points=np.vstack((x,y)).T
+    # Linear length along the line:
+    distance = np.cumsum(np.sqrt(np.sum(np.diff(points, axis=0) ** 2, axis=1)))
+    distance = np.insert(distance, 0, 0) / distance[-1]
+
+    # Interpolation for different methods:
+    interpolations_methods = ['slinear', 'quadratic', 'cubic']
+    alpha = np.linspace(0, 1, 75)
+
+    interpolated_points = {}
+    for method in interpolations_methods:
+        interpolator = interp1d(distance, points, kind=method, axis=0)
+        interpolated_points[method] = interpolator(alpha)
+    # Graph:
+    plt.figure(figsize=(7, 7))
+    for method_name, curve in interpolated_points.items():
+        plt.plot(*curve.T, '-', label=method_name)
+
+    plt.plot(*points.T, 'ok', label='original points')
+    plt.axis('equal')
+    plt.legend()
+    plt.xlabel('x')
+    plt.ylabel('y')
+    plt.show()
