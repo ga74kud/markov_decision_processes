@@ -31,11 +31,7 @@ class service_handler(object):
 
         return dict_mdp
 
-if __name__ == '__main__':
-    # object from data handler
-    obj_data_handler=service_data()
-    input_file=obj_data_handler.get_input_file()
-    obj_data=service_data()
+def get_all_visual_objects():
     # object from visualizer class
     obj_visual = service_visualizer()
     obj_visual.init_plotter()
@@ -45,17 +41,23 @@ if __name__ == '__main__':
     obj_vectorfield = service_visualizer()
     obj_vectorfield.init_plotter()
     obj_vectorfield.show_grid()
+    return obj_visual, obj_vectorfield
 
-    #cmap=np.array(plt.get_cmap("plasma").colors)
+def get_data_handlers():
+    # object from data handler
+    obj_data_handler = service_data()
+    input_file = obj_data_handler.get_input_file()
+    return obj_data_handler, input_file
+if __name__ == '__main__':
+    obj_data_handler, input_file=get_data_handlers()
+
+    #visualizer objects for plotting results
+    obj_visual, obj_vectorfield=get_all_visual_objects()
 
     # object from environment class
     obj_map=map_loader()
 
     coordinates=obj_map.preprocessing(input_file)
-
-    # kmeans for large data
-        #ref, daski=obj_map.classify_to_meta()
-        #obj_map.save_semantic_kmeans(daski)
 
     # object for solver handling
     obj_service=service_handler()
