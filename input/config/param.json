@@ -4,7 +4,7 @@
     "xgrid_dim": 10,
     "ygrid_dim": 10
   },
-  "mdp": {
-    "limit_optimal_traj": 40
+  "result_traj": {
+    "amount_sections": 5
   }
 }

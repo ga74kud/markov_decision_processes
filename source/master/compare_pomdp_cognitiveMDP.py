@@ -5,6 +5,7 @@ import source.util.data_input_loader as util_io
 from input.get_data import *
 from collections import OrderedDict
 
+
 class service_handler(object):
     def __init__(self, **kwargs):
         None
@@ -17,6 +18,10 @@ class service_handler(object):
     def use_scm(self):
         problem_type = {'type': 'scm'}
         self.service_scmMDP(problem_type)
+    def use_reach(self):
+        None
+    def use_monte_carlo(self):
+        None
     def use_mdp(self, input_file):
         problem={'type': 'mdp', 'rewards': {'95': 100000}}
         obj_mdp=service_MDP()
@@ -41,7 +46,7 @@ if __name__ == '__main__':
     # object from environment class
     obj_map=map_loader()
 
-    compressed_data=obj_map.preprocessing(input_file)
+    coordinates=obj_map.preprocessing(input_file)
 
     # kmeans for large data
         #ref, daski=obj_map.classify_to_meta()
@@ -53,17 +58,16 @@ if __name__ == '__main__':
 
 
     # add map to queue
-    new_queue = util_io.map_for_queue(compressed_data)
+    new_queue = util_io.map_for_queue(coordinates)
     obj_visual.add_queue(new_queue)
 
 
-    new_queue=util_io.trajectory_for_queue(compressed_data, optimal_mdp)
+    new_queue=util_io.trajectory_for_queue(coordinates, optimal_mdp)
     obj_visual.add_queue(new_queue)
-    #new_queue = util_io.reach_for_queue(compressed_data, reach_mdp)
+    #new_queue = util_io.reach_for_queue(coordinates, reach_mdp)
     #all_queue_to_plot.append(new_queue)
-
-
-
 
     obj_visual.show_plot()
 
+    #get result trajectories
+    util_io.get_result_trajectories_mdp(optimal_mdp, coordinates)
