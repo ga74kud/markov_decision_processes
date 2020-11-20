@@ -14,7 +14,7 @@ class mdp(object):
                     }
         self.mdp_dict['T']=None # Transition
         self.mdp_dict['pi']=None
-        self.mdp_dict['multi_pi'] = None
+        self.mdp_dict['multi_pi'] = {}
         self.mdp_dict['U'] = None
         self.param = {'n_optimal_trajectory': None, # optimal trajectory
                       }
@@ -101,15 +101,23 @@ class mdp(object):
         group=[self.mdp_dict["U"][int(wlt)] for wlt in nodes]
         return group
 
+
     def get_all_policy_options(self):
         for act_node in self.mdp_dict['S']:
-            act_value=self.get_value_of_nodes(act_node)
+            act_value=float(self.get_value_of_nodes(act_node)[0])
             act_neighbours=self.find_neighbours(act_node)
             act_values_by_group=self.get_value_of_nodes(act_neighbours)
-            bool_group=[bool(wlt>act_value) for wlt in act_values_by_group]
-            group_best=[act_neighbours[idx] for idx, act_bool in enumerate(bool_group) if act_bool==True]
-            self.mdp_dict['multi_pi'][act_node]=group_best
-        None
+            bool_group=list()
+            for wlt in act_values_by_group:
+                if(wlt>act_value):
+                    bool_group.append(True)
+                else:
+                    bool_group.append(False)
+            self.mdp_dict['multi_pi'][act_node]=list()
+            for idx, act_bool in enumerate(bool_group):
+                if(act_bool==True):
+                    new_cand={"neighbour": act_neighbours[idx], "difference": float(act_values_by_group[idx]-act_value)}
+                    self.mdp_dict['multi_pi'][act_node].append(new_cand)
 
     def start_mdp(self):
         count=0
