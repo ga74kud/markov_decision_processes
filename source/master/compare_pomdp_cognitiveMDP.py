@@ -30,7 +30,6 @@ class service_handler(object):
         obj_mdp.set_problem_type(problem)
         obj_mdp.new_problem(input_file)
         dict_mdp=obj_mdp.start_mdp(problem)
-
         return dict_mdp
     def get_all_visual_objects(self):
         # object from visualizer class

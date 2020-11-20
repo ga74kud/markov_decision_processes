@@ -142,7 +142,7 @@ class mdp(object):
                 break
 
             count+=1
-        return {"pi": self.mdp_dict['pi'], "U": self.mdp_dict['U']}
+        return self.mdp_dict
 
     def visualize_network(self):
         g = ig.Graph(self.mdp_dict['adjacency_list'])
