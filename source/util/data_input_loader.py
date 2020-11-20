@@ -22,14 +22,16 @@ def get_direction(act_idx, act_coord, map, mpd_dict):
     act_node=mpd_dict["S"][act_idx]
     act_multi_pi=mpd_dict["multi_pi"][act_node]
     act_neighbours=[wlt["neighbour"] for wlt in act_multi_pi]
-    all_directions=[(3, 3, 5), (-3, 3, 5)]
-    return all_directions
+    act_difference = [wlt["difference"] for wlt in act_multi_pi]
+    all_directions=[tuple(map[int(wlt),:]-act_coord) for wlt in act_neighbours]
+    #all_directions=[(3, 3, 5), (-3, 3, 5)]
+    return all_directions, act_difference
 
 
 def vectorfield_for_queue(map, mpd_dict):
     queue_list = []
     for idx, wlt in enumerate(map):
-        all_directions=get_direction(idx, wlt, map, mpd_dict)
+        all_directions, act_difference=get_direction(idx, wlt, map, mpd_dict)
         for qrt in all_directions:
             queue_list.append({"actor_name": "map" + str(idx), "start": wlt, "direction": qrt,
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
