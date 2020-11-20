@@ -14,37 +14,48 @@ class mdp(object):
                     }
         self.mdp_dict['T']=None # Transition
         self.mdp_dict['pi']=None
+        self.mdp_dict['multi_pi'] = None
         self.mdp_dict['U'] = None
         self.param = {'n_optimal_trajectory': None, # optimal trajectory
                       }
         params=util_io.get_params()
         self.set_gamma(params["solvers"]["mdp"]["gamma"])
         self.set_limit_simulation(params["program"]["simulation"]["limit_counts"])
+
     def set_limit_simulation(self, value):
         self.param["n_optimal_trajectory"]=value
+
     def set_gamma(self, gamma):
         self.mdp_dict["gamma"]=gamma
+
     def set_position_list(self, position):
         self.mdp_dict['P']=position
+
     def set_T(self, transition):
         self.mdp_dict['T']=transition
+
     def set_U(self):
         self.mdp_dict['U'] = [0] * len(self.mdp_dict['S'])
+
     def set_action(self, action):
         self.mdp_dict['action']=action
+
     def set_init_pi(self):
         a={}
         for i in self.mdp_dict['S']:
             a[i]=self.mdp_dict['action'][i][0]
         self.mdp_dict['pi']=a
+
     def set_S(self, S):
         self.mdp_dict['S']=S
+
     def set_R(self, dictR):
         val=list(dictR.values())
         keys=dictR.keys()
         self.mdp_dict['R']=np.zeros(len(self.mdp_dict['S']))
         for idx, q in enumerate(keys):
             self.mdp_dict['R'][int(q)]=val[idx]
+
     def set_T(self, T):
         self.mdp_dict['T']=T
     def set_adjacency_list(self, list):
@@ -77,13 +88,27 @@ class mdp(object):
                     idx = np.int(np.random.choice(len(self.mdp_dict['S']), 1, p=prob_dict))
                     all_Us[ka]=self.mdp_dict['R'][idx] + bds
                 self.get_new_policy(np.array(all_Us), kp)
+
     def get_new_policy(self, all_Us, act_node):
         idx=np.argmax(all_Us, axis=0)
         act_node_name=self.mdp_dict['S'][act_node]
         self.mdp_dict['pi'][act_node_name]=self.mdp_dict['action'][act_node_name][idx]
-      
+
+    def find_neighbours(self, act_node):
+        return self.mdp_dict["action"][act_node]
+
+    def get_value_of_nodes(self, nodes):
+        group=[self.mdp_dict["U"][int(wlt)] for wlt in nodes]
+        return group
+
     def get_all_policy_options(self):
-        a=1
+        for act_node in self.mdp_dict['S']:
+            act_value=self.get_value_of_nodes(act_node)
+            act_neighbours=self.find_neighbours(act_node)
+            act_values_by_group=self.get_value_of_nodes(act_neighbours)
+            bool_group=[bool(wlt>act_value) for wlt in act_values_by_group]
+            group_best=[act_neighbours[idx] for idx, act_bool in enumerate(bool_group) if act_bool==True]
+            self.mdp_dict['multi_pi'][act_node]=group_best
         None
 
     def start_mdp(self):
@@ -152,6 +177,7 @@ class mdp(object):
         visual_style = {}
         visual_style["edge_curved"] = False
         ig.plot(g, layout=layout, **visual_style)
+
     def get_trajectory(self, R_dict):
         start_node=self.mdp_dict['S'][0]
         r_target_values=list(R_dict.keys())

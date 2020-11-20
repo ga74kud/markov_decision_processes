@@ -81,15 +81,15 @@ if __name__ == '__main__':
     # solver
     obj_service.get_solver_information(input_file)
 
-    #add visual plot
+    # add visual plot
     obj_service.add_visuals_queue()
     obj_service.visuals["obj_visual"].show_plot()
 
-    #add vectorfield plot
+    # add vectorfield plot
     obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_vectorfield"].show_plot()
 
 
 
-    #get result trajectories
+    # get result trajectories
     util_io.get_result_trajectories_mdp(obj_service.dict_mdp["ideal_path"], obj_service.coordinates)
