@@ -24,6 +24,12 @@ class service_visualizer(object):
             d = to_plot["point_size"]
             e = to_plot["render_points_as_spheres"]
             self.p.add_mesh(a, opacity=b, color=c, point_size=d, render_points_as_spheres=e)
+
+    def add_queue_delauny(self, queue):
+        to_plot=[queue[wlt]["to_plot"] for wlt in range(0, len(queue))]
+        a=pv.PolyData(to_plot)
+        delaunay_plot=a.delaunay_2d()
+        self.p.add_mesh(delaunay_plot)
     def show_grid(self):
         self.p.show_grid()
     def show_plot(self):

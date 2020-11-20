@@ -18,6 +18,14 @@ def map_for_queue(map):
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
+def delaunay_map_for_queue(map):
+    queue_list = []
+    cloud = pv.PolyData(points)
+    for idx, wlt in enumerate(map):
+        queue_list.append({"actor_name": "map" + str(idx), "to_plot": wlt,
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
+    return queue_list
+
 def get_direction(act_idx, act_coord, map, mpd_dict):
     act_node=mpd_dict["S"][act_idx]
     act_multi_pi=mpd_dict["multi_pi"][act_node]

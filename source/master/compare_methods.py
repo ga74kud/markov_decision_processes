@@ -77,6 +77,8 @@ class service_handler(object):
         new_queue = util_io.map_for_queue(self.coordinates)
         self.visuals["obj_vectorfield"].add_queue(new_queue)
 
+        self.visuals["obj_vectorfield"].add_queue_delauny(new_queue)
+
         new_queue = util_io.vectorfield_for_queue(self.coordinates, self.dict_mdp)
         self.visuals["obj_vectorfield"].add_queue_vectorfield(new_queue)
 
