@@ -29,7 +29,7 @@ class service_visualizer(object):
         to_plot=[queue[wlt]["to_plot"] for wlt in range(0, len(queue))]
         a=pv.PolyData(to_plot)
         delaunay_plot=a.delaunay_2d()
-        self.p.add_mesh(delaunay_plot)
+        self.p.add_mesh(delaunay_plot, opacity=0.5)
     def show_grid(self):
         self.p.show_grid()
     def show_plot(self):

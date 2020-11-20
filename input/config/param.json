@@ -14,7 +14,7 @@
   },
   "program":
   {
-    "select_grid": "regular",
+    "select_grid": "random",
     "simulation":
     {
       "amount_sections": 2,

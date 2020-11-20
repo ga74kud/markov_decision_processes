@@ -18,9 +18,13 @@ def map_for_queue(map):
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
+def perturb_by_random_vector(vec, scale_val):
+    pertub_vec=np.random.rand(len(vec))*scale_val
+    new_vec=vec+pertub_vec
+    return new_vec
+
 def delaunay_map_for_queue(map):
     queue_list = []
-    cloud = pv.PolyData(points)
     for idx, wlt in enumerate(map):
         queue_list.append({"actor_name": "map" + str(idx), "to_plot": wlt,
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
