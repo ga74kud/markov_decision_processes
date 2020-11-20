@@ -97,6 +97,5 @@ if __name__ == '__main__':
     obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_barplot"].show_plot()
 
-
     # get result trajectories
     util_io.get_result_trajectories_mdp(obj_service.dict_mdp["ideal_path"], obj_service.coordinates)
