@@ -81,6 +81,10 @@ class service_handler(object):
 
         new_queue = util_io.vectorfield_for_queue(self.coordinates, self.dict_mdp)
         self.visuals["obj_vectorfield"].add_queue_vectorfield(new_queue)
+        self.visuals["obj_vectorfield"].add_queue_topology(new_queue)
+        self.visuals["obj_vectorfield"].add_queue_optimalpath(new_queue)
+
+
 
 if __name__ == '__main__':
 

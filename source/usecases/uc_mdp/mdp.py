@@ -187,7 +187,8 @@ class mdp(object):
         ig.plot(g, layout=layout, **visual_style)
 
     def get_trajectory(self, R_dict):
-        start_node=self.mdp_dict['S'][0]
+        params=util_io.get_params()
+        start_node=self.mdp_dict['S'][params["program"]["simulation"]["start_node"]]
         r_target_values=list(R_dict.keys())
         ideal_path=[]
         ideal_path.append(str(start_node))

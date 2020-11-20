@@ -36,19 +36,21 @@ def get_direction(act_idx, act_coord, map, mpd_dict):
     act_neighbours=[wlt["neighbour"] for wlt in act_multi_pi]
     act_difference = [wlt["difference"] for wlt in act_multi_pi]
     all_directions=[tuple(map[int(wlt),:]-act_coord) for wlt in act_neighbours]
-    a=np.max(act_difference)
+    a=np.max(act_difference)+0.01
     scale_vec=act_difference/a
-    return all_directions, act_difference, scale_vec
+    neigh_idx=[mpd_dict["S"].index(act_neighbours[idx]) for idx in range(0, len(act_neighbours))]
+    end_points=[tuple(map[qrt, :]) for qrt in neigh_idx]
+    return all_directions, act_difference, scale_vec, end_points
 
 
 def vectorfield_for_queue(map, mpd_dict):
     queue_list = []
     for idx, wlt in enumerate(map):
-        all_directions, act_difference, scale_vec=get_direction(idx, wlt, map, mpd_dict)
+        all_directions, act_difference, scale_vec, end_points=get_direction(idx, wlt, map, mpd_dict)
         for idx, qrt in enumerate(all_directions):
             queue_list.append({"actor_name": "map" + str(idx), "start": wlt, "direction": qrt,
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
-                               "scale": scale_vec[idx]})
+                               "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
     return queue_list
 
 def trajectory_for_queue(map, trajectory):

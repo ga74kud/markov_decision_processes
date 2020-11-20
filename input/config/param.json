@@ -18,7 +18,8 @@
     "simulation":
     {
       "amount_sections": 2,
-      "limit_counts": 3000
+      "limit_counts": 3000,
+      "start_node": 5
     }
   }
 }
