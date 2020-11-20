@@ -21,7 +21,7 @@ def map_for_queue(map):
 def vectorfield_for_queue(map, mpd_dict):
     queue_list = []
     for idx, wlt in enumerate(map):
-        queue_list.append({"actor_name": "map" + str(idx), "to_plot": wlt,
+        queue_list.append({"actor_name": "map" + str(idx), "start": wlt, "direction": (3, 5, 6),
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 

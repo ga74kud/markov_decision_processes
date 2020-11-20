@@ -5,14 +5,14 @@ import source.util.data_input_loader as util_io
 
 class mdp(object):
     def __init__(self, **kwargs):
-        self.mdp_dict= {'S': None, #States
-                   'action': None, #Action set
-                   'adjacency_list': None, #Topology
-                   'R': None, #Rewards
-                   'gamma': None, #discount factor
-                   'P': None #Positions
+        self.mdp_dict= {'S': None, # States
+                   'action': None, # Action set
+                   'adjacency_list': None, # Topology
+                   'R': None, # Rewards
+                   'gamma': None, # discount factor
+                   'P': None # Positions
                     }
-        self.mdp_dict['T']=None
+        self.mdp_dict['T']=None # Transition
         self.mdp_dict['pi']=None
         self.mdp_dict['U'] = None
         self.param = {'n_optimal_trajectory': None, # optimal trajectory
@@ -82,7 +82,9 @@ class mdp(object):
         act_node_name=self.mdp_dict['S'][act_node]
         self.mdp_dict['pi'][act_node_name]=self.mdp_dict['action'][act_node_name][idx]
       
-
+    def get_all_policy_options(self):
+        a=1
+        None
 
     def start_mdp(self):
         count=0
