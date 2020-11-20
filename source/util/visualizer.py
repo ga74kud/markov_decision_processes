@@ -26,7 +26,14 @@ class service_visualizer(object):
             self.p.add_mesh(a, opacity=b, color=c, point_size=d, render_points_as_spheres=e)
 
     def add_queue_optimalpath(self, queue):
-        None
+        for wlt in range(0, len(queue)):
+            to_plot = queue[wlt]
+            a = pv.Arrow(start=to_plot["start"], direction=to_plot["direction"])
+            b = to_plot["opacity"]
+            c = "blue"
+            d = to_plot["point_size"]
+            e = to_plot["render_points_as_spheres"]
+            self.p.add_mesh(a, opacity=b, color=c, point_size=d, render_points_as_spheres=e)
 
     def add_queue_delauny(self, queue):
         to_plot=[queue[wlt]["to_plot"] for wlt in range(0, len(queue))]

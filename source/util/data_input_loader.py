@@ -30,37 +30,59 @@ def delaunay_map_for_queue(map):
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
-def get_direction(act_idx, act_coord, map, mpd_dict):
-    act_node=mpd_dict["S"][act_idx]
-    act_multi_pi=mpd_dict["multi_pi"][act_node]
+def get_direction(act_idx, act_coord, map, mdp_dict):
+    act_node=mdp_dict["S"][act_idx]
+    act_multi_pi=mdp_dict["multi_pi"][act_node]
     act_neighbours=[wlt["neighbour"] for wlt in act_multi_pi]
     act_difference = [wlt["difference"] for wlt in act_multi_pi]
     all_directions=[tuple(map[int(wlt),:]-act_coord) for wlt in act_neighbours]
-    a=np.max(act_difference)+0.01
+    try:
+        a=np.max(act_difference)+0.01
+    except:
+        a=1
     scale_vec=act_difference/a
-    neigh_idx=[mpd_dict["S"].index(act_neighbours[idx]) for idx in range(0, len(act_neighbours))]
+    neigh_idx=[mdp_dict["S"].index(act_neighbours[idx]) for idx in range(0, len(act_neighbours))]
     end_points=[tuple(map[qrt, :]) for qrt in neigh_idx]
     return all_directions, act_difference, scale_vec, end_points
 
 
-def vectorfield_for_queue(map, mpd_dict):
+def get_next_node(act_idx, map, mdp_dict):
+    act_node_idx=mdp_dict["S"].index(act_idx)
+    start_point=map[act_node_idx, :]
+    act_multi_pi=mdp_dict["multi_pi"][act_idx]
+    act_neighbours=[wlt["neighbour"] for wlt in act_multi_pi]
+    act_difference = [wlt["difference"] for wlt in act_multi_pi]
+    max_idx=act_difference.index(max(act_difference))
+    neigh_idx=[mdp_dict["S"].index(act_neighbours[idx]) for idx in range(0, len(act_neighbours))]
+    all_end_points=[tuple(map[qrt, :]) for qrt in neigh_idx]
+    best_end_point=all_end_points[max_idx]
+    best_end_idx=neigh_idx[max_idx]
+    return start_point, all_end_points, best_end_point, best_end_idx
+
+def vectorfield_for_queue(map, mdp_dict):
     queue_list = []
     for idx, wlt in enumerate(map):
-        all_directions, act_difference, scale_vec, end_points=get_direction(idx, wlt, map, mpd_dict)
+        all_directions, act_difference, scale_vec, end_points=get_direction(idx, wlt, map, mdp_dict)
         for idx, qrt in enumerate(all_directions):
             queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
                                "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
     return queue_list
 
-def optimal_path_for_queue(map, mpd_dict):
+def optimal_path_for_queue(map, mdp_dict):
+    params = get_params()
+    act_node = mdp_dict['S'][params["program"]["simulation"]["start_node"]]
     queue_list = []
-    for idx, wlt in enumerate(map):
-        all_directions, act_difference, scale_vec, end_points=get_direction(idx, wlt, map, mpd_dict)
-        for idx, qrt in enumerate(all_directions):
-            queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
-                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
-                               "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
+    for idx in range(0, 3000):
+        start_point, all_end_points, best_end_point, next_node=get_next_node(act_node, map, mdp_dict)
+        act_node=mdp_dict["S"][next_node]
+        if(np.abs(mdp_dict["R"][next_node]-np.max(mdp_dict["R"]))<0.0001):
+            break
+        else:
+            act_difference=np.array(best_end_point) - start_point
+            queue_list.append({"actor_name": "vecfld_" + str(idx), "start": start_point, "direction": act_difference,
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "orange",
+                       "scale": 3})
     return queue_list
 
 def trajectory_for_queue(map, trajectory):
