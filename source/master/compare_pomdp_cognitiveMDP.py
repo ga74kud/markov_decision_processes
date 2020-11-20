@@ -8,7 +8,7 @@ from collections import OrderedDict
 
 class service_handler(object):
     def __init__(self, **kwargs):
-        self.visuals={"obj_visual": None, "obj_vectorfield": None}
+        self.visuals={"obj_visual": None, "obj_vectorfield": None, "obj_barplot": None}
         self.coordinates=None
         self.dict_mdp=None
     def use_all_solvers(self, input_file):
@@ -42,6 +42,11 @@ class service_handler(object):
         self.visuals["obj_vectorfield"] = service_visualizer()
         self.visuals["obj_vectorfield"].init_plotter()
         self.visuals["obj_vectorfield"].show_grid()
+
+        # object from visualizer class
+        self.visuals["obj_barplot"] = service_visualizer()
+        self.visuals["obj_barplot"].init_plotter()
+        self.visuals["obj_barplot"].show_grid()
     def get_environmental_information(self, input_file):
         # object from environment class
         obj_map = map_loader()
@@ -89,6 +94,9 @@ if __name__ == '__main__':
     obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_vectorfield"].show_plot()
 
+    # add barplot for value function
+    obj_service.add_vectorfield_queue()
+    obj_service.visuals["obj_barplot"].show_plot()
 
 
     # get result trajectories
