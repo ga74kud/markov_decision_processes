@@ -25,6 +25,9 @@ class service_visualizer(object):
             e = to_plot["render_points_as_spheres"]
             self.p.add_mesh(a, opacity=b, color=c, point_size=d, render_points_as_spheres=e)
 
+    def add_queue_optimalpath(self, queue):
+        None
+
     def add_queue_delauny(self, queue):
         to_plot=[queue[wlt]["to_plot"] for wlt in range(0, len(queue))]
         a=pv.PolyData(to_plot)
@@ -36,7 +39,7 @@ class service_visualizer(object):
             to_plot = queue[wlt]
             a = pv.Line(pointa=to_plot["pointa"], pointb=to_plot["pointb"])
             b = to_plot["opacity"]
-            c = to_plot["color"]
+            c = "black"
             d = to_plot["point_size"]
             e = to_plot["render_points_as_spheres"]
             self.p.add_mesh(a, opacity=b, color=c, point_size=d, render_points_as_spheres=e)

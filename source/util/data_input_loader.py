@@ -48,7 +48,17 @@ def vectorfield_for_queue(map, mpd_dict):
     for idx, wlt in enumerate(map):
         all_directions, act_difference, scale_vec, end_points=get_direction(idx, wlt, map, mpd_dict)
         for idx, qrt in enumerate(all_directions):
-            queue_list.append({"actor_name": "map" + str(idx), "start": wlt, "direction": qrt,
+            queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
+                               "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
+    return queue_list
+
+def optimal_path_for_queue(map, mpd_dict):
+    queue_list = []
+    for idx, wlt in enumerate(map):
+        all_directions, act_difference, scale_vec, end_points=get_direction(idx, wlt, map, mpd_dict)
+        for idx, qrt in enumerate(all_directions):
+            queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
                                "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
     return queue_list
