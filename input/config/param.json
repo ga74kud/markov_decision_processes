@@ -2,17 +2,12 @@
   "environment": {
     "regular": {
       "grid": {
-        "xgrid_dim": 5,
-        "ygrid_dim": 5
+        "xgrid_dim": 12,
+        "ygrid_dim": 12
       }
     }
   },
-  "solvers": {
-    "mdp": {
-      "gamma": 0.9
-    }
-  },
-  "program":
+  "mdp":
   {
     "select_grid": "random",
     "simulation":
@@ -20,7 +15,8 @@
       "amount_sections": 2,
       "limit_counts": 3000,
       "start_node": 5,
-      "rewards": {"95": 10000}
+      "rewards": {"24": 10000},
+      "gamma": 0.9
     }
   }
 }

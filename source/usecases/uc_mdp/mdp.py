@@ -19,8 +19,8 @@ class mdp(object):
         self.param = {'n_optimal_trajectory': None, # optimal trajectory
                       }
         params=util_io.get_params()
-        self.set_gamma(params["solvers"]["mdp"]["gamma"])
-        self.set_limit_simulation(params["program"]["simulation"]["limit_counts"])
+        self.set_gamma(params["mdp"]["simulation"]["gamma"])
+        self.set_limit_simulation(params["mdp"]["simulation"]["limit_counts"])
 
     def set_limit_simulation(self, value):
         self.param["n_optimal_trajectory"]=value
@@ -188,7 +188,7 @@ class mdp(object):
 
     def get_trajectory(self, R_dict):
         params=util_io.get_params()
-        start_node=self.mdp_dict['S'][params["program"]["simulation"]["start_node"]]
+        start_node=self.mdp_dict['S'][params["mdp"]["simulation"]["start_node"]]
         r_target_values=list(R_dict.keys())
         ideal_path=[]
         ideal_path.append(str(start_node))

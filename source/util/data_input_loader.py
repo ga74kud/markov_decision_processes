@@ -1,6 +1,6 @@
 import json
 import numpy as np
-
+import warnings
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 def get_from_json(input_file):
@@ -30,19 +30,24 @@ def delaunay_map_for_queue(map):
     return queue_list
 
 def get_direction(act_idx, act_coord, map, mdp_dict):
+    FLAG_IS_VALID=False
     act_node=mdp_dict["S"][act_idx]
     act_multi_pi=mdp_dict["multi_pi"][act_node]
     act_neighbours=[wlt["neighbour"] for wlt in act_multi_pi]
+    if(len(act_neighbours)==0):
+        return 0, 0, 0, 0, FLAG_IS_VALID
     act_difference = [wlt["difference"] for wlt in act_multi_pi]
     all_directions=[tuple(map[int(wlt),:]-act_coord) for wlt in act_neighbours]
-    if(len(act_difference)>0):
+    try:
         a=np.max(act_difference)
-    else:
-        a=1.0
-    scale_vec=act_difference/a
+        scale_vec=act_difference/a
+    except:
+        warnings.warn(str(act_neighbours)+str(act_difference), Warning)
+
     neigh_idx=[mdp_dict["S"].index(act_neighbours[idx]) for idx in range(0, len(act_neighbours))]
     end_points=[tuple(map[qrt, :]) for qrt in neigh_idx]
-    return all_directions, act_difference, scale_vec, end_points
+    FLAG_IS_VALID=True
+    return all_directions, act_difference, scale_vec, end_points, FLAG_IS_VALID
 
 
 def get_next_node(act_idx, map, mdp_dict):
@@ -61,16 +66,19 @@ def get_next_node(act_idx, map, mdp_dict):
 def vectorfield_for_queue(map, mdp_dict):
     queue_list = []
     for idx, wlt in enumerate(map):
-        all_directions, act_difference, scale_vec, end_points=get_direction(idx, wlt, map, mdp_dict)
-        for idx, qrt in enumerate(all_directions):
-            queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
+        all_directions, act_difference, scale_vec, end_points, FLAG_IS_VALID=get_direction(idx, wlt, map, mdp_dict)
+        if(FLAG_IS_VALID):
+            for idx, qrt in enumerate(all_directions):
+                queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
                                "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
+        else:
+            continue
     return queue_list
 
 def optimal_path_for_queue(map, mdp_dict):
     params = get_params()
-    act_node = mdp_dict['S'][params["program"]["simulation"]["start_node"]]
+    act_node = mdp_dict['S'][params["mdp"]["simulation"]["start_node"]]
     queue_list = []
     for idx in range(0, 3000):
         start_point, all_end_points, best_end_point, next_node=get_next_node(act_node, map, mdp_dict)

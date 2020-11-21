@@ -11,9 +11,9 @@ class service_data(object):
         #input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
         #input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/reachable_meta_states.json"
         t=util_io.get_params()
-        if(t["program"]["select_grid"]=="regular"):
+        if(t["mdp"]["select_grid"]=="regular"):
             input_file = self.get_meshgrid_points()
-        elif (t["program"]["select_grid"] == "random"):
+        elif (t["mdp"]["select_grid"] == "random"):
             input_file = self.get_random_grid_points()
         self.set_input_file(input_file)
         return input_file
