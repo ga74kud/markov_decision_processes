@@ -1,7 +1,6 @@
 import json
 import numpy as np
-from matplotlib import cm
-import cairo
+
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
 def get_from_json(input_file):
@@ -36,10 +35,10 @@ def get_direction(act_idx, act_coord, map, mdp_dict):
     act_neighbours=[wlt["neighbour"] for wlt in act_multi_pi]
     act_difference = [wlt["difference"] for wlt in act_multi_pi]
     all_directions=[tuple(map[int(wlt),:]-act_coord) for wlt in act_neighbours]
-    try:
-        a=np.max(act_difference)+0.01
-    except:
-        a=1
+    if(len(act_difference)>0):
+        a=np.max(act_difference)
+    else:
+        a=1.0
     scale_vec=act_difference/a
     neigh_idx=[mdp_dict["S"].index(act_neighbours[idx]) for idx in range(0, len(act_neighbours))]
     end_points=[tuple(map[qrt, :]) for qrt in neigh_idx]
@@ -76,7 +75,7 @@ def optimal_path_for_queue(map, mdp_dict):
     for idx in range(0, 3000):
         start_point, all_end_points, best_end_point, next_node=get_next_node(act_node, map, mdp_dict)
         act_node=mdp_dict["S"][next_node]
-        if(np.abs(mdp_dict["R"][next_node]-np.max(mdp_dict["R"]))<0.0001):
+        if(np.abs(mdp_dict["R"][next_node]-np.max(mdp_dict["R"]))<0.2):
             break
         else:
             act_difference=np.array(best_end_point) - start_point
@@ -109,9 +108,12 @@ def write_to_json(input_file, input_data):
         outfile.write(json_object)
 
 def get_params():
-    dirs=get_from_json("../../input/config/special_paths.json")
+    dirs=get_special_paths()
     FILE_DIR=dirs["ROOT_DIR"]+dirs["PARAMS"]
     return get_from_json(FILE_DIR)
+
+def get_special_paths():
+    return get_from_json("../../input/config/special_paths.json")
 
 def chunks(input, k):
     n=int(np.floor(len(input)/k))

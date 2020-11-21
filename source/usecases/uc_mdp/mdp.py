@@ -104,9 +104,9 @@ class mdp(object):
 
     def get_all_policy_options(self):
         for act_node in self.mdp_dict['S']:
-            act_value=float(self.get_value_of_nodes(act_node)[0])
-            act_neighbours=self.find_neighbours(act_node)
-            act_values_by_group=self.get_value_of_nodes(act_neighbours)
+            act_value=float(self.get_value_of_nodes(act_node)[0]) # actual value function
+            act_neighbours=self.find_neighbours(act_node) # actual neighbours
+            act_values_by_group=self.get_value_of_nodes(act_neighbours) # actual value function of neighbours
             bool_group=list()
             for wlt in act_values_by_group:
                 if(wlt>act_value):

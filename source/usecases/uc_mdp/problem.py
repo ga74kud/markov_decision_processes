@@ -1,5 +1,4 @@
 from source.usecases.uc_mdp.manifold import *
-from source.usecases.uc_mdp.mdp import *
 from source.usecases.uc_mdp.reachability import *
 
 class problem(object):
@@ -24,10 +23,11 @@ class problem(object):
         R_dict = problem["rewards"]
         self.obj_solver.set_R(R_dict)
         dict_mdp = self.obj_solver.start_mdp()
-        policy_options = self.obj_solver.get_all_policy_options()
+
         ideal_path = self.obj_solver.get_trajectory(R_dict)
         ideal_path = np.array([np.int(ideal_path[i]) for i in range(0, len(ideal_path))])
         dict_mdp["ideal_path"] = ideal_path
+        self.obj_solver.get_all_policy_options()
         return dict_mdp
 
 if __name__ == '__main__':

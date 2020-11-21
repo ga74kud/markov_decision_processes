@@ -2,6 +2,8 @@ from source.usecases.uc_mdp.uc_mdp_main import *
 from source.util.map_loader import *
 from source.util.visualizer import *
 from input.get_data import *
+from datetime import *
+import source.util.data_input_loader as util_io
 
 class service_handler(object):
     def __init__(self, **kwargs):
@@ -9,6 +11,10 @@ class service_handler(object):
         self.coordinates=None
         self.dict_mdp=None
 
+    def create_output_folder(self):
+        util_io.get_params()
+        now = datetime.now()
+        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     def use_all_solvers(self, input_file):
         dict_mdp=self.use_mdp(input_file)
         return dict_mdp
