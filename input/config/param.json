@@ -2,8 +2,8 @@
   "environment": {
     "regular": {
       "grid": {
-        "xgrid_dim": 10,
-        "ygrid_dim": 10
+        "xgrid_dim": 5,
+        "ygrid_dim": 5
       }
     }
   },
@@ -19,7 +19,8 @@
     {
       "amount_sections": 2,
       "limit_counts": 3000,
-      "start_node": 5
+      "start_node": 5,
+      "rewards": {"95": 10000}
     }
   }
 }

@@ -12,7 +12,8 @@ class service_handler(object):
         self.dict_mdp=None
 
     def create_output_folder(self):
-        util_io.get_params()
+        special_paths=util_io.get_special_paths()
+        path_output=special_paths["ROOT_DIR"]+special_paths["OUTPUT_DIR"]
         now = datetime.now()
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     def use_all_solvers(self, input_file):
