@@ -16,8 +16,9 @@ class service_scmMDP(object):
         self.problem.obj_solver.visualize_network()
 
 if __name__ == '__main__':
-    obj=service_scmMDP()
-    init_problem=problem()
-    obj.set_problem(init_problem)
-    obj.new_problem()
+    problem_type = {'type': 'scm'}
+    obj=service_scmMDP(problem_type)
+    #init_problem=obj.new_problem()
+    #obj.set_problem(init_problem)
+    #obj.new_problem()
     obj.show_graph()

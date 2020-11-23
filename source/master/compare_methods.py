@@ -18,6 +18,7 @@ class service_handler(object):
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     def use_all_solvers(self, input_file):
         dict_mdp=self.use_mdp(input_file)
+        self.use_scm()
         return dict_mdp
 
     def use_cognitive_mdp(self):
@@ -27,6 +28,7 @@ class service_handler(object):
     def use_scm(self):
         problem_type = {'type': 'scm'}
         self.service_scmMDP(problem_type)
+        b=1
 
     def use_reach(self):
         None
