@@ -35,8 +35,7 @@ class service_handler(object):
         None
 
     def use_mdp(self, input_file):
-
-        problem={'type': 'mdp', 'rewards': {'95': 100000}}
+        problem={'type': 'mdp', 'rewards': {'99': 100000}}
         obj_mdp=service_MDP()
         obj_mdp.set_problem_type(problem)
         obj_mdp.new_problem(input_file)
@@ -46,9 +45,9 @@ class service_handler(object):
     def get_all_visual_objects(self):
 
         # object from visualizer class
-        self.visuals["obj_visual"] = service_visualizer()
-        self.visuals["obj_visual"].init_plotter()
-        self.visuals["obj_visual"].show_grid()
+        #self.visuals["obj_visual"] = service_visualizer()
+        #self.visuals["obj_visual"].init_plotter()
+        #self.visuals["obj_visual"].show_grid()
 
         # object from visualizer class
         self.visuals["obj_vectorfield"] = service_visualizer()
@@ -93,8 +92,6 @@ class service_handler(object):
         new_queue = util_io.optimal_path_for_queue(self.coordinates, self.dict_mdp)
         self.visuals["obj_vectorfield"].add_queue_optimalpath(new_queue)
 
-
-
 if __name__ == '__main__':
 
     # object from data handler
@@ -113,16 +110,16 @@ if __name__ == '__main__':
     obj_service.get_solver_information(input_file)
 
     # add visual plot
-    obj_service.add_visuals_queue()
-    obj_service.visuals["obj_visual"].show_plot()
+    #obj_service.add_visuals_queue()
+    #obj_service.visuals["obj_visual"].show_plot()
 
     # add vectorfield plot
     obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_vectorfield"].show_plot()
 
     # add barplot for value function
-    obj_service.add_vectorfield_queue()
-    obj_service.visuals["obj_barplot"].show_plot()
+    #obj_service.add_vectorfield_queue()
+    #obj_service.visuals["obj_barplot"].show_plot()
 
     # get result trajectories
-    util_io.get_result_trajectories_mdp(obj_service.dict_mdp["ideal_path"], obj_service.coordinates)
+    #util_io.get_result_trajectories_mdp(obj_service.dict_mdp["ideal_path"], obj_service.coordinates)

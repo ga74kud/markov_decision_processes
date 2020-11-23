@@ -2,14 +2,14 @@
   "environment": {
     "regular": {
       "grid": {
-        "xgrid_dim": 12,
-        "ygrid_dim": 12
+        "xgrid_dim": 10,
+        "ygrid_dim": 10
       }
     }
   },
   "mdp":
   {
-    "select_grid": "random",
+    "select_grid": "regular",
     "simulation":
     {
       "amount_sections": 2,
