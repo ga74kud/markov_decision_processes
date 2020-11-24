@@ -4,8 +4,6 @@ class service_MDP(object):
     def __init__(self):
         self.problem_type={"type": None, "rewards": None}
         self.obj=None
-    def show_graph(self):
-        self.problem.obj_solver.visualize_network()
     def set_rewards_by_param(self):
         param=util_io.get_params()
         self.problem_type["rewards"]=param["mdp"]["simulation"]["rewards"]
@@ -15,6 +13,7 @@ class service_MDP(object):
         self.obj.set_solver()
     def start_mdp(self):
         dict_mdp=self.obj.start_mdp_solver(self.problem_type["rewards"])
+
         return dict_mdp
 
 if __name__ == '__main__':

@@ -80,10 +80,10 @@ def optimal_path_for_queue(map, mdp_dict):
     params = get_params()
     act_node = mdp_dict['S'][params["mdp"]["simulation"]["start_node"]]
     queue_list = []
-    for idx in range(0, 3000):
+    for idx in range(0, params["mdp"]["simulation"]["number_cycles_to_reach_target"]):
         start_point, all_end_points, best_end_point, next_node=get_next_node(act_node, map, mdp_dict)
         act_node=mdp_dict["S"][next_node]
-        if(np.abs(mdp_dict["R"][next_node]-np.max(mdp_dict["R"]))<0.2):
+        if(np.abs(mdp_dict["R"][next_node]-np.max(mdp_dict["R"]))<params["mdp"]["simulation"]["threshold_to_reach_target"]):
             break
         else:
             act_difference=np.array(best_end_point) - start_point

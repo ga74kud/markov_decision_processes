@@ -23,6 +23,7 @@ class problem(object):
         self.obj_solver.set_R(R_dict)
         dict_mdp = self.obj_solver.start_mdp()
         self.obj_solver.get_all_policy_options()
+        self.obj_solver.visualize_network()
         return dict_mdp
 
 if __name__ == '__main__':
