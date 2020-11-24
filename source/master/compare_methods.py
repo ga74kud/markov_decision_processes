@@ -36,11 +36,11 @@ class service_handler(object):
         None
 
     def use_mdp(self, input_file):
-        problem={'type': 'mdp', 'rewards': {'99': 100000}}
+        #problem={'type': 'mdp', 'rewards': {'99': 100000}}
         obj_mdp=service_MDP()
-        obj_mdp.set_problem_type(problem)
+        obj_mdp.set_rewards_by_param()
         obj_mdp.new_problem(input_file)
-        dict_mdp=obj_mdp.start_mdp(problem)
+        dict_mdp=obj_mdp.start_mdp()
         return dict_mdp
 
     def get_all_visual_objects(self):

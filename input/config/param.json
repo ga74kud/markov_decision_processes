@@ -2,8 +2,8 @@
   "environment": {
     "regular": {
       "grid": {
-        "xgrid_dim": 10,
-        "ygrid_dim": 10
+        "xgrid_dim": 5,
+        "ygrid_dim": 5
       }
     }
   },
