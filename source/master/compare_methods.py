@@ -18,7 +18,6 @@ class service_handler(object):
         dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     def use_all_solvers(self, input_file):
         dict_mdp=self.use_mdp(input_file)
-        self.use_scm()
         return dict_mdp
 
     def use_cognitive_mdp(self):
@@ -110,10 +109,6 @@ if __name__ == '__main__':
 
     # solver
     obj_service.get_solver_information(input_file)
-
-    # add visual plot
-    #obj_service.add_visuals_queue()
-    #obj_service.visuals["obj_visual"].show_plot()
 
     # add vectorfield plot
     obj_service.add_vectorfield_queue()

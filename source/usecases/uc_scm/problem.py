@@ -9,7 +9,7 @@ class problem(object):
     def set_manifold(self):
         self.obj_manifold=manifold()
 
-    def set_solver(self, problem_type):
+    def set_solver(self):
         self.obj_solver=scm_class()
         self.obj_solver.set_manifold(self.obj_manifold)
         self.obj_solver.scm_import_json()

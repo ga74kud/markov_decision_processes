@@ -2,9 +2,8 @@ import igraph as ig
 import sympy
 from sympy.stats import *
 from sympy.utilities.lambdify import *
-#from source.usecases.uc_pomdp.pomdp import *
 import json
-
+import numpy as np
 
 class scm_class(object):
     def __init__(self):
@@ -21,13 +20,13 @@ class scm_class(object):
             new_list.append((a, b))
         return new_list
     def scm_import_json(self):
-        f = open('../../../input/old/structuralCausalModels.json', "r")
+        #f = open('../../../input/old/structuralCausalModels.json', "r")
+        f = open('../../../input/old/simple_velocity.json', "r")
         self.data = json.loads(f.read())
         self.manifold['amount_states'] = len(self.data['scm'])
         self.manifold['X'] = [qrt for qrt in self.data['variables']]
         self.manifold['Topology']=self.get_topology_by_scm(self.data)
-        t=self.get_scm_function(self.data, [Normal('M', 2, 1), Normal('N', 3, 1), Normal('O', 4, 1)])
-        print(t)
+
         #self.get_adjacency(self.manifold['amount_states'])
         #self.set_neighbour_actions()
     def get_topology_by_scm(self, data):
