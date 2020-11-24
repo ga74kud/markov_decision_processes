@@ -65,6 +65,9 @@ class service_handler(object):
         # object from environment class
         obj_map = map_loader()
         self.coordinates = obj_map.preprocessing(input_file)
+
+    def set_dict_mdp(self, dict_mdp):
+        self.dict_mdp=dict_mdp
     def get_solver_information(self, input_file):
 
         # object for solver handling
@@ -97,6 +100,7 @@ if __name__ == '__main__':
 
     # object from data handler
     obj_data_handler = service_data()
+    obj_data_handler.set_initial_folder()
     input_file = obj_data_handler.get_input_file()
     # object for solver handling
     obj_service = service_handler()
@@ -108,8 +112,8 @@ if __name__ == '__main__':
     obj_service.get_environmental_information(input_file)
 
     # solver
-    obj_service.get_solver_information(input_file)
-
+    #obj_service.get_solver_information(input_file)
+    obj_service.set_dict_mdp(obj_service.use_mdp(input_file))
     # add vectorfield plot
     obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_vectorfield"].show_plot()

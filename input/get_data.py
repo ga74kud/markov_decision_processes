@@ -1,11 +1,25 @@
 import numpy as np
 import source.util.data_input_loader as util_io
-
-
+from datetime import datetime
+import os
 
 class service_data(object):
     def __init__(self, **kwargs):
         self.input_file=None
+        self.folder_to_store=None
+    def set_initial_folder(self):
+        params=util_io.get_special_paths()
+        now = datetime.now()
+        dt_string = now.strftime("%Y%m%d_%H%M%S")
+        folder_to_store=params["ROOT_DIR"]+params["OUTPUT_DIR"]+dt_string
+        path=folder_to_store
+        try:
+            os.mkdir(path)
+        except OSError:
+            print("Creation of the directory %s failed" % path)
+        else:
+            print("Successfully created the directory %s " % path)
+        self.folder_to_store=folder_to_store
     def get_input_file(self):
         # which environment model provided
         #input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"

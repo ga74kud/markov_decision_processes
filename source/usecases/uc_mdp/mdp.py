@@ -184,7 +184,7 @@ class mdp(object):
         g.vs["vertex_size"] = 20
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, layout=layout, **visual_style)
+        ig.plot(g, "../../social_network.pdf", layout=layout, **visual_style)
 
     def get_trajectory(self, R_dict):
         params=util_io.get_params()
