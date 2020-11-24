@@ -54,7 +54,7 @@ class scm_class(object):
         scm_sympy = sympy.sympify(scms)
         for q, qi in enumerate(scm_sympy):
             expectation_scm, variance_scm=self.get_expected_val_scm(input, q, qi, symb, values)
-            print(expectation_scm)
+            #print(expectation_scm)
             all_exp.append(expectation_scm)
             all_var.append(variance_scm)
         return all_exp

@@ -22,5 +22,9 @@ if __name__ == '__main__':
     #obj.new_problem()
     obj.show_graph()
 
-    t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data, [Normal('M', 2, 1), Normal('N', 3, 1)])
+    t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data, [Normal('x', 1.295, 0.273), Normal('v', 1.295, 0.273), Normal('v', 1.295, 0.273)])
+    print(t)
+    t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
+                                                [3, 4,
+                                                 Normal('v', 1.295, 0.273)])
     print(t)
