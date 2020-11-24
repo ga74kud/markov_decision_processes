@@ -10,12 +10,6 @@ class service_handler(object):
         self.visuals={"obj_visual": None, "obj_vectorfield": None, "obj_barplot": None}
         self.coordinates=None
         self.dict_mdp=None
-
-    def create_output_folder(self):
-        special_paths=util_io.get_special_paths()
-        path_output=special_paths["ROOT_DIR"]+special_paths["OUTPUT_DIR"]
-        now = datetime.now()
-        dt_string = now.strftime("%d/%m/%Y %H:%M:%S")
     def use_all_solvers(self, input_file):
         dict_mdp=self.use_mdp(input_file)
         return dict_mdp
@@ -27,7 +21,6 @@ class service_handler(object):
     def use_scm(self):
         problem_type = {'type': 'scm'}
         self.service_scmMDP(problem_type)
-        b=1
 
     def use_reach(self):
         None
@@ -35,12 +28,12 @@ class service_handler(object):
     def use_monte_carlo(self):
         None
 
-    def use_mdp(self, input_file):
+    def use_mdp(self, input_file, folder_to_store):
         #problem={'type': 'mdp', 'rewards': {'99': 100000}}
         obj_mdp=service_MDP()
         obj_mdp.set_rewards_by_param()
         obj_mdp.new_problem(input_file)
-        dict_mdp=obj_mdp.start_mdp()
+        dict_mdp=obj_mdp.start_mdp(folder_to_store)
         return dict_mdp
 
     def get_all_visual_objects(self):
@@ -112,8 +105,8 @@ if __name__ == '__main__':
     obj_service.get_environmental_information(input_file)
 
     # solver
-    #obj_service.get_solver_information(input_file)
-    obj_service.set_dict_mdp(obj_service.use_mdp(input_file))
+    new_dict_mdp=obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
+    obj_service.set_dict_mdp(new_dict_mdp)
     # add vectorfield plot
     obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_vectorfield"].show_plot()

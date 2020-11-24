@@ -144,7 +144,7 @@ class mdp(object):
             count+=1
         return self.mdp_dict
 
-    def visualize_network(self):
+    def visualize_network(self, folder_to_store):
         g = ig.Graph(self.mdp_dict['adjacency_list'])
         g.vs["name"] = self.mdp_dict['S']
         g.vs["reward"]= self.mdp_dict['R']
@@ -184,7 +184,7 @@ class mdp(object):
         g.vs["vertex_size"] = 20
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, "../../social_network.pdf", layout=layout, **visual_style)
+        ig.plot(g, folder_to_store+"igraph.pdf", layout=layout, **visual_style)
 
     def get_trajectory(self, R_dict):
         params=util_io.get_params()

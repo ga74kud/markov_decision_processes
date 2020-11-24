@@ -11,8 +11,8 @@ class service_MDP(object):
         self.obj=problem()
         self.obj.set_manifold(FILE_DIR)
         self.obj.set_solver()
-    def start_mdp(self):
-        dict_mdp=self.obj.start_mdp_solver(self.problem_type["rewards"])
+    def start_mdp(self, folder_to_store):
+        dict_mdp=self.obj.start_mdp_solver(self.problem_type["rewards"], folder_to_store)
 
         return dict_mdp
 

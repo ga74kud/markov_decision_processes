@@ -25,3 +25,5 @@ _site*
 tmp/
 important
 new.ply
+output/
+*.pdf

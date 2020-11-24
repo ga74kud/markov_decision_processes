@@ -18,12 +18,12 @@ class problem(object):
         self.obj_solver.set_action(self.obj_manifold.manifold["Actions"])
         self.obj_solver.set_init_pi()
         self.obj_solver.set_T(self.obj_manifold.get_probability_nodes())
-    def start_mdp_solver(self, rewards):
+    def start_mdp_solver(self, rewards, folder_to_store):
         R_dict = rewards
         self.obj_solver.set_R(R_dict)
         dict_mdp = self.obj_solver.start_mdp()
         self.obj_solver.get_all_policy_options()
-        self.obj_solver.visualize_network()
+        self.obj_solver.visualize_network(folder_to_store)
         return dict_mdp
 
 if __name__ == '__main__':
