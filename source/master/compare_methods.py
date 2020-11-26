@@ -113,7 +113,7 @@ if __name__ == '__main__':
     obj_service.set_dict_mdp(new_dict_mdp)
     # add vectorfield plot
     obj_service.add_vectorfield_queue()
-    obj_service.visuals["obj_vectorfield"].show_plot()
+    obj_service.visuals["obj_vectorfield"].show_plot(obj_data_handler.folder_to_store+"vectorfield.png")
 
     # add barplot for value function
     #obj_service.add_vectorfield_queue()

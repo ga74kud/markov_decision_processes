@@ -4,7 +4,7 @@ class service_visualizer(object):
     def __init__(self, **kwargs):
         self.p=None
     def init_plotter(self):
-        self.p = pv.Plotter()
+        self.p = pv.Plotter(off_screen=True)
     def add_queue(self, queue):
         for wlt in range(0, len(queue)):
             to_plot=queue[wlt]
@@ -50,5 +50,5 @@ class service_visualizer(object):
             self.p.add_mesh(a, opacity=b, color=c, point_size=d, render_points_as_spheres=e)
     def show_grid(self):
         self.p.show_grid()
-    def show_plot(self):
-        self.p.show()
+    def show_plot(self, path):
+        self.p.show(screenshot=path)
