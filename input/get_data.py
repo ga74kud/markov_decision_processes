@@ -2,11 +2,22 @@ import numpy as np
 import source.util.data_input_loader as util_io
 from datetime import datetime
 import os
+import json
 
 class service_data(object):
     def __init__(self, **kwargs):
         self.input_file=None
         self.folder_to_store=None
+    def set_initial_json(self):
+        data = {"storage_folder": self.folder_to_store}
+        with open(self.folder_to_store+"tmp.json", 'w') as f:
+            json.dump(data, f)
+    def update_json_with_dictionary(self, input_dict):
+        with open(self.folder_to_store+"tmp.json", "r+") as file:
+            data = json.load(file)
+            data.update(input_dict)
+            file.seek(0)
+            json.dump(data, file)
     def set_initial_folder(self):
         params=util_io.get_special_paths()
         now = datetime.now()

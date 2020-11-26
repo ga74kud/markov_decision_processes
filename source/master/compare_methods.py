@@ -53,6 +53,7 @@ class service_handler(object):
         self.visuals["obj_barplot"].init_plotter()
         self.visuals["obj_barplot"].show_grid()
 
+
     def get_environmental_information(self, input_file):
 
         # object from environment class
@@ -94,6 +95,9 @@ if __name__ == '__main__':
     # object from data handler
     obj_data_handler = service_data()
     obj_data_handler.set_initial_folder()
+    obj_data_handler.set_initial_json()
+    #obj_data_handler.update_json_with_dictionary({"abc": "123"})
+
     input_file = obj_data_handler.get_input_file()
     # object for solver handling
     obj_service = service_handler()
