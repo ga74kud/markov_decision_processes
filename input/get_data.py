@@ -21,7 +21,7 @@ class service_data(object):
     def set_initial_folder(self):
         params=util_io.get_special_paths()
         now = datetime.now()
-        dt_string = now.strftime("%Y%m%d_%H%M%S/")
+        dt_string = now.strftime("%Y%m%d_%H/")
         folder_to_store=params["ROOT_DIR"]+params["OUTPUT_DIR"]+dt_string
         path=folder_to_store
         try:
