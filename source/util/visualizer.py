@@ -30,7 +30,7 @@ class service_visualizer(object):
             to_plot = queue[wlt]
             a = pv.Arrow(start=to_plot["start"], direction=to_plot["direction"], tip_radius=0.2, shaft_radius=0.1)
             b = 1
-            c = "blue"
+            c = to_plot["color"]
             self.p.add_mesh(a, opacity=b, color=c)
 
     def add_queue_delauny(self, queue):

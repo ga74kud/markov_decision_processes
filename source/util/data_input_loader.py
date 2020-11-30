@@ -70,7 +70,7 @@ def vectorfield_for_queue(map, mdp_dict):
         if(FLAG_IS_VALID):
             for idx, qrt in enumerate(all_directions):
                 queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
-                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "blue",
                                "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
         else:
             continue
