@@ -37,12 +37,6 @@ class service_handler(object):
         return dict_mdp
 
     def get_all_visual_objects(self):
-
-        # object from visualizer class
-        #self.visuals["obj_visual"] = service_visualizer()
-        #self.visuals["obj_visual"].init_plotter()
-        #self.visuals["obj_visual"].show_grid()
-
         # object from visualizer class
         self.visuals["obj_vectorfield"] = service_visualizer()
         self.visuals["obj_vectorfield"].init_plotter()
@@ -92,13 +86,13 @@ class service_handler(object):
 
         return optimal_path_list
 
-if __name__ == '__main__':
 
+def compute_trajectory_of_mdp():
     # object from data handler
     obj_data_handler = service_data()
     obj_data_handler.set_initial_folder()
     obj_data_handler.set_initial_json()
-    #obj_data_handler.update_json_with_dictionary({"abc": "123"})
+    # obj_data_handler.update_json_with_dictionary({"abc": "123"})
 
     input_file = obj_data_handler.get_input_file()
     # object for solver handling
@@ -111,14 +105,19 @@ if __name__ == '__main__':
     obj_service.get_environmental_information(input_file)
 
     # solver
-    new_dict_mdp=obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
+    new_dict_mdp = obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
     obj_service.set_dict_mdp(new_dict_mdp)
     # add vectorfield plot
-    optimal_path_list=obj_service.add_vectorfield_queue()
-    obj_service.visuals["obj_vectorfield"].show_plot(obj_data_handler.folder_to_store+"vectorfield.png")
+    optimal_path_list = obj_service.add_vectorfield_queue()
+    obj_service.visuals["obj_vectorfield"].show_plot(obj_data_handler.folder_to_store + "vectorfield.png")
 
     # write optimal path to tmp.json
     obj_data_handler.update_json_with_dictionary(optimal_path_list)
 
     # get result trajectories with spline interpolation
-    util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates, obj_data_handler.folder_to_store)
+    util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
+                                        obj_data_handler.folder_to_store)
+
+if __name__ == '__main__':
+    compute_trajectory_of_mdp()
+

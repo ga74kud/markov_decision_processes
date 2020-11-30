@@ -9,7 +9,7 @@
   },
   "mdp":
   {
-    "select_grid": "random",
+    "select_grid": "regular",
     "simulation":
     {
       "spline_interpolation": 75,
