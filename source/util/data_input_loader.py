@@ -141,17 +141,15 @@ def chunks(input, k):
     test=[np.array(input[i:i+n]) for i in range(0, len(input), n)]
     return test
 
-def get_result_trajectories_mdp(optimal_mdp, coordinates):
-
-    #k=param["mdp"]["simulation"]["amount_sections"]
-    #chunklist = chunks(optimal_mdp[1:-1], k)
+def get_result_trajectories_mdp(optimal_mdp, coordinates, folder_to_store):
     act_traj=list()
     for wlt in optimal_mdp:
         x = coordinates[wlt, 0]
         y = coordinates[wlt, 1]
         act_traj.append((x,y))
-    plot_traj(act_traj)
-def plot_traj(act_traj):
+    interpolated_points, points=interpolate_traj(act_traj)
+    plot_traj(interpolated_points, points, folder_to_store)
+def interpolate_traj(act_traj):
     param=get_params()
     x = [wlt[0] for wlt in act_traj]
     y = [wlt[1] for wlt in act_traj]
@@ -168,6 +166,9 @@ def plot_traj(act_traj):
     for method in interpolations_methods:
         interpolator = interp1d(distance, points, kind=method, axis=0)
         interpolated_points[method] = interpolator(alpha)
+    return interpolated_points, points
+
+def plot_traj(interpolated_points, points, folder_to_store):
     # Graph:
     plt.figure(figsize=(7, 7))
     for method_name, curve in interpolated_points.items():
@@ -178,4 +179,5 @@ def plot_traj(act_traj):
     plt.legend()
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.show()
+    plt.savefig(folder_to_store+"interpolated_traj.png")
+    #plt.show()

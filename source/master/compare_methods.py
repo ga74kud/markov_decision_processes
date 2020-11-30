@@ -117,11 +117,8 @@ if __name__ == '__main__':
     optimal_path_list=obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_vectorfield"].show_plot(obj_data_handler.folder_to_store+"vectorfield.png")
 
-
+    # write optimal path to tmp.json
     obj_data_handler.update_json_with_dictionary(optimal_path_list)
-    # add barplot for value function
-    #obj_service.add_vectorfield_queue()
-    #obj_service.visuals["obj_barplot"].show_plot()
 
-    # get result trajectories
-    util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates)
+    # get result trajectories with spline interpolation
+    util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates, obj_data_handler.folder_to_store)
