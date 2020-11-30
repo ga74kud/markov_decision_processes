@@ -70,7 +70,7 @@ def vectorfield_for_queue(map, mdp_dict):
         if(FLAG_IS_VALID):
             for idx, qrt in enumerate(all_directions):
                 queue_list.append({"actor_name": "vecfld_" + str(idx), "start": wlt, "direction": qrt,
-                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "blue",
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red",
                                "scale": scale_vec[idx], "pointa": wlt, "pointb": end_points[idx]})
         else:
             continue
@@ -80,17 +80,30 @@ def optimal_path_for_queue(map, mdp_dict):
     params = get_params()
     act_node = mdp_dict['S'][params["mdp"]["simulation"]["start_node"]]
     queue_list = []
+    start_point_list=[]
+    act_node_list=[]
     for idx in range(0, params["mdp"]["simulation"]["number_cycles_to_reach_target"]):
         start_point, all_end_points, best_end_point, next_node=get_next_node(act_node, map, mdp_dict)
+        start_point_list.append(start_point.tolist())
+        act_node_list.append(int(act_node))
         act_node=mdp_dict["S"][next_node]
-        if(np.abs(mdp_dict["R"][next_node]-np.max(mdp_dict["R"]))<params["mdp"]["simulation"]["threshold_to_reach_target"]):
-            break
-        else:
-            act_difference=np.array(best_end_point) - start_point
-            queue_list.append({"actor_name": "vecfld_" + str(idx), "start": start_point, "direction": act_difference,
-                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "orange",
+        act_difference=np.array(best_end_point) - start_point
+        queue_list.append({"actor_name": "vecfld_" + str(idx), "start": start_point, "direction": act_difference,
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "blue",
                        "scale": 3})
-    return queue_list
+
+    new_act_node_list=[]
+    new_start_point_list=[]
+    count=0
+    for idx, val in enumerate(act_node_list):
+        if(act_node_list[idx]==act_node_list[idx+1]):
+            count+=1
+        new_act_node_list.append(val)
+        new_start_point_list.append(start_point_list[idx])
+        if(count>=1):
+            break
+    optimal_path_list = {"start_point": new_start_point_list, "act_node": new_act_node_list}
+    return queue_list, optimal_path_list
 
 def trajectory_for_queue(map, trajectory):
     queue_list=[]
@@ -138,7 +151,6 @@ def get_result_trajectories_mdp(optimal_mdp, coordinates):
         x = np.mean(coordinates[wlt, 0])
         y = np.mean(coordinates[wlt, 1])
         act_traj.append((x,y))
-    act_traj.append((coordinates[optimal_mdp[-1], 0], coordinates[optimal_mdp[-1], 1]))
     plot_traj(act_traj)
 def plot_traj(act_traj):
     x = [wlt[0] for wlt in act_traj]

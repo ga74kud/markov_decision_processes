@@ -87,8 +87,10 @@ class service_handler(object):
         self.visuals["obj_vectorfield"].add_queue_vectorfield(new_queue)
         self.visuals["obj_vectorfield"].add_queue_topology(new_queue)
 
-        new_queue = util_io.optimal_path_for_queue(self.coordinates, self.dict_mdp)
+        new_queue, optimal_path_list = util_io.optimal_path_for_queue(self.coordinates, self.dict_mdp)
         self.visuals["obj_vectorfield"].add_queue_optimalpath(new_queue)
+
+        return optimal_path_list
 
 if __name__ == '__main__':
 
@@ -112,12 +114,14 @@ if __name__ == '__main__':
     new_dict_mdp=obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
     obj_service.set_dict_mdp(new_dict_mdp)
     # add vectorfield plot
-    obj_service.add_vectorfield_queue()
+    optimal_path_list=obj_service.add_vectorfield_queue()
     obj_service.visuals["obj_vectorfield"].show_plot(obj_data_handler.folder_to_store+"vectorfield.png")
 
+
+    obj_data_handler.update_json_with_dictionary(optimal_path_list)
     # add barplot for value function
     #obj_service.add_vectorfield_queue()
     #obj_service.visuals["obj_barplot"].show_plot()
 
     # get result trajectories
-    #util_io.get_result_trajectories_mdp(obj_service.dict_mdp["ideal_path"], obj_service.coordinates)
+    util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates)

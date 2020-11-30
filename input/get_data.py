@@ -8,16 +8,16 @@ class service_data(object):
     def __init__(self, **kwargs):
         self.input_file=None
         self.folder_to_store=None
+
     def set_initial_json(self):
         data = {"storage_folder": self.folder_to_store}
         with open(self.folder_to_store+"tmp.json", 'w') as f:
             json.dump(data, f)
+
     def update_json_with_dictionary(self, input_dict):
         with open(self.folder_to_store+"tmp.json", "r+") as file:
-            data = json.load(file)
-            data.update(input_dict)
-            file.seek(0)
-            json.dump(data, file)
+            json.dump(input_dict, file)
+
     def set_initial_folder(self):
         params=util_io.get_special_paths()
         now = datetime.now()
@@ -31,6 +31,7 @@ class service_data(object):
         else:
             print("Successfully created the directory %s " % path)
         self.folder_to_store=folder_to_store
+
     def get_input_file(self):
         # which environment model provided
         #input_file = "/home/michael/ros/vifware_data_puntigam/pcd/map_v1_small_filtered_xyzrgb.pcd"
@@ -43,6 +44,7 @@ class service_data(object):
         self.set_input_file(input_file)
         return input_file
         # input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/regular_grid.json"
+
     def set_input_file(self, input_file):
         self.input_file=input_file
 
