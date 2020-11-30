@@ -12,7 +12,7 @@
     "select_grid": "regular",
     "simulation":
     {
-      "amount_sections": 4,
+      "spline_interpolation": 75,
       "limit_counts": 3000,
       "start_node": 0,
       "rewards": {"24": 10000},

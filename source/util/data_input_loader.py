@@ -142,17 +142,17 @@ def chunks(input, k):
     return test
 
 def get_result_trajectories_mdp(optimal_mdp, coordinates):
-    param=get_params()
-    k=param["mdp"]["simulation"]["amount_sections"]
-    chunklist = chunks(optimal_mdp[1:-1], k)
+
+    #k=param["mdp"]["simulation"]["amount_sections"]
+    #chunklist = chunks(optimal_mdp[1:-1], k)
     act_traj=list()
-    act_traj.append((coordinates[optimal_mdp[0], 0], coordinates[optimal_mdp[0], 1]))
-    for wlt in chunklist:
-        x = np.mean(coordinates[wlt, 0])
-        y = np.mean(coordinates[wlt, 1])
+    for wlt in optimal_mdp:
+        x = coordinates[wlt, 0]
+        y = coordinates[wlt, 1]
         act_traj.append((x,y))
     plot_traj(act_traj)
 def plot_traj(act_traj):
+    param=get_params()
     x = [wlt[0] for wlt in act_traj]
     y = [wlt[1] for wlt in act_traj]
     points=np.vstack((x,y)).T
@@ -161,8 +161,8 @@ def plot_traj(act_traj):
     distance = np.insert(distance, 0, 0) / distance[-1]
 
     # Interpolation for different methods:
-    interpolations_methods = ['slinear', 'quadratic', 'cubic']
-    alpha = np.linspace(0, 1, 75)
+    interpolations_methods = ['quadratic']
+    alpha = np.linspace(0, 1, param["mdp"]["simulation"]["spline_interpolation"])
 
     interpolated_points = {}
     for method in interpolations_methods:
