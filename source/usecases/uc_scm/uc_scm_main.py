@@ -17,9 +17,6 @@ class service_scmMDP(object):
 
 if __name__ == '__main__':
     obj=service_scmMDP()
-    #init_problem=obj.new_problem()
-    #obj.set_problem(init_problem)
-    #obj.new_problem()
     obj.show_graph()
 
     t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data, [Normal('x', 1.295, 0.273), Normal('v', 1.295, 0.273), Normal('v', 1.295, 0.273)])

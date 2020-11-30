@@ -1,6 +1,10 @@
 from source.usecases.uc_mdp.uc_mdp_main import *
+from source.usecases.uc_scm.uc_scm_main import *
+
+
 from source.util.map_loader import *
 from source.util.visualizer import *
+
 from input.get_data import *
 from datetime import *
 import source.util.data_input_loader as util_io
@@ -10,17 +14,23 @@ class service_handler(object):
         self.visuals={"obj_visual": None, "obj_vectorfield": None, "obj_barplot": None}
         self.coordinates=None
         self.dict_mdp=None
-    def use_all_solvers(self, input_file):
-        dict_mdp=self.use_mdp(input_file)
-        return dict_mdp
 
     def use_cognitive_mdp(self):
         problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
         self.service_CognitiveMDP(problem_type)
 
     def use_scm(self):
-        problem_type = {'type': 'scm'}
-        self.service_scmMDP(problem_type)
+        obj = service_scmMDP()
+        obj.show_graph()
+
+        t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
+                                                    [Normal('x', 1.295, 0.273), Normal('v', 1.295, 0.273),
+                                                     Normal('v', 1.295, 0.273)])
+        print(t)
+        t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
+                                                    [3, 4,
+                                                     Normal('v', 1.295, 0.273)])
+        print(t)
 
     def use_reach(self):
         None
@@ -117,6 +127,8 @@ def compute_trajectory_of_mdp():
     # get result trajectories with spline interpolation
     util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
                                         obj_data_handler.folder_to_store)
+
+    obj_service.use_scm()
 
 if __name__ == '__main__':
     compute_trajectory_of_mdp()
