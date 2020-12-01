@@ -119,7 +119,7 @@ class mdp(object):
                     new_cand={"neighbour": act_neighbours[idx], "difference": float(act_values_by_group[idx]-act_value)}
                     self.mdp_dict['multi_pi'][act_node].append(new_cand)
 
-    def start_mdp(self):
+    def start_mdp_algorithm(self):
         count=0
         count2=0
         while(1):

@@ -77,7 +77,7 @@ class scm_class(object):
         print('symmetry')
         print(test_symmetry)
 
-    def visualize_network(self):
+    def visualize_network(self, folder_to_store):
         nodes=self.manifold['X']
         nodes_name=[self.data['variables'][i] for i in nodes]
         adjacency=self.set_adjacency_list(nodes, self.manifold['Topology'])
@@ -87,6 +87,6 @@ class scm_class(object):
         g.vs["vertex_size"] = 20
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, **visual_style)#margin = 20,bbox = (3000, 3000), layout=layout,
+        ig.plot(g, folder_to_store+"scm_graph.pdf", **visual_style)#margin = 20,bbox = (3000, 3000), layout=layout,
 
 

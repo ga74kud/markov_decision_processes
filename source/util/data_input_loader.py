@@ -149,6 +149,7 @@ def get_result_trajectories_mdp(optimal_mdp, coordinates, folder_to_store):
         act_traj.append((x,y))
     interpolated_points, points=interpolate_traj(act_traj)
     plot_traj(interpolated_points, points, folder_to_store)
+    return interpolated_points, points
 def interpolate_traj(act_traj):
     param=get_params()
     x = [wlt[0] for wlt in act_traj]
@@ -181,3 +182,23 @@ def plot_traj(interpolated_points, points, folder_to_store):
     plt.ylabel('y')
     plt.savefig(folder_to_store+"interpolated_traj.png")
     #plt.show()
+
+def get_cumultative_distance(folder_to_store, interpolated_points):
+    plt.figure()
+    interpolated_points=interpolated_points["quadratic"]
+    x = interpolated_points[:, 0]
+    y = interpolated_points[:, 1]
+    t=np.linspace(0, 100, len(x))
+    dx = x[1:] - x[:-1]
+    dy = y[1:] - y[:-1]
+
+    step_size = np.sqrt(dx ** 2 + dy ** 2)
+
+    cum_dist = np.concatenate(([0], np.cumsum(step_size)))
+    plot_trajectory(folder_to_store, t, cum_dist, 't [%]', 'd [m]')
+    return cum_dist
+def plot_trajectory(folder_to_store, t, y, xlab, ylab):
+    plt.plot(t, y)
+    plt.xlabel(xlab)
+    plt.ylabel(ylab)
+    plt.savefig(folder_to_store+"cumulative_path_length.png")

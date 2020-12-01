@@ -1,12 +1,8 @@
 from source.usecases.uc_mdp.uc_mdp_main import *
 from source.usecases.uc_scm.uc_scm_main import *
-
-
 from source.util.map_loader import *
 from source.util.visualizer import *
-
 from input.get_data import *
-from datetime import *
 import source.util.data_input_loader as util_io
 
 class service_handler(object):
@@ -19,9 +15,9 @@ class service_handler(object):
         problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
         self.service_CognitiveMDP(problem_type)
 
-    def use_scm(self):
-        obj = service_scmMDP()
-        obj.show_graph()
+    def use_scm_on_interpolated_line(self, folder_to_store, interpolated_points, points, cum_dist):
+        obj = service_scmMDP(folder_to_store)
+        obj.show_graph(folder_to_store)
 
         t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
                                                     [Normal('x', 1.295, 0.273), Normal('v', 1.295, 0.273),
@@ -39,7 +35,6 @@ class service_handler(object):
         None
 
     def use_mdp(self, input_file, folder_to_store):
-        #problem={'type': 'mdp', 'rewards': {'99': 100000}}
         obj_mdp=service_MDP()
         obj_mdp.set_rewards_by_param()
         obj_mdp.new_problem(input_file)
@@ -125,10 +120,10 @@ def compute_trajectory_of_mdp():
     obj_data_handler.update_json_with_dictionary(optimal_path_list)
 
     # get result trajectories with spline interpolation
-    util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
+    interpolated_points, points=util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
                                         obj_data_handler.folder_to_store)
-
-    obj_service.use_scm()
+    cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
+    obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points, points, cum_dist)
 
 if __name__ == '__main__':
     compute_trajectory_of_mdp()

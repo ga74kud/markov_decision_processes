@@ -1,9 +1,9 @@
 from source.usecases.uc_scm.problem import *
 class service_scmMDP(object):
-    def __init__(self):
-        self.problem=self.new_problem()
+    def __init__(self, folder_to_store):
+        self.problem=self.new_problem(folder_to_store)
 
-    def new_problem(self):
+    def new_problem(self, folder_to_store):
         obj = problem()
         obj.set_manifold()
         obj.set_solver()
@@ -12,8 +12,8 @@ class service_scmMDP(object):
     def set_problem(self, problem):
         self.problem=problem
 
-    def show_graph(self):
-        self.problem.obj_solver.visualize_network()
+    def show_graph(self, folder_to_store):
+        self.problem.obj_solver.visualize_network(folder_to_store)
 
 if __name__ == '__main__':
     obj=service_scmMDP()

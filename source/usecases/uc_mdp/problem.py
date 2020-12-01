@@ -21,7 +21,7 @@ class problem(object):
     def start_mdp_solver(self, rewards, folder_to_store):
         R_dict = rewards
         self.obj_solver.set_R(R_dict)
-        dict_mdp = self.obj_solver.start_mdp()
+        dict_mdp = self.obj_solver.start_mdp_algorithm()
         self.obj_solver.get_all_policy_options()
         self.obj_solver.visualize_network(folder_to_store)
         return dict_mdp
