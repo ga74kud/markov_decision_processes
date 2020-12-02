@@ -4,6 +4,7 @@ from source.util.map_loader import *
 from source.util.visualizer import *
 from input.get_data import *
 import source.util.data_input_loader as util_io
+from sympy.stats import *
 
 class service_handler(object):
     def __init__(self, **kwargs):

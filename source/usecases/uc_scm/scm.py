@@ -1,6 +1,5 @@
 import igraph as ig
 import sympy
-from sympy.stats import *
 from sympy.utilities.lambdify import *
 import json
 import numpy as np
@@ -58,12 +57,15 @@ class scm_class(object):
             all_exp.append(expectation_scm)
             all_var.append(variance_scm)
         return all_exp, all_var
-    def get_expected_val_scm(self, idx, act_scm, symb, values):
+    def get_expected_val_scm(self, idx, act_scm, symb, probability_input):
+        from sympy.stats import E, variance
         a = sympy.symbols('a')
         new_fun=implemented_function('scm_'+str(idx), lambda inp: act_scm.subs([(symb[i], inp[i]) for i in range(0, len(inp))]))
         lam_f=lambdify(a, new_fun(a))
-        erg=lam_f(values)
-        return E(erg), variance(erg)
+        erg=lam_f(probability_input)
+        E=E(erg)
+        V=variance(erg)
+        return E, V
     def set_neighbour_actions(self):
         for wlt in range(0, np.size(self.manifold['Adjacency'], 1)):
             abc=self.manifold['Adjacency'][:, wlt]
