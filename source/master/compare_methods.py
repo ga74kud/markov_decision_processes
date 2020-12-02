@@ -19,10 +19,17 @@ class service_handler(object):
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
 
-        t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
+        mean_val, variance_val = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
                                                     [Normal('x', 1.295, 0.273), Normal('v', 1.295, 0.273),
-                                                     Normal('v', 1.295, 0.273)])
-        print(t)
+                                                     Normal('a', 1.295, 0.273)])
+        print(mean_val)
+        print(variance_val)
+        mean_val, variance_val = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
+                                                                         [Normal('x', mean_val[0], variance_val[0]),
+                                                                          Normal('v', mean_val[1], variance_val[1]),
+                                                                          Normal('a', mean_val[2], variance_val[2])])
+        print(mean_val)
+        print(variance_val)
         t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
                                                     [3, 4,
                                                      Normal('v', 1.295, 0.273)])

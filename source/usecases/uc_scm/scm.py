@@ -45,22 +45,22 @@ class scm_class(object):
         return topology
 
 
-    def get_scm_function(self, input, values):
+    def get_scm_function(self, input, probability_input):
         all_exp=[]
         all_var = []
         scms=list(input["scm"].values())
         dictionary = input["variables"]
         symb=sympy.symbols(list(dictionary.values()))
-        scm_sympy = sympy.sympify(scms)
-        for q, qi in enumerate(scm_sympy):
-            expectation_scm, variance_scm=self.get_expected_val_scm(input, q, qi, symb, values)
+        scm_sympy = sympy.sympify(scms) #necessary for substitution later
+        for idx, act_scm in enumerate(scm_sympy):
+            expectation_scm, variance_scm=self.get_expected_val_scm(idx, act_scm, symb, probability_input)
             #print(expectation_scm)
             all_exp.append(expectation_scm)
             all_var.append(variance_scm)
-        return all_exp
-    def get_expected_val_scm(self, input, q, qi, symb, values):
+        return all_exp, all_var
+    def get_expected_val_scm(self, idx, act_scm, symb, values):
         a = sympy.symbols('a')
-        new_fun=implemented_function('scm_'+str(q), lambda inp: qi.subs([(symb[i], inp[i]) for i in range(0, len(inp))]))
+        new_fun=implemented_function('scm_'+str(idx), lambda inp: act_scm.subs([(symb[i], inp[i]) for i in range(0, len(inp))]))
         lam_f=lambdify(a, new_fun(a))
         erg=lam_f(values)
         return E(erg), variance(erg)
