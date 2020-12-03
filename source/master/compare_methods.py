@@ -17,24 +17,16 @@ class service_handler(object):
         self.service_CognitiveMDP(problem_type)
 
     def use_scm_on_interpolated_line(self, folder_to_store, interpolated_points, points, cum_dist):
+        params=util_io.get_params()
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
-
-        mean_val, variance_val = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
-                                                    [Normal('x', 1.295, 0.273), Normal('v', 1.295, 0.273),
-                                                     Normal('a', 1.295, 0.273)])
-        print(mean_val)
-        print(variance_val)
-        mean_val, variance_val = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
-                                                                         [Normal('x', mean_val[0], variance_val[0]),
-                                                                          Normal('v', mean_val[1], variance_val[1]),
-                                                                          Normal('a', mean_val[2], variance_val[2])])
-        print(mean_val)
-        print(variance_val)
-        t = obj.problem.obj_solver.get_scm_function(obj.problem.obj_solver.data,
-                                                    [3, 4,
-                                                     Normal('v', 1.295, 0.273)])
-        print(t)
+        mean_val_list=[]
+        mean_val=[0, 0, 1.295, params["general"]["Ts"]]
+        mean_val_list.append(mean_val)
+        for wlt in range(0, 10):
+            mean_val= obj.problem.obj_solver.get_scm_function_mean(obj.problem.obj_solver.data, mean_val)
+            mean_val_list.append(mean_val)
+        return mean_val_list
 
     def use_reach(self):
         None
@@ -131,8 +123,8 @@ def compute_trajectory_of_mdp():
     interpolated_points, points=util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
                                         obj_data_handler.folder_to_store)
     cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
-    obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points, points, cum_dist)
-
+    mean_val_list=obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points, points, cum_dist)
+    util_io.plot_mean_value(obj_data_handler.folder_to_store, mean_val_list)
 if __name__ == '__main__':
     compute_trajectory_of_mdp()
 

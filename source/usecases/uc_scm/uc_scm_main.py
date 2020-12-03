@@ -1,4 +1,6 @@
 from source.usecases.uc_scm.problem import *
+from sympy.stats import *
+
 class service_scmMDP(object):
     def __init__(self, folder_to_store):
         self.problem=self.new_problem(folder_to_store)

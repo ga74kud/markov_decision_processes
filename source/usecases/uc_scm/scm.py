@@ -57,6 +57,24 @@ class scm_class(object):
             all_exp.append(expectation_scm)
             all_var.append(variance_scm)
         return all_exp, all_var
+
+    def get_scm_function_mean(self, input, mean_input):
+        all_exp=[]
+        scms=list(input["scm"].values())
+        dictionary = input["variables"]
+        symb=sympy.symbols(list(dictionary.values()))
+        scm_sympy = sympy.sympify(scms) #necessary for substitution later
+        for idx, act_scm in enumerate(scm_sympy):
+            expectation_scm=self.get_expected_val_scm_mean(idx, act_scm, symb, mean_input)
+            all_exp.append(expectation_scm)
+        return all_exp
+    def get_expected_val_scm_mean(self, idx, act_scm, symb, value_input):
+        from sympy.stats import E, variance
+        a = sympy.symbols('a')
+        new_fun=implemented_function('scm_'+str(idx), lambda inp: act_scm.subs([(symb[i], inp[i]) for i in range(0, len(inp))]))
+        lam_f=lambdify(a, new_fun(a))
+        erg=lam_f(value_input)
+        return erg
     def get_expected_val_scm(self, idx, act_scm, symb, probability_input):
         from sympy.stats import E, variance
         a = sympy.symbols('a')

@@ -1,4 +1,7 @@
 {
+  "general": {
+    "Ts": 0.1
+  },
   "environment": {
     "regular": {
       "grid": {

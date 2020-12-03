@@ -184,7 +184,6 @@ def plot_traj(interpolated_points, points, folder_to_store):
     #plt.show()
 
 def get_cumultative_distance(folder_to_store, interpolated_points):
-    plt.figure()
     interpolated_points=interpolated_points["quadratic"]
     x = interpolated_points[:, 0]
     y = interpolated_points[:, 1]
@@ -195,10 +194,16 @@ def get_cumultative_distance(folder_to_store, interpolated_points):
     step_size = np.sqrt(dx ** 2 + dy ** 2)
 
     cum_dist = np.concatenate(([0], np.cumsum(step_size)))
-    plot_trajectory(folder_to_store, t, cum_dist, 't [%]', 'd [m]')
+    plot_trajectory(folder_to_store, t, cum_dist, 't [%]', 'd [m]', "cumulative_path_length")
     return cum_dist
-def plot_trajectory(folder_to_store, t, y, xlab, ylab):
+
+def plot_mean_value(folder_to_store, mean_val_list):
+    x=[wlt[0] for wlt in mean_val_list]
+    t=np.linspace(0, len(x), len(x))
+    plot_trajectory(folder_to_store, t, x, 't [%]', 'x [m]', "mean_val")
+def plot_trajectory(folder_to_store, t, y, xlab, ylab, name):
+    plt.figure()
     plt.plot(t, y)
     plt.xlabel(xlab)
     plt.ylabel(ylab)
-    plt.savefig(folder_to_store+"cumulative_path_length.png")
+    plt.savefig(folder_to_store+name+".png")
