@@ -44,7 +44,6 @@ class scm_class(object):
                     topology.append([abc_keys[idx], abc_keys[idx2]])
         return topology
 
-
     def get_scm_function(self, input, probability_input):
         all_exp=[]
         all_var = []
@@ -82,7 +81,6 @@ class scm_class(object):
         lam_f = lambdify(a, new_fun(a))
         erg = lam_f(value_input)
         return erg
-
 
     def get_expected_val_scm_mean(self, idx, act_scm, symb, value_input):
         from sympy.stats import E, variance

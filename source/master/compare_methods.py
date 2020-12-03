@@ -19,13 +19,19 @@ class service_handler(object):
         interpolated_points=interpolated_points["quadratic"]
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
-        mean_val=[0, 1, 1.295]
+        x_v_a=[0, 1, 1.295]
         mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": []}
-        mean_val_list["mean_val"].append(mean_val)
-        for wlt in range(0, 100):
-            mean_val= obj.problem.obj_solver.get_scm_function_mean(obj.problem.obj_solver.data, mean_val)
-            mean_val_list["mean_val"].append(mean_val)
-            if (mean_val[0]>cum_dist[-1]):
+        mean_val_list["mean_val"].append(x_v_a)
+        mean_val_list["cum_dist"].append(cum_dist[0])
+
+        for wlt in range(0, 1000):
+            x_v_a= obj.problem.obj_solver.get_scm_function_mean(obj.problem.obj_solver.data, x_v_a)
+            x=x_v_a[0]
+            l=list((cum_dist-x)**2)
+            idx=l.index(min(l))
+            mean_val_list["mean_val"].append(x_v_a)
+            mean_val_list["cum_dist"].append(cum_dist[idx])
+            if (x_v_a[0]>cum_dist[-1]):
                 break
         return mean_val_list
 
