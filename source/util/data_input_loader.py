@@ -198,7 +198,7 @@ def get_cumultative_distance(folder_to_store, interpolated_points):
     return cum_dist
 
 def plot_mean_value(folder_to_store, mean_val_list):
-    x=[wlt[0] for wlt in mean_val_list]
+    x=[wlt[0] for wlt in mean_val_list["mean_val"]]
     t=np.linspace(0, len(x), len(x))
     plot_trajectory(folder_to_store, t, x, 't [%]', 'x [m]', "mean_val")
 def plot_trajectory(folder_to_store, t, y, xlab, ylab, name):

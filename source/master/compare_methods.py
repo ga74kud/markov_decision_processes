@@ -3,7 +3,6 @@ from source.usecases.uc_scm.uc_scm_main import *
 from source.util.map_loader import *
 from source.util.visualizer import *
 from input.get_data import *
-import source.util.data_input_loader as util_io
 from sympy.stats import *
 
 class service_handler(object):
@@ -17,15 +16,17 @@ class service_handler(object):
         self.service_CognitiveMDP(problem_type)
 
     def use_scm_on_interpolated_line(self, folder_to_store, interpolated_points, points, cum_dist):
-        params=util_io.get_params()
+        interpolated_points=interpolated_points["quadratic"]
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
-        mean_val_list=[]
-        mean_val=[0, 0, 1.295, params["general"]["Ts"]]
-        mean_val_list.append(mean_val)
-        for wlt in range(0, 10):
+        mean_val=[0, 1, 1.295]
+        mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": []}
+        mean_val_list["mean_val"].append(mean_val)
+        for wlt in range(0, 100):
             mean_val= obj.problem.obj_solver.get_scm_function_mean(obj.problem.obj_solver.data, mean_val)
-            mean_val_list.append(mean_val)
+            mean_val_list["mean_val"].append(mean_val)
+            if (mean_val[0]>cum_dist[-1]):
+                break
         return mean_val_list
 
     def use_reach(self):

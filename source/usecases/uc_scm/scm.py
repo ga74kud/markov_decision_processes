@@ -3,6 +3,7 @@ import sympy
 from sympy.utilities.lambdify import *
 import json
 import numpy as np
+import source.util.data_input_loader as util_io
 
 class scm_class(object):
     def __init__(self):
@@ -59,15 +60,30 @@ class scm_class(object):
         return all_exp, all_var
 
     def get_scm_function_mean(self, input, mean_input):
+
         all_exp=[]
         scms=list(input["scm"].values())
         dictionary = input["variables"]
+        param_dictionary = input["parameters"]
         symb=sympy.symbols(list(dictionary.values()))
+        param_symb = sympy.symbols(list(param_dictionary.values()))
         scm_sympy = sympy.sympify(scms) #necessary for substitution later
         for idx, act_scm in enumerate(scm_sympy):
             expectation_scm=self.get_expected_val_scm_mean(idx, act_scm, symb, mean_input)
+            expectation_scm=self.replace_param_value(idx, expectation_scm, param_symb)
             all_exp.append(expectation_scm)
         return all_exp
+    def replace_param_value(self, idx, expectation_scm, param_symb):
+        params = util_io.get_params()
+        Ts = params["general"]["Ts"]
+        value_input=[Ts]
+        a = sympy.symbols('a')
+        new_fun = implemented_function("pr"+str(idx), lambda inp: expectation_scm.subs([(param_symb[i], inp[i]) for i in range(0, len(inp))]))
+        lam_f = lambdify(a, new_fun(a))
+        erg = lam_f(value_input)
+        return erg
+
+
     def get_expected_val_scm_mean(self, idx, act_scm, symb, value_input):
         from sympy.stats import E, variance
         a = sympy.symbols('a')
