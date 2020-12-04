@@ -177,20 +177,25 @@ def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
 
     mean_vals = mean_val_list["mean_val"]
     velocs=[wlt[1] for wlt in mean_vals]
+    indexes=mean_val_list["interpol_idx"]
     points_A= interpol_points[0:-1]
     points_B = interpol_points[1:]
     tangency=points_B-points_A
     tangency=np.concatenate((tangency, np.array([[0, 0]])), axis=0)
     for idx, wlt in enumerate(interpol_points):
-        x_pos=wlt[0]
-        y_pos=wlt[1]
-        distance=np.linalg.norm(tangency[idx])
-        x_dif=tangency[idx][0]/distance
-        y_dif = tangency[idx][1]/distance
-        scale=3
-        plt.arrow(x_pos, y_pos, scale*x_dif, scale*y_dif,
-                  fc='red', ec='blue', alpha=.7, width=2,
-                  head_width=2.4, head_length=2)
+        if(idx in indexes):
+            idx2_all=[idx2 for idx2, wlt in enumerate(indexes) if wlt==idx]
+            x_pos=wlt[0]
+            y_pos=wlt[1]
+            distance=np.linalg.norm(tangency[idx])
+            x_dif=tangency[idx][0]/distance
+            y_dif = tangency[idx][1]/distance
+            for qrt in idx2_all:
+                act_vel=velocs[qrt]
+                scale=1
+                plt.arrow(x_pos, y_pos, scale*x_dif, scale*y_dif,
+                    fc='red', ec='blue', alpha=.7, width=.4,
+                    head_width=1.4, head_length=1)
     plt.plot(*points.T, 'ok', label='original points')
     plt.axis('equal')
     plt.legend()
