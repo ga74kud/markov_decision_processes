@@ -148,7 +148,6 @@ def get_result_trajectories_mdp(optimal_mdp, coordinates, folder_to_store):
         y = coordinates[wlt, 1]
         act_traj.append((x,y))
     interpolated_points, points=interpolate_traj(act_traj)
-    plot_traj(interpolated_points, points, folder_to_store)
     return interpolated_points, points
 def interpolate_traj(act_traj):
     param=get_params()
@@ -169,12 +168,29 @@ def interpolate_traj(act_traj):
         interpolated_points[method] = interpolator(alpha)
     return interpolated_points, points
 
-def plot_traj(interpolated_points, points, folder_to_store):
+def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
+    interpol_points=interpolated_points["quadratic"]
     # Graph:
     plt.figure(figsize=(7, 7))
     for method_name, curve in interpolated_points.items():
         plt.plot(*curve.T, '-', label=method_name)
 
+    mean_vals = mean_val_list["mean_val"]
+    velocs=[wlt[1] for wlt in mean_vals]
+    points_A= interpol_points[0:-1]
+    points_B = interpol_points[1:]
+    tangency=points_B-points_A
+    tangency=np.concatenate((tangency, np.array([[0, 0]])), axis=0)
+    for idx, wlt in enumerate(interpol_points):
+        x_pos=wlt[0]
+        y_pos=wlt[1]
+        distance=np.linalg.norm(tangency[idx])
+        x_dif=tangency[idx][0]/distance
+        y_dif = tangency[idx][1]/distance
+        scale=3
+        plt.arrow(x_pos, y_pos, scale*x_dif, scale*y_dif,
+                  fc='red', ec='blue', alpha=.7, width=2,
+                  head_width=2.4, head_length=2)
     plt.plot(*points.T, 'ok', label='original points')
     plt.axis('equal')
     plt.legend()

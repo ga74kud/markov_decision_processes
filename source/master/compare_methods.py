@@ -20,10 +20,12 @@ class service_handler(object):
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
         x_v_a=[0, 1, 1.295]
-        mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": []}
+        mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": [], "interpol_idx": []}
+        idx=0
         mean_val_list["mean_val"].append(x_v_a)
-        mean_val_list["cum_dist"].append(cum_dist[0])
-
+        mean_val_list["cum_dist"].append(cum_dist[idx])
+        mean_val_list["interpolated_point"].append(interpolated_points[idx,:])
+        mean_val_list["interpol_idx"].append(idx)
         for wlt in range(0, 1000):
             x_v_a= obj.problem.obj_solver.get_scm_function_mean(obj.problem.obj_solver.data, x_v_a)
             x=x_v_a[0]
@@ -31,6 +33,8 @@ class service_handler(object):
             idx=l.index(min(l))
             mean_val_list["mean_val"].append(x_v_a)
             mean_val_list["cum_dist"].append(cum_dist[idx])
+            mean_val_list["interpolated_point"].append(interpolated_points[idx, :])
+            mean_val_list["interpol_idx"].append(idx)
             if (x_v_a[0]>cum_dist[-1]):
                 break
         return mean_val_list
@@ -132,6 +136,7 @@ def compute_trajectory_of_mdp():
     cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
     mean_val_list=obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points, points, cum_dist)
     util_io.plot_mean_value(obj_data_handler.folder_to_store, mean_val_list)
+    util_io.plot_traj(interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list)
 if __name__ == '__main__':
     compute_trajectory_of_mdp()
 
