@@ -177,6 +177,11 @@ def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
 
     mean_vals = mean_val_list["mean_val"]
     velocs=[wlt[1] for wlt in mean_vals]
+    cmap = get_colormap("cividis")
+    col_idx = np.floor(np.linspace(0, np.size(cmap, 0) - 1, 101))
+    col_idx_int=[int(wlt) for wlt in col_idx]
+    topi=np.interp(velocs, (np.min(velocs), np.max(velocs)), (0, 100))
+    topi=[np.int(wrt) for wrt in topi]
     indexes=mean_val_list["interpol_idx"]
     points_A= interpol_points[0:-1]
     points_B = interpol_points[1:]
@@ -191,10 +196,11 @@ def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
             x_dif=tangency[idx][0]/distance
             y_dif = tangency[idx][1]/distance
             for qrt in idx2_all:
-                act_vel=velocs[qrt]
+                act_vel_idx=topi[qrt]
+                act_col=cmap[col_idx_int[act_vel_idx], :]
                 scale=1
                 plt.arrow(x_pos, y_pos, scale*x_dif, scale*y_dif,
-                    fc='red', ec='blue', alpha=.7, width=.4,
+                    fc=act_col, ec='blue', alpha=.7, width=.4,
                     head_width=1.4, head_length=1)
     plt.plot(*points.T, 'ok', label='original points')
     plt.axis('equal')
