@@ -103,7 +103,7 @@ class service_handler(object):
         return optimal_path_list
 
 
-def compute_trajectory_of_mdp(obj_service, obj_data_handler, input_file):
+def use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file):
     # solver
     new_dict_mdp = obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
     obj_service.set_dict_mdp(new_dict_mdp)
@@ -118,9 +118,7 @@ def compute_trajectory_of_mdp(obj_service, obj_data_handler, input_file):
     interpolated_points, points=util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
                                         obj_data_handler.folder_to_store)
     cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
-    mean_val_list=obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points, points, cum_dist)
-    util_io.plot_mean_value(obj_data_handler.folder_to_store, mean_val_list)
-    util_io.plot_traj(interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list)
+    return interpolated_points, cum_dist, points
 def pre_processing():
     # object from data handler
     obj_data_handler = service_data()
@@ -138,7 +136,13 @@ def pre_processing():
     # environmental information
     obj_service.get_environmental_information(input_file)
     return obj_service, obj_data_handler, input_file
+def use_scm_for_velocity(interpolated_points, cum_dist, points):
+    mean_val_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
+                                                             points, cum_dist)
+    util_io.plot_mean_value(obj_data_handler.folder_to_store, mean_val_list)
+    util_io.plot_traj(interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list)
 if __name__ == '__main__':
     obj_service, obj_data_handler, input_file=pre_processing()
-    compute_trajectory_of_mdp(obj_service, obj_data_handler, input_file)
+    interpolated_points, cum_dist, points=use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file)
+    use_scm_for_velocity(interpolated_points, cum_dist, points)
 
