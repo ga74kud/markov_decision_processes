@@ -103,23 +103,7 @@ class service_handler(object):
         return optimal_path_list
 
 
-def compute_trajectory_of_mdp():
-    # object from data handler
-    obj_data_handler = service_data()
-    obj_data_handler.set_initial_folder()
-    obj_data_handler.set_initial_json()
-    # obj_data_handler.update_json_with_dictionary({"abc": "123"})
-
-    input_file = obj_data_handler.get_input_file()
-    # object for solver handling
-    obj_service = service_handler()
-
-    # visualizer objects for plotting results
-    obj_service.get_all_visual_objects()
-
-    # environmental information
-    obj_service.get_environmental_information(input_file)
-
+def compute_trajectory_of_mdp(obj_service, obj_data_handler, input_file):
     # solver
     new_dict_mdp = obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
     obj_service.set_dict_mdp(new_dict_mdp)
@@ -137,6 +121,24 @@ def compute_trajectory_of_mdp():
     mean_val_list=obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points, points, cum_dist)
     util_io.plot_mean_value(obj_data_handler.folder_to_store, mean_val_list)
     util_io.plot_traj(interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list)
+def pre_processing():
+    # object from data handler
+    obj_data_handler = service_data()
+    obj_data_handler.set_initial_folder()
+    obj_data_handler.set_initial_json()
+    # obj_data_handler.update_json_with_dictionary({"abc": "123"})
+
+    input_file = obj_data_handler.get_input_file()
+    # object for solver handling
+    obj_service = service_handler()
+
+    # visualizer objects for plotting results
+    obj_service.get_all_visual_objects()
+
+    # environmental information
+    obj_service.get_environmental_information(input_file)
+    return obj_service, obj_data_handler, input_file
 if __name__ == '__main__':
-    compute_trajectory_of_mdp()
+    obj_service, obj_data_handler, input_file=pre_processing()
+    compute_trajectory_of_mdp(obj_service, obj_data_handler, input_file)
 

@@ -171,13 +171,13 @@ def interpolate_traj(act_traj):
 def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
     interpol_points=interpolated_points["quadratic"]
     # Graph:
-    plt.figure(figsize=(7, 7))
+    fig=plt.figure(figsize=(7, 7))
     for method_name, curve in interpolated_points.items():
         plt.plot(*curve.T, '-', label=method_name)
 
     mean_vals = mean_val_list["mean_val"]
     velocs=[wlt[1] for wlt in mean_vals]
-    cmap = get_colormap("cividis")
+    cmap = get_colormap("plasma")
     col_idx = np.floor(np.linspace(0, np.size(cmap, 0) - 1, 101))
     col_idx_int=[int(wlt) for wlt in col_idx]
     topi=np.interp(velocs, (np.min(velocs), np.max(velocs)), (0, 100))
@@ -202,6 +202,7 @@ def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
                 plt.arrow(x_pos, y_pos, scale*x_dif, scale*y_dif,
                     fc=act_col, ec='blue', alpha=.7, width=.4,
                     head_width=1.4, head_length=1)
+
     plt.plot(*points.T, 'ok', label='original points')
     plt.axis('equal')
     plt.legend()
