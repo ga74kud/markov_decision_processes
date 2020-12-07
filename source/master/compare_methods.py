@@ -22,6 +22,7 @@ class service_handler(object):
         obj.show_graph(folder_to_store)
         x_v_a=[0, 1, 1.295, 0]
         mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": [], "interpol_idx": []}
+        intervention_list = {"interpolated_point": [], "cum_dist": [], "mean_val": [], "interpol_idx": []}
         idx=0
         mean_val_list["mean_val"].append(x_v_a)
         mean_val_list["cum_dist"].append(cum_dist[idx])
@@ -31,6 +32,10 @@ class service_handler(object):
             x_v_a= obj.problem.obj_solver.get_scm_function_mean(obj.problem.obj_solver.data, x_v_a)
             x=x_v_a[0]
             if(with_intervention and wlt>24):
+                intervention_list["mean_val"].append(x_v_a)
+                intervention_list["cum_dist"].append(cum_dist[idx])
+                intervention_list["interpolated_point"].append(interpolated_points[idx, :])
+                intervention_list["interpol_idx"].append(idx)
                 x_v_a[3]=2
             l=list((cum_dist-x)**2)
             idx=l.index(min(l))
@@ -40,7 +45,7 @@ class service_handler(object):
             mean_val_list["interpol_idx"].append(idx)
             if (x_v_a[0]>cum_dist[-1]):
                 break
-        return mean_val_list
+        return mean_val_list, intervention_list
 
     def use_reach(self):
         None
@@ -140,9 +145,9 @@ def pre_processing():
     obj_service.get_environmental_information(input_file)
     return obj_service, obj_data_handler, input_file
 def use_scm_for_velocity(obj_visual, interpolated_points, cum_dist, points, with_intervention):
-    mean_val_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
+    mean_val_list, intervention_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
                                                              cum_dist, with_intervention)
-    util_io.plot_traj(obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list, with_intervention)
+    util_io.plot_traj(intervention_list, obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list, with_intervention)
 if __name__ == '__main__':
     obj_visual=visual_handler()
     obj_service, obj_data_handler, input_file=pre_processing()
