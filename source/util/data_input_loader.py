@@ -170,11 +170,12 @@ def interpolate_traj(act_traj):
     return interpolated_points, points
 
 def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val_list):
-    plt.figure(obj_visual.number)
+
     interpol_points=interpolated_points["quadratic"]
+    plt.figure(obj_visual.number)
     for method_name, curve in interpolated_points.items():
         plt.plot(*curve.T, '-', alpha=.6)
-
+    plt.plot(*points.T, 'ok', label='original points', alpha=1)
     mean_vals = mean_val_list["mean_val"]
     velocs=[wlt[1] for wlt in mean_vals]
     cmap = get_colormap("plasma")
@@ -187,6 +188,7 @@ def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val
     points_B = interpol_points[1:]
     tangency=points_B-points_A
     tangency=np.concatenate((tangency, np.array([[0, 0]])), axis=0)
+
     for idx, wlt in enumerate(interpol_points):
         if(idx in indexes):
             idx2_all=[idx2 for idx2, wlt in enumerate(indexes) if wlt==idx]
@@ -203,7 +205,7 @@ def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val
                     fc=act_col, ec='blue', alpha=.2, width=.4,
                     head_width=1.4, head_length=1)
 
-    plt.plot(*points.T, 'ok', label='original points', alpha=1)
+
     plt.axis('equal')
     plt.legend()
     plt.xlabel('x')

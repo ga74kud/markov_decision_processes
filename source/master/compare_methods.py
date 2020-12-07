@@ -20,7 +20,7 @@ class service_handler(object):
         interpolated_points=interpolated_points["quadratic"]
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
-        x_v_a=[0, 1, 1.295]
+        x_v_a=[0, 1, 1.295, 0, 0, 1]
         mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": [], "interpol_idx": []}
         idx=0
         mean_val_list["mean_val"].append(x_v_a)
@@ -140,7 +140,6 @@ def pre_processing():
 def use_scm_for_velocity(obj_visual, interpolated_points, cum_dist, points):
     mean_val_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
                                                              points, cum_dist)
-    util_io.plot_mean_value(obj_data_handler.folder_to_store, mean_val_list)
     util_io.plot_traj(obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list)
 if __name__ == '__main__':
     obj_visual=visual_handler()
