@@ -168,12 +168,10 @@ def interpolate_traj(act_traj):
         interpolated_points[method] = interpolator(alpha)
     return interpolated_points, points
 
-def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
+def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val_list):
     interpol_points=interpolated_points["quadratic"]
-    # Graph:
-    fig=plt.figure(figsize=(7, 7))
     for method_name, curve in interpolated_points.items():
-        plt.plot(*curve.T, '-', label=method_name)
+        plt.plot(*curve.T, '-', alpha=.6)
 
     mean_vals = mean_val_list["mean_val"]
     velocs=[wlt[1] for wlt in mean_vals]
@@ -200,10 +198,10 @@ def plot_traj(interpolated_points, points, folder_to_store, mean_val_list):
                 act_col=cmap[col_idx_int[act_vel_idx], :]
                 scale=1
                 plt.arrow(x_pos, y_pos, scale*x_dif, scale*y_dif,
-                    fc=act_col, ec='blue', alpha=.7, width=.4,
+                    fc=act_col, ec='blue', alpha=.2, width=.4,
                     head_width=1.4, head_length=1)
 
-    plt.plot(*points.T, 'ok', label='original points')
+    plt.plot(*points.T, 'ok', label='original points', alpha=1)
     plt.axis('equal')
     plt.legend()
     plt.xlabel('x')
@@ -222,16 +220,16 @@ def get_cumultative_distance(folder_to_store, interpolated_points):
     step_size = np.sqrt(dx ** 2 + dy ** 2)
 
     cum_dist = np.concatenate(([0], np.cumsum(step_size)))
-    plot_trajectory(folder_to_store, t, cum_dist, 't [%]', 'd [m]', "cumulative_path_length")
+    #plot_trajectory(folder_to_store, t, cum_dist, 't [%]', 'd [m]', "cumulative_path_length")
     return cum_dist
 
 def plot_mean_value(folder_to_store, mean_val_list):
     x=[wlt[0] for wlt in mean_val_list["mean_val"]]
     t=np.linspace(0, len(x), len(x))
-    plot_trajectory(folder_to_store, t, x, 't [%]', 'x [m]', "mean_val")
+    #plot_trajectory(folder_to_store, t, x, 't [%]', 'x [m]', "mean_val")
 def plot_trajectory(folder_to_store, t, y, xlab, ylab, name):
     plt.figure()
-    plt.plot(t, y)
+    plt.plot(t, y, alpha=.6)
     plt.xlabel(xlab)
     plt.ylabel(ylab)
     plt.savefig(folder_to_store+name+".png")
