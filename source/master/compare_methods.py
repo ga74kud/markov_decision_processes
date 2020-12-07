@@ -16,11 +16,11 @@ class service_handler(object):
         problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
         self.service_CognitiveMDP(problem_type)
 
-    def use_scm_on_interpolated_line(self, folder_to_store, interpolated_points, points, cum_dist):
+    def use_scm_on_interpolated_line(self, folder_to_store, interpolated_points, cum_dist, with_intervention):
         interpolated_points=interpolated_points["quadratic"]
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
-        x_v_a=[0, 1, 1.295, 0, 0, 1]
+        x_v_a=[0, 1, 1.295, 0]
         mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": [], "interpol_idx": []}
         idx=0
         mean_val_list["mean_val"].append(x_v_a)
@@ -30,6 +30,8 @@ class service_handler(object):
         for wlt in range(0, 1000):
             x_v_a= obj.problem.obj_solver.get_scm_function_mean(obj.problem.obj_solver.data, x_v_a)
             x=x_v_a[0]
+            if(with_intervention and wlt>24):
+                x_v_a[3]=2
             l=list((cum_dist-x)**2)
             idx=l.index(min(l))
             mean_val_list["mean_val"].append(x_v_a)
@@ -137,13 +139,16 @@ def pre_processing():
     # environmental information
     obj_service.get_environmental_information(input_file)
     return obj_service, obj_data_handler, input_file
-def use_scm_for_velocity(obj_visual, interpolated_points, cum_dist, points):
+def use_scm_for_velocity(obj_visual, interpolated_points, cum_dist, points, with_intervention):
     mean_val_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
-                                                             points, cum_dist)
-    util_io.plot_traj(obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list)
+                                                             cum_dist, with_intervention)
+    util_io.plot_traj(obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list, with_intervention)
 if __name__ == '__main__':
     obj_visual=visual_handler()
     obj_service, obj_data_handler, input_file=pre_processing()
     interpolated_points, cum_dist, points=use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file)
-    use_scm_for_velocity(obj_visual.figures["interp_traj"], interpolated_points, cum_dist, points)
+    with_intervention=False
+    use_scm_for_velocity(obj_visual.figures["interp_traj_no_interv"], interpolated_points, cum_dist, points, with_intervention)
+    with_intervention = True
+    use_scm_for_velocity(obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention)
 

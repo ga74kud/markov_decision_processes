@@ -169,13 +169,15 @@ def interpolate_traj(act_traj):
         interpolated_points[method] = interpolator(alpha)
     return interpolated_points, points
 
-def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val_list):
+def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val_list, with_intervention):
 
     interpol_points=interpolated_points["quadratic"]
+    # original points provided by MDP
     plt.figure(obj_visual.number)
     for method_name, curve in interpolated_points.items():
         plt.plot(*curve.T, '-', alpha=.6)
     plt.plot(*points.T, 'ok', label='original points', alpha=1)
+
     mean_vals = mean_val_list["mean_val"]
     velocs=[wlt[1] for wlt in mean_vals]
     cmap = get_colormap("plasma")
@@ -206,11 +208,14 @@ def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val
                     head_width=1.4, head_length=1)
 
 
-    plt.axis('equal')
+    plt.axis([-11.5, 11.5, -11.5, 11.5])
     plt.legend()
     plt.xlabel('x')
     plt.ylabel('y')
-    plt.savefig(folder_to_store+"interpolated_traj.png")
+    if(with_intervention):
+        plt.savefig(folder_to_store+"trajectory_with_interaction.png")
+    else:
+        plt.savefig(folder_to_store + "trajectory_without_interaction.png")
     #plt.show()
 
 def get_cumultative_distance(folder_to_store, interpolated_points):
