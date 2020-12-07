@@ -146,5 +146,5 @@ if __name__ == '__main__':
     obj_visual=visual_handler()
     obj_service, obj_data_handler, input_file=pre_processing()
     interpolated_points, cum_dist, points=use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file)
-    use_scm_for_velocity(obj_visual, interpolated_points, cum_dist, points)
+    use_scm_for_velocity(obj_visual.figures["interp_traj"], interpolated_points, cum_dist, points)
 

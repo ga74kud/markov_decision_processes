@@ -150,6 +150,7 @@ def get_result_trajectories_mdp(optimal_mdp, coordinates, folder_to_store):
     interpolated_points, points=interpolate_traj(act_traj)
     return interpolated_points, points
 def interpolate_traj(act_traj):
+    plt.figure()
     param=get_params()
     x = [wlt[0] for wlt in act_traj]
     y = [wlt[1] for wlt in act_traj]
@@ -169,6 +170,7 @@ def interpolate_traj(act_traj):
     return interpolated_points, points
 
 def plot_traj(obj_visual, interpolated_points, points, folder_to_store, mean_val_list):
+    plt.figure(obj_visual.number)
     interpol_points=interpolated_points["quadratic"]
     for method_name, curve in interpolated_points.items():
         plt.plot(*curve.T, '-', alpha=.6)
