@@ -1,6 +1,5 @@
-from source.usecases.uc_reachability.manifold import *
 from source.usecases.uc_reachability.reachability import *
-
+from source.usecases.uc_reachability.manifold import *
 class problem(object):
     def __init__(self, **kwargs):
         self.obj_manifold=None
@@ -10,21 +9,16 @@ class problem(object):
         self.obj_manifold.set_environment_by_json(FILE_DIR)
 
     def set_solver(self):
-        self.obj_solver=mdp()
+        self.obj_solver=reachability()
         self.obj_solver.set_S(self.obj_manifold.manifold['X'])
         self.obj_solver.set_adjacency_list(self.obj_manifold.manifold['Topology'])
         self.obj_solver.set_position_list(self.obj_manifold.manifold['Position'])
-        self.obj_solver.set_U()
         self.obj_solver.set_action(self.obj_manifold.manifold["Actions"])
-        self.obj_solver.set_init_pi()
         self.obj_solver.set_T(self.obj_manifold.get_probability_nodes())
-    def start_mdp_solver(self, rewards, folder_to_store):
-        R_dict = rewards
-        self.obj_solver.set_R(R_dict)
-        dict_mdp = self.obj_solver.start_mdp_algorithm()
-        self.obj_solver.get_all_policy_options()
+    def start_reach_solver(self, folder_to_store):
+        dict_reach = self.obj_solver.start_reach_algorithm()
         self.obj_solver.visualize_network(folder_to_store)
-        return dict_mdp
+        return dict_reach
 
 if __name__ == '__main__':
     obj = problem()

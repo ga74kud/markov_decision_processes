@@ -65,7 +65,7 @@ class service_handler(object):
     def use_reach(self, input_file, folder_to_store):
         obj_reach=service_reach()
         obj_reach.new_problem(input_file)
-        dict_reach=obj_reach(folder_to_store)
+        dict_reach=obj_reach.start_reach(folder_to_store)
 
     """
     Markov Decision Process 
@@ -109,6 +109,13 @@ class service_handler(object):
         self.dict_mdp=dict_mdp
 
     """
+        Fill the dictionary of Reachability with information
+        """
+
+    def set_dict_reach(self, dict_reach):
+        self.dict_reach = dict_reach
+
+    """
     Illustration of vectorfield in PyVista
     """
     def add_vectorfield_queue(self):
@@ -147,6 +154,15 @@ class service_handler(object):
         cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
         return interpolated_points, cum_dist, points
 
+    # TODO reach on visual
+    """
+    """
+    def use_reach_on_visual(self, obj_data_handler, input_file):
+        # solver
+        new_dict_reach = self.use_reach(input_file, obj_data_handler.folder_to_store)
+        self.set_dict_reach(new_dict_reach)
+
+
     """ 
     Function for pre-processing: initial json-files and environmental information
     """
@@ -180,6 +196,7 @@ if __name__ == '__main__':
     obj_service = service_handler()
     obj_data_handler, input_file=obj_service.pre_processing()
     interpolated_points, cum_dist, points=obj_service.use_mdp_optimal_vectorfield(obj_data_handler, input_file)
+    obj_service.use_reach_on_visual(obj_data_handler, input_file)
     with_intervention=False
     obj_service.use_scm_for_velocity(obj_visual.figures["interp_traj_no_interv"], interpolated_points, cum_dist, points, with_intervention)
     with_intervention = True
