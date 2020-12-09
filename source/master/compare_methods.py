@@ -127,63 +127,61 @@ class service_handler(object):
 
         return optimal_path_list
 
-"""
-MDP to compute optimal vectorfield
-"""
-def use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file):
-    # solver
-    new_dict_mdp = obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
-    obj_service.set_dict_mdp(new_dict_mdp)
-    # add vectorfield plot
-    optimal_path_list = obj_service.add_vectorfield_queue()
-    obj_service.visuals["obj_vectorfield"].show_plot(obj_data_handler.folder_to_store + "vectorfield.png")
+    """
+    MDP to compute optimal vectorfield
+    """
+    def use_mdp_optimal_vectorfield(self, obj_data_handler, input_file):
+        # solver
+        new_dict_mdp = self.use_mdp(input_file, obj_data_handler.folder_to_store)
+        self.set_dict_mdp(new_dict_mdp)
+        # add vectorfield plot
+        optimal_path_list = self.add_vectorfield_queue()
+        self.visuals["obj_vectorfield"].show_plot(obj_data_handler.folder_to_store + "vectorfield.png")
 
-    # write optimal path to tmp.json
-    obj_data_handler.update_json_with_dictionary(optimal_path_list)
+        # write optimal path to tmp.json
+        obj_data_handler.update_json_with_dictionary(optimal_path_list)
 
-    # get result trajectories with spline interpolation
-    interpolated_points, points=util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
+        # get result trajectories with spline interpolation
+        interpolated_points, points=util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
                                         obj_data_handler.folder_to_store)
-    cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
-    return interpolated_points, cum_dist, points
+        cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
+        return interpolated_points, cum_dist, points
 
+    """ 
+    Function for pre-processing: initial json-files and environmental information
+    """
+    def pre_processing(self):
+        # object from data handler
+        obj_data_handler = service_data()
+        obj_data_handler.set_initial_folder()
+        obj_data_handler.set_initial_json()
+        # obj_data_handler.update_json_with_dictionary({"abc": "123"})
 
+        input_file = obj_data_handler.get_input_file()
 
-""" 
-Function for pre-processing: initial json-files and environmental information
-"""
-def pre_processing():
-    # object from data handler
-    obj_data_handler = service_data()
-    obj_data_handler.set_initial_folder()
-    obj_data_handler.set_initial_json()
-    # obj_data_handler.update_json_with_dictionary({"abc": "123"})
+        # visualizer objects for plotting results
+        obj_service.get_all_visual_objects()
 
-    input_file = obj_data_handler.get_input_file()
-    # object for solver handling
-    obj_service = service_handler()
+        # environmental information
+        obj_service.get_environmental_information(input_file)
+        return obj_data_handler, input_file
 
-    # visualizer objects for plotting results
-    obj_service.get_all_visual_objects()
-
-    # environmental information
-    obj_service.get_environmental_information(input_file)
-    return obj_service, obj_data_handler, input_file
-
-"""
-Structural causal model for velocity computation
-"""
-def use_scm_for_velocity(obj_visual, interpolated_points, cum_dist, points, with_intervention):
-    mean_val_list, intervention_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
+    """
+    Structural causal model for velocity computation
+    """
+    def use_scm_for_velocity(self, obj_visual, interpolated_points, cum_dist, points, with_intervention):
+        mean_val_list, intervention_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
                                                              cum_dist, with_intervention)
-    util_io.plot_traj(intervention_list, obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list, with_intervention)
+        util_io.plot_traj(intervention_list, obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list, with_intervention)
 
 if __name__ == '__main__':
     obj_visual=visual_handler()
-    obj_service, obj_data_handler, input_file=pre_processing()
-    interpolated_points, cum_dist, points=use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file)
+    # object for solver handling
+    obj_service = service_handler()
+    obj_data_handler, input_file=obj_service.pre_processing()
+    interpolated_points, cum_dist, points=obj_service.use_mdp_optimal_vectorfield(obj_data_handler, input_file)
     with_intervention=False
-    use_scm_for_velocity(obj_visual.figures["interp_traj_no_interv"], interpolated_points, cum_dist, points, with_intervention)
+    obj_service.use_scm_for_velocity(obj_visual.figures["interp_traj_no_interv"], interpolated_points, cum_dist, points, with_intervention)
     with_intervention = True
-    use_scm_for_velocity(obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention)
+    obj_service.use_scm_for_velocity(obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention)
 
