@@ -1,21 +1,33 @@
+# -------------------------------------------------------------
+# code developed by Michael Hartmann during his Ph.D.
+#
+# (C) 2020 Michael Hartmann, Graz, Austria
+# Released under TODO: find a release license
+# email michael.hartmann@v2c2.at
+# -------------------------------------------------------------
 from source.usecases.uc_mdp.uc_mdp_main import *
 from source.usecases.uc_scm.uc_scm_main import *
+from source.usecases.uc_reachability.uc_reach_main import *
 from source.util.map_loader import *
 from source.util.visualizer import *
 from source.util.visual_handler import *
 from input.get_data import *
 
-
+"""
+Main class for Markov Decision Process (MDP) + SCM + Reachabiltiy Analysis (RA)
+"""
 class service_handler(object):
     def __init__(self, **kwargs):
+        # visual objects
         self.visuals={"obj_visual": None, "obj_vectorfield": None, "obj_barplot": None}
+        # coordinates
         self.coordinates=None
+        # dictionary for mdp results
         self.dict_mdp=None
 
-    def use_cognitive_mdp(self):
-        problem_type = {'type': 'cognitive_mdp', 'rewards_body': {'24': 10}, 'rewards_cortex': {'52': 10}}
-        self.service_CognitiveMDP(problem_type)
-
+    """
+    MDP provides an optimal trajectory and on the trajectory the structural causal model (SCM) computes the velocity
+    """
     def use_scm_on_interpolated_line(self, folder_to_store, interpolated_points, cum_dist, with_intervention):
         interpolated_points=interpolated_points["quadratic"]
         obj = service_scmMDP(folder_to_store)
@@ -47,12 +59,17 @@ class service_handler(object):
                 break
         return mean_val_list, intervention_list
 
-    def use_reach(self):
-        None
+    # TODO: make a comment and program
+    """
+    """
+    def use_reach(self, input_file, folder_to_store):
+        obj_reach=service_reach()
+        obj_reach.new_problem(input_file)
+        dict_reach=obj_reach(folder_to_store)
 
-    def use_monte_carlo(self):
-        None
-
+    """
+    Markov Decision Process 
+    """
     def use_mdp(self, input_file, folder_to_store):
         obj_mdp=service_MDP()
         obj_mdp.set_rewards_by_param()
@@ -60,6 +77,10 @@ class service_handler(object):
         dict_mdp=obj_mdp.start_mdp(folder_to_store)
         return dict_mdp
 
+
+    """
+    Start visualizer objects for illustration in PyVista
+    """
     def get_all_visual_objects(self):
         # object from visualizer class
         self.visuals["obj_vectorfield"] = service_visualizer()
@@ -72,28 +93,24 @@ class service_handler(object):
         self.visuals["obj_barplot"].show_grid()
 
 
+    """
+    Get environmental information from json-file
+    """
     def get_environmental_information(self, input_file):
 
         # object from environment class
         obj_map = map_loader()
         self.coordinates = obj_map.preprocessing(input_file)
 
+    """
+    Fill the dictionary of MDP with information
+    """
     def set_dict_mdp(self, dict_mdp):
         self.dict_mdp=dict_mdp
-    def get_solver_information(self, input_file):
 
-        # object for solver handling
-        obj_service = service_handler()
-        self.dict_mdp = obj_service.use_all_solvers(input_file)
-    def add_visuals_queue(self):
-
-        # add map to queue
-        new_queue = util_io.map_for_queue(self.coordinates)
-        self.visuals["obj_visual"].add_queue(new_queue)
-
-        new_queue = util_io.trajectory_for_queue(self.coordinates, self.dict_mdp["ideal_path"])
-        self.visuals["obj_visual"].add_queue(new_queue)
-
+    """
+    Illustration of vectorfield in PyVista
+    """
     def add_vectorfield_queue(self):
 
         new_queue = util_io.map_for_queue(self.coordinates)
@@ -110,7 +127,9 @@ class service_handler(object):
 
         return optimal_path_list
 
-
+"""
+MDP to compute optimal vectorfield
+"""
 def use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file):
     # solver
     new_dict_mdp = obj_service.use_mdp(input_file, obj_data_handler.folder_to_store)
@@ -127,6 +146,12 @@ def use_mdp_optimal_vectorfield(obj_service, obj_data_handler, input_file):
                                         obj_data_handler.folder_to_store)
     cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
     return interpolated_points, cum_dist, points
+
+
+
+""" 
+Function for pre-processing: initial json-files and environmental information
+"""
 def pre_processing():
     # object from data handler
     obj_data_handler = service_data()
@@ -144,10 +169,15 @@ def pre_processing():
     # environmental information
     obj_service.get_environmental_information(input_file)
     return obj_service, obj_data_handler, input_file
+
+"""
+Structural causal model for velocity computation
+"""
 def use_scm_for_velocity(obj_visual, interpolated_points, cum_dist, points, with_intervention):
     mean_val_list, intervention_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
                                                              cum_dist, with_intervention)
     util_io.plot_traj(intervention_list, obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list, with_intervention)
+
 if __name__ == '__main__':
     obj_visual=visual_handler()
     obj_service, obj_data_handler, input_file=pre_processing()
