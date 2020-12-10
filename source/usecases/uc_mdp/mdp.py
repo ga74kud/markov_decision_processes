@@ -245,7 +245,7 @@ class mdp(object):
         g.vs["vertex_size"] = 20
         visual_style = {}
         visual_style["edge_curved"] = False
-        ig.plot(g, folder_to_store+"igraph.pdf", layout=layout, **visual_style)
+        ig.plot(g, folder_to_store+"mdp_igraph.pdf", layout=layout, **visual_style)
 
     """
     Based on the optimization on the MDP, get a stochastic trajectory resulting from the optimization procedure of the MDP

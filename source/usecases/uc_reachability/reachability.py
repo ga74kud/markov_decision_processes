@@ -51,5 +51,20 @@ class reachability(object):
     """
     def start_reach_algorithm(self):
         self.get_all_policy_options()
+
+    """
+    Visualize reachability analysis
+    """
     def visualize_network(self, folder_to_store):
-        None #TODO: for implementation
+        params = util_io.get_params()
+        act_node = self.reach_dict['S'][params["general"]["start_node"]]
+        g = ig.Graph(self.reach_dict['adjacency_list'])
+        g.vs["name"] = self.reach_dict['S']
+        g.vs["label"] = g.vs["name"]
+        color_dict = {0: "blue", 1: "green", 2: "cyan", 3: "yellow", 4: "pink", 5: "orange", 6: "red"}
+        P_2D = [(wlt[0], wlt[1]) for wlt in self.reach_dict['P']]
+        layout = ig.Layout(P_2D)
+        g.vs["vertex_size"] = 20
+        visual_style = {}
+        visual_style["edge_curved"] = False
+        ig.plot(g, folder_to_store + "reach_igraph.pdf", layout=layout, **visual_style)
