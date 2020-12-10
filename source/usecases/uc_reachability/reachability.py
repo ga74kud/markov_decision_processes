@@ -8,10 +8,9 @@ class reachability(object):
         self.reach_dict = {'S': None,  # States
                          'action': None,  # Action set
                          'adjacency_list': None,  # Topology
-                         'R': None,  # Rewards
-                         'gamma': None,  # discount factor
                          'P': None  # Positions
                          }
+        self.reach_dict['multi_pi'] = {}
     def set_S(self, S):
         self.reach_dict['S']=S
     def set_adjacency_list(self, list):
@@ -31,7 +30,26 @@ class reachability(object):
     def set_action(self, action):
         self.reach_dict['action']=action
 
+    """
+    Find neighbours
+    """
+    def find_neighbours(self, act_node):
+        return self.reach_dict["action"][act_node]
+
+    """
+    Get all policy options
+    """
+    def get_all_policy_options(self):
+        for act_node in self.reach_dict['S']:
+            act_neighbours = self.find_neighbours(act_node)  # actual neighbours
+            self.reach_dict['multi_pi'][act_node] = list()
+            new_cand = {"neighbour": act_neighbours}
+            self.reach_dict['multi_pi'][act_node].append(new_cand)
+
+    """
+    Get all neighbours for each node to perform later reachability analysis
+    """
     def start_reach_algorithm(self):
-        None #TODO: for implementation
+        self.get_all_policy_options()
     def visualize_network(self, folder_to_store):
         None #TODO: for implementation

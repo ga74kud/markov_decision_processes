@@ -1,13 +1,29 @@
+# -------------------------------------------------------------
+# code developed by Michael Hartmann during his Ph.D.
+# Reachability Analysis on Topological Spaces
+#
+# (C) 2020 Michael Hartmann, Graz, Austria
+# Released under TODO: find a release license
+# email michael.hartmann@v2c2.at
+# -------------------------------------------------------------
+
 from source.usecases.uc_reachability.reachability import *
 from source.usecases.uc_reachability.manifold import *
 class problem(object):
     def __init__(self, **kwargs):
         self.obj_manifold=None
         self.obj_solver=None
+
+    """
+    Set manifold
+    """
     def set_manifold(self, FILE_DIR):
         self.obj_manifold=manifold()
         self.obj_manifold.set_environment_by_json(FILE_DIR)
 
+    """
+    Set solver information
+    """
     def set_solver(self):
         self.obj_solver=reachability()
         self.obj_solver.set_S(self.obj_manifold.manifold['X'])
@@ -15,6 +31,10 @@ class problem(object):
         self.obj_solver.set_position_list(self.obj_manifold.manifold['Position'])
         self.obj_solver.set_action(self.obj_manifold.manifold["Actions"])
         self.obj_solver.set_T(self.obj_manifold.get_probability_nodes())
+
+    """
+    Reachability Analysis and visualization
+    """
     def start_reach_solver(self, folder_to_store):
         dict_reach = self.obj_solver.start_reach_algorithm()
         self.obj_solver.visualize_network(folder_to_store)

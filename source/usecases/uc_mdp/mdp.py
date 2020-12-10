@@ -1,8 +1,20 @@
+# -------------------------------------------------------------
+# code developed by Michael Hartmann during his Ph.D.
+# Markov Decision Process (MDP)
+#
+# (C) 2020 Michael Hartmann, Graz, Austria
+# Released under TODO: find a release license
+# email michael.hartmann@v2c2.at
+# -------------------------------------------------------------
+
 import igraph as ig
 import numpy as np
 from scipy.cluster.vq import kmeans, vq
 import source.util.data_input_loader as util_io
 
+"""
+Class for Markov Decision Process
+"""
 class mdp(object):
     def __init__(self, **kwargs):
         self.mdp_dict= {'S': None, # States
@@ -25,30 +37,54 @@ class mdp(object):
     def set_limit_simulation(self, value):
         self.param["n_optimal_trajectory"]=value
 
+    """
+    Set gamma (forgetting factor) on dictionary for MDP
+    """
     def set_gamma(self, gamma):
         self.mdp_dict["gamma"]=gamma
 
+    """
+    Set position list on dictionary for MDP
+    """
     def set_position_list(self, position):
         self.mdp_dict['P']=position
 
+    """
+    Set transition probabilities on dictionary for MDP
+    """
     def set_T(self, transition):
         self.mdp_dict['T']=transition
 
+    """
+    Set state values on dictionary for MDP
+    """
     def set_U(self):
         self.mdp_dict['U'] = [0] * len(self.mdp_dict['S'])
 
+    """
+    Set action values on dictionary for MDP
+    """
     def set_action(self, action):
         self.mdp_dict['action']=action
 
+    """
+    Set initial policy on dictionary for MDP
+    """
     def set_init_pi(self):
         a={}
         for i in self.mdp_dict['S']:
             a[i]=self.mdp_dict['action'][i][0]
         self.mdp_dict['pi']=a
 
+    """
+    Set states on dictionary for MDP
+    """
     def set_S(self, S):
         self.mdp_dict['S']=S
 
+    """
+    Set rewards on dictionary for MDP
+    """
     def set_R(self, dictR):
         val=list(dictR.values())
         keys=dictR.keys()
@@ -56,8 +92,9 @@ class mdp(object):
         for idx, q in enumerate(keys):
             self.mdp_dict['R'][int(q)]=val[idx]
 
-    def set_T(self, T):
-        self.mdp_dict['T']=T
+    """
+    Set adjacency list on dictionary for MDP
+    """
     def set_adjacency_list(self, list):
         new_list=[]
         for i in list:
@@ -68,6 +105,9 @@ class mdp(object):
             #new_list.append((b, a))
         self.mdp_dict['adjacency_list']=new_list
 
+    """
+    Policy evaluation for MDP
+    """
     def policy_evaluation(self):
             for kp, p in enumerate(self.mdp_dict['S']):
                 state_action=(p, self.mdp_dict['pi'][p])
@@ -77,6 +117,9 @@ class mdp(object):
                 self.mdp_dict['U'][kp]=self.mdp_dict['R'][idx]+bds
             return self.mdp_dict['U']
 
+    """
+    Policy iteration for MDP
+    """
     def policy_iteration(self):
             actual_U=self.policy_evaluation()
             for kp, p in enumerate(self.mdp_dict['S']):
@@ -89,19 +132,30 @@ class mdp(object):
                     all_Us[ka]=self.mdp_dict['R'][idx] + bds
                 self.get_new_policy(np.array(all_Us), kp)
 
+    """
+    Get new policy
+    """
     def get_new_policy(self, all_Us, act_node):
         idx=np.argmax(all_Us, axis=0)
         act_node_name=self.mdp_dict['S'][act_node]
         self.mdp_dict['pi'][act_node_name]=self.mdp_dict['action'][act_node_name][idx]
 
+    """
+    Find neighbours
+    """
     def find_neighbours(self, act_node):
         return self.mdp_dict["action"][act_node]
 
+    """
+    Get values for a list of nodes
+    """
     def get_value_of_nodes(self, nodes):
         group=[self.mdp_dict["U"][int(wlt)] for wlt in nodes]
         return group
 
-
+    """
+    Get all policy options
+    """
     def get_all_policy_options(self):
         for act_node in self.mdp_dict['S']:
             act_value=float(self.get_value_of_nodes(act_node)[0]) # actual value function
@@ -119,6 +173,10 @@ class mdp(object):
                     new_cand={"neighbour": act_neighbours[idx], "difference": float(act_values_by_group[idx]-act_value)}
                     self.mdp_dict['multi_pi'][act_node].append(new_cand)
 
+
+    """
+    MDP: policy iteration and evaluation
+    """
     def start_mdp_algorithm(self):
         count=0
         count2=0
@@ -144,6 +202,9 @@ class mdp(object):
             count+=1
         return self.mdp_dict
 
+    """
+    Visualization of the network with igraph python package
+    """
     def visualize_network(self, folder_to_store):
         g = ig.Graph(self.mdp_dict['adjacency_list'])
         g.vs["name"] = self.mdp_dict['S']
@@ -186,6 +247,9 @@ class mdp(object):
         visual_style["edge_curved"] = False
         ig.plot(g, folder_to_store+"igraph.pdf", layout=layout, **visual_style)
 
+    """
+    Based on the optimization on the MDP, get a stochastic trajectory resulting from the optimization procedure of the MDP
+    """
     def get_trajectory(self, R_dict):
         params=util_io.get_params()
         start_node=self.mdp_dict['S'][params["mdp"]["simulation"]["start_node"]]

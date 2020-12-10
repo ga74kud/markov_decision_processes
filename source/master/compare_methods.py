@@ -1,5 +1,6 @@
 # -------------------------------------------------------------
 # code developed by Michael Hartmann during his Ph.D.
+# Markov Decision Process (MDP) + Structural Causal Model (SCM) and Reachability Analysis (RA)
 #
 # (C) 2020 Michael Hartmann, Graz, Austria
 # Released under TODO: find a release license
