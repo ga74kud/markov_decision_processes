@@ -203,7 +203,7 @@ class mdp(object):
         return self.mdp_dict
 
     """
-    Visualization of the network with igraph python package
+    Visualization of the network after running MDP algorithms (policy iteration and -evaluation) with igraph python package
     """
     def visualize_network(self, folder_to_store):
         g = ig.Graph(self.mdp_dict['adjacency_list'])
@@ -233,11 +233,7 @@ class mdp(object):
             act_idx=act_idx[0].tolist()
             for t in act_idx:
                 new_cluster_indices[t]=count
-        col_r = np.round(np.linspace(255, 0, len(vec)))
-        col_g = np.round(np.linspace(0, 255, len(vec)))
-        col_b = np.zeros(len(vec))
-        transp=np.ones(len(vec))
-        allCol=np.transpose(np.vstack((col_r, col_g, col_b, transp)))
+
         colors = [color_dict[index] for index in new_cluster_indices]
         g.vs["color"] = colors
         P_2D=[(wlt[0], wlt[1]) for wlt in self.mdp_dict['P']]

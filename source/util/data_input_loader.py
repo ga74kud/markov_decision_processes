@@ -250,3 +250,9 @@ def plot_trajectory(folder_to_store, t, y, xlab, ylab, name):
     plt.ylabel(ylab)
     plt.savefig(folder_to_store+name+".png")
 
+def intersect(lstA, lstB):
+    return [val for val in lstA if val in lstB]
+
+def union_of_lists(lstA, lstB):
+    return lstA + lstB
+
