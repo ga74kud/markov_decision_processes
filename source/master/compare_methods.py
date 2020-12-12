@@ -136,6 +136,19 @@ class service_handler(object):
         return optimal_path_list
 
     """
+       Illustration of barplot in PyVista
+       """
+
+    def add_barplot_queue(self):
+
+        new_queue = util_io.map_for_queue(self.coordinates)
+        self.visuals["obj_barplot"].add_queue(new_queue)
+
+        self.visuals["obj_barplot"].add_queue_delauny(new_queue)
+
+
+
+    """
     MDP to compute optimal vectorfield
     """
     def use_mdp_optimal_vectorfield(self, obj_data_handler, input_file):
@@ -161,7 +174,8 @@ class service_handler(object):
     def use_reach_on_visual(self, obj_data_handler, input_file):
         # solver
         new_dict_reach = self.use_reach(input_file, obj_data_handler.folder_to_store)
-        self.set_dict_reach(new_dict_reach)
+        self.add_barplot_queue()
+        self.visuals["obj_barplot"].show_plot(obj_data_handler.folder_to_store + "barplot.png")
 
 
     """ 
