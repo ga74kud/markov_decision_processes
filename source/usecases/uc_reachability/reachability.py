@@ -80,10 +80,9 @@ class reachability(object):
     """
     Visualize reachability analysis
     """
-    def visualize_network(self, folder_to_store):
-
-        for wlt in range(1, 4):
-            reach_list=self.start_getting_reach_list(wlt)
+    def visualize_network(self, folder_to_store, all_reach_list):
+        for wlt in range(1, len(all_reach_list)):
+            reach_list=all_reach_list[wlt]#self.start_getting_reach_list(wlt)
             g = ig.Graph(self.reach_dict['adjacency_list'])
             g.vs["name"] = self.reach_dict['S']
             g.vs["label"] = g.vs["name"]

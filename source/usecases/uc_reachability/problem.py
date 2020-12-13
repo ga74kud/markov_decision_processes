@@ -37,7 +37,10 @@ class problem(object):
     """
     def start_reach_solver(self, folder_to_store):
         dict_reach = self.obj_solver.start_reach_algorithm()
-        self.obj_solver.visualize_network(folder_to_store)
+        all_reach_list=[]
+        for wlt in range(1, 4):
+            all_reach_list.append(self.obj_solver.start_getting_reach_list(wlt))
+        self.obj_solver.visualize_network(folder_to_store, all_reach_list)
         return dict_reach
 
 if __name__ == '__main__':

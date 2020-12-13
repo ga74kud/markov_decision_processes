@@ -3,6 +3,7 @@ import numpy as np
 import warnings
 from scipy.interpolate import interp1d
 import matplotlib.pyplot as plt
+
 def get_from_json(input_file):
     f = open(input_file, "r")
     data = json.loads(f.read())
@@ -11,6 +12,13 @@ def read_json_point_list(input_dictionary):
     return np.array([i for i in input_dictionary.values()])
 
 def map_for_queue(map):
+    queue_list = []
+    for idx, wlt in enumerate(map):
+        queue_list.append({"actor_name": "map"+str(idx), "to_plot": wlt,
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
+    return queue_list
+
+def reach_for_queue(map, reachlist):
     queue_list = []
     for idx, wlt in enumerate(map):
         queue_list.append({"actor_name": "map"+str(idx), "to_plot": wlt,

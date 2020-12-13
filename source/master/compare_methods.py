@@ -67,6 +67,7 @@ class service_handler(object):
         obj_reach=service_reach()
         obj_reach.new_problem(input_file)
         dict_reach=obj_reach.start_reach(folder_to_store)
+        return dict_reach
 
     """
     Markov Decision Process 
