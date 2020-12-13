@@ -14,15 +14,17 @@ def read_json_point_list(input_dictionary):
 def map_for_queue(map):
     queue_list = []
     for idx, wlt in enumerate(map):
-        queue_list.append({"actor_name": "map"+str(idx), "to_plot": wlt,
+        queue_list.append({"actor_name": "map_"+str(idx), "to_plot": wlt,
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
 def reach_for_queue(map, reachlist):
     queue_list = []
+
     for idx, wlt in enumerate(map):
-        queue_list.append({"actor_name": "map"+str(idx), "to_plot": wlt,
-                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
+        if(str(idx) in reachlist[-1]):
+            queue_list.append({"actor_name": "reach_"+str(idx), "to_plot": wlt,
+                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "blue"})
     return queue_list
 
 def perturb_by_random_vector(vec, scale_val):
