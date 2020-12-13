@@ -36,12 +36,14 @@ class problem(object):
     Reachability Analysis and visualization
     """
     def start_reach_solver(self, folder_to_store):
-        dict_reach = self.obj_solver.start_reach_algorithm()
+        params=util_io.get_params()
+
+        self.obj_solver.start_reach_algorithm()
         all_reach_list=[]
-        for wlt in range(1, 4):
-            all_reach_list.append(self.obj_solver.start_getting_reach_list(wlt))
+        for wlt in range(1, params["reachability"]["amount_cycles"]+1):
+            all_reach_list.append(set(self.obj_solver.start_getting_reach_list(wlt)))
         self.obj_solver.visualize_network(folder_to_store, all_reach_list)
-        return dict_reach
+        return all_reach_list
 
 if __name__ == '__main__':
     obj = problem()

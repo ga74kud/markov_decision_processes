@@ -81,7 +81,7 @@ class reachability(object):
     Visualize reachability analysis
     """
     def visualize_network(self, folder_to_store, all_reach_list):
-        for wlt in range(1, len(all_reach_list)):
+        for wlt in range(0, len(all_reach_list)):
             reach_list=all_reach_list[wlt]#self.start_getting_reach_list(wlt)
             g = ig.Graph(self.reach_dict['adjacency_list'])
             g.vs["name"] = self.reach_dict['S']
@@ -100,4 +100,4 @@ class reachability(object):
             g.vs["color"] = colors
             visual_style = {}
             visual_style["edge_curved"] = False
-            ig.plot(g, folder_to_store + "reach_igraph_"+str(wlt)+".pdf", layout=layout, **visual_style)
+            ig.plot(g, folder_to_store + "reach_igraph_"+str(wlt+1)+".pdf", layout=layout, **visual_style)

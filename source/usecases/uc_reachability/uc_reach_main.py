@@ -12,9 +12,9 @@ class service_reach(object):
         self.obj.set_manifold(FILE_DIR)
         self.obj.set_solver()
     def start_reach(self, folder_to_store):
-        dict_reach=self.obj.start_reach_solver(folder_to_store)
+        all_reach_list=self.obj.start_reach_solver(folder_to_store)
 
-        return dict_reach
+        return all_reach_list
 
 if __name__ == '__main__':
     obj=service_reach()
