@@ -11,7 +11,7 @@ class service_visualizer(object):
             if(to_plot.get("type")==None):
                 a=pv.PolyData(to_plot["to_plot"])
             elif(to_plot["type"]=="sphere"):
-                a=pv.Sphere(radius=2, center=to_plot["to_plot"])
+                a=pv.Sphere(radius=0.4, center=to_plot["to_plot"])
             elif (to_plot["type"] == "cone"):
                 a = pv.Cone(center=to_plot["to_plot"])
             b=to_plot["opacity"]
