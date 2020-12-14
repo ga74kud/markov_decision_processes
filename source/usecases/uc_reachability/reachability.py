@@ -1,8 +1,21 @@
+# -------------------------------------------------------------
+# code developed by Michael Hartmann during his Ph.D.
+# Reachability Analysis (RA)
+#
+# (C) 2020 Michael Hartmann, Graz, Austria
+# Released under TODO: find a release license
+# email michael.hartmann@v2c2.at
+# -------------------------------------------------------------
+
 import igraph as ig
 import numpy as np
 from scipy.cluster.vq import kmeans, vq
 import source.util.data_input_loader as util_io
 
+
+"""
+Class for reachability analysis
+"""
 class reachability(object):
     def __init__(self, **kwargs):
         self.reach_dict = {'S': None,  # States
@@ -11,8 +24,16 @@ class reachability(object):
                          'P': None  # Positions
                          }
         self.reach_dict['multi_pi'] = {}
+
+    """
+    Set states 
+    """
     def set_S(self, S):
         self.reach_dict['S']=S
+
+    """
+    Set adjacency list
+    """
     def set_adjacency_list(self, list):
         new_list=[]
         for i in list:
@@ -22,11 +43,22 @@ class reachability(object):
             new_list.append((a, a))
             #new_list.append((b, a))
         self.reach_dict['adjacency_list']=new_list
+
+    """
+    Set position list
+    """
     def set_position_list(self, position):
         self.reach_dict['P']=position
 
+    """
+    Set transition list
+    """
     def set_T(self, transition):
         self.reach_dict['T']=transition
+
+    """
+    Set action list
+    """
     def set_action(self, action):
         self.reach_dict['action']=action
 
