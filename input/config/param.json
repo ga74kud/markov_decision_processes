@@ -1,7 +1,6 @@
 {
   "general": {
-    "Ts": 0.1,
-    "start_node": 0
+    "Ts": 0.1
   },
   "environment": {
     "regular": {
@@ -18,7 +17,6 @@
     {
       "spline_interpolation": 75,
       "limit_counts": 3000,
-      "rewards": {"24": 10000},
       "gamma": 0.9,
       "threshold_to_reach_target": 0.04,
       "number_cycles_to_reach_target": 100

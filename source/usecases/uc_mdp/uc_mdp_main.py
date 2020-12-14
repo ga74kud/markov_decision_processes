@@ -4,6 +4,8 @@ class service_MDP(object):
     def __init__(self):
         self.problem_type={"type": None, "rewards": None}
         self.obj=None
+    def set_rewards(self, rewards):
+        self.problem_type["rewards"]=rewards
     def set_rewards_by_param(self):
         param=util_io.get_params()
         self.problem_type["rewards"]=param["mdp"]["simulation"]["rewards"]

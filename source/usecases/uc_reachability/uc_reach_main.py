@@ -11,8 +11,8 @@ class service_reach(object):
         self.obj=problem()
         self.obj.set_manifold(FILE_DIR)
         self.obj.set_solver()
-    def start_reach(self, folder_to_store):
-        all_reach_list=self.obj.start_reach_solver(folder_to_store)
+    def start_reach(self, folder_to_store, storyline):
+        all_reach_list=self.obj.start_reach_solver(folder_to_store, storyline)
 
         return all_reach_list
 

@@ -104,9 +104,9 @@ class reachability(object):
         reach_list=self.get_reach_in_list(reach_list)
         return reach_list
 
-    def start_getting_reach_list(self, depth):
+    def start_getting_reach_list(self, depth, storyline):
         params = util_io.get_params()
-        act_node = self.reach_dict['S'][params["general"]["start_node"]]
+        act_node = storyline["start_node"]
         reach_list = self.get_reach_list(act_node, depth)
         return reach_list
     """

@@ -18,19 +18,21 @@ class service_data(object):
         with open(self.folder_to_store+"tmp.json", "r+") as file:
             json.dump(input_dict, file)
 
-    def set_initial_folder(self):
+    def set_initial_folder(self, storyline):
         params=util_io.get_special_paths()
         now = datetime.now()
         dt_string = now.strftime("%Y%m%d_%H/")
-        folder_to_store=params["ROOT_DIR"]+params["OUTPUT_DIR"]+dt_string
-        path=folder_to_store
-        try:
-            os.mkdir(path)
-        except OSError:
-            print("Creation of the directory %s failed" % path)
-        else:
-            print("Successfully created the directory %s " % path)
-        self.folder_to_store=folder_to_store
+        folder_to_store_A=params["ROOT_DIR"]+params["OUTPUT_DIR"]+dt_string
+        folder_to_store_B=params["ROOT_DIR"]+params["OUTPUT_DIR"]+dt_string+storyline["name"]+"/"
+        for wlt in [folder_to_store_A, folder_to_store_B]:
+            path=wlt
+            try:
+                os.mkdir(path)
+            except OSError:
+                print("Creation of the directory %s failed" % path)
+            else:
+                print("Successfully created the directory %s " % path)
+        self.folder_to_store=folder_to_store_B
 
     def get_input_file(self):
         # which environment model provided

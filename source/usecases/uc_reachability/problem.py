@@ -35,13 +35,13 @@ class problem(object):
     """
     Reachability Analysis and visualization on igraph
     """
-    def start_reach_solver(self, folder_to_store):
+    def start_reach_solver(self, folder_to_store, storyline):
         params=util_io.get_params()
 
         self.obj_solver.start_reach_algorithm()
         all_reach_list=[]
         for wlt in range(1, params["reachability"]["amount_cycles"]+1):
-            new_set=set(self.obj_solver.start_getting_reach_list(wlt))
+            new_set=set(self.obj_solver.start_getting_reach_list(wlt, storyline))
             new_list=list(new_set)
             all_reach_list.append(new_list)
         self.obj_solver.visualize_network(folder_to_store, all_reach_list)
