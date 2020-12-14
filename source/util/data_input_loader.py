@@ -18,16 +18,23 @@ def map_for_queue(map):
                            "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
-def reach_for_queue(map, reachlist):
+def reach_for_queue(map, dict_reach, dict_mdp):
+    act_reach=np.sort([int(wlt) for wlt in dict_reach[-1]])
+    act_reach=act_reach.tolist()
+    act_U_mdp=[dict_mdp["U"][wlt] for wlt in range(0, len(dict_mdp["S"]))]
     queue_list = []
-
+    cmap = get_colormap("plasma")
+    scale_fac=(np.size(cmap, 0)-1)/np.max(act_U_mdp)
+    act_U_col_idx=[np.int(np.floor(wlt*scale_fac)) for wlt in act_U_mdp]
+    #col_idx = np.floor(np.linspace(0, np.size(cmap, 0) - 1, len(act_reach)))
     for idx, wlt in enumerate(map):
-        if(str(idx) in reachlist[-1]):
+        act_col=cmap[act_U_col_idx[idx]]
+        if(idx in act_reach):
             queue_list.append({"actor_name": "reach_"+str(idx), "to_plot": wlt,
-                           "opacity": .8, "point_size": 10, "render_points_as_spheres": True, "color": "blue"})
+                           "opacity": .8, "point_size": 20, "render_points_as_spheres": True, "color": act_col})
         else:
             queue_list.append({"actor_name": "reach_" + str(idx), "to_plot": wlt,
-                               "opacity": .4, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
+                               "opacity": .4, "point_size": 10, "render_points_as_spheres": True, "color": act_col})
     return queue_list
 
 def perturb_by_random_vector(vec, scale_val):

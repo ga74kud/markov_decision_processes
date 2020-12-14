@@ -139,12 +139,11 @@ class service_handler(object):
         return optimal_path_list
 
     """
-       Illustration of barplot in PyVista
-       """
+    Illustration of barplot in PyVista
+    """
+    def add_barplot_queue(self):
 
-    def add_barplot_queue(self, new_dict_reach):
-
-        new_queue = util_io.reach_for_queue(self.coordinates, new_dict_reach)
+        new_queue = util_io.reach_for_queue(self.coordinates, self.dict_reach, self.dict_mdp)
         self.visuals["obj_barplot"].add_queue(new_queue)
         self.visuals["obj_barplot"].add_queue_delauny(new_queue)
 
@@ -177,7 +176,7 @@ class service_handler(object):
         # solver
         new_dict_reach = self.use_reach(input_file, obj_data_handler.folder_to_store)
         self.set_dict_reach(new_dict_reach)
-        self.add_barplot_queue(self.dict_reach)
+        self.add_barplot_queue()
         self.visuals["obj_barplot"].show_plot(obj_data_handler.folder_to_store + "barplot.png")
 
 
