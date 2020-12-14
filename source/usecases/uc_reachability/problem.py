@@ -33,7 +33,7 @@ class problem(object):
         self.obj_solver.set_T(self.obj_manifold.get_probability_nodes())
 
     """
-    Reachability Analysis and visualization
+    Reachability Analysis and visualization on igraph
     """
     def start_reach_solver(self, folder_to_store):
         params=util_io.get_params()

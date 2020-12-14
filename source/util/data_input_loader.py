@@ -24,7 +24,10 @@ def reach_for_queue(map, reachlist):
     for idx, wlt in enumerate(map):
         if(str(idx) in reachlist[-1]):
             queue_list.append({"actor_name": "reach_"+str(idx), "to_plot": wlt,
-                           "opacity": .5, "point_size": 10, "render_points_as_spheres": True, "color": "blue"})
+                           "opacity": .8, "point_size": 10, "render_points_as_spheres": True, "color": "blue"})
+        else:
+            queue_list.append({"actor_name": "reach_" + str(idx), "to_plot": wlt,
+                               "opacity": .4, "point_size": 10, "render_points_as_spheres": True, "color": "red"})
     return queue_list
 
 def perturb_by_random_vector(vec, scale_val):

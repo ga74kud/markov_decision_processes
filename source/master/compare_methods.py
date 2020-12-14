@@ -25,6 +25,8 @@ class service_handler(object):
         self.coordinates=None
         # dictionary for mdp results
         self.dict_mdp=None
+        # dictionary for reachability analysis results
+        self.dict_reach=None
 
     """
     MDP provides an optimal trajectory and on the trajectory the structural causal model (SCM) computes the velocity
@@ -60,8 +62,8 @@ class service_handler(object):
                 break
         return mean_val_list, intervention_list
 
-    # TODO: make a comment and program
     """
+    Object for reachability analysis 
     """
     def use_reach(self, input_file, folder_to_store):
         obj_reach=service_reach()
@@ -144,7 +146,6 @@ class service_handler(object):
 
         new_queue = util_io.reach_for_queue(self.coordinates, new_dict_reach)
         self.visuals["obj_barplot"].add_queue(new_queue)
-
         self.visuals["obj_barplot"].add_queue_delauny(new_queue)
 
 
@@ -169,13 +170,14 @@ class service_handler(object):
         cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
         return interpolated_points, cum_dist, points
 
-    # TODO reach on visual
     """
+    Reachability Analysis for visualization on PyVista
     """
     def use_reach_on_visual(self, obj_data_handler, input_file):
         # solver
         new_dict_reach = self.use_reach(input_file, obj_data_handler.folder_to_store)
-        self.add_barplot_queue(new_dict_reach)
+        self.set_dict_reach(new_dict_reach)
+        self.add_barplot_queue(self.dict_reach)
         self.visuals["obj_barplot"].show_plot(obj_data_handler.folder_to_store + "barplot.png")
 
 
