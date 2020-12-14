@@ -31,10 +31,10 @@ def reach_for_queue(map, dict_reach, dict_mdp):
         act_col=cmap[act_U_col_idx[idx]]
         if(idx in act_reach):
             queue_list.append({"actor_name": "reach_"+str(idx), "to_plot": wlt,
-                           "opacity": .8, "point_size": 20, "render_points_as_spheres": True, "color": act_col})
+                           "opacity": .8, "point_size": 20, "render_points_as_spheres": True, "color": act_col, "type": "sphere"})
         else:
             queue_list.append({"actor_name": "reach_" + str(idx), "to_plot": wlt,
-                               "opacity": .4, "point_size": 10, "render_points_as_spheres": True, "color": act_col})
+                               "opacity": .4, "point_size": 10, "render_points_as_spheres": True, "color": act_col, "type": "cone"})
     return queue_list
 
 def perturb_by_random_vector(vec, scale_val):

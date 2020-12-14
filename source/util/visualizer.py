@@ -8,7 +8,12 @@ class service_visualizer(object):
     def add_queue(self, queue):
         for wlt in range(0, len(queue)):
             to_plot=queue[wlt]
-            a=pv.PolyData(to_plot["to_plot"])
+            if(to_plot.get("type")==None):
+                a=pv.PolyData(to_plot["to_plot"])
+            elif(to_plot["type"]=="sphere"):
+                a=pv.Sphere(radius=2, center=to_plot["to_plot"])
+            elif (to_plot["type"] == "cone"):
+                a = pv.Cone(center=to_plot["to_plot"])
             b=to_plot["opacity"]
             c = to_plot["color"]
             d = to_plot["point_size"]
@@ -33,7 +38,7 @@ class service_visualizer(object):
             c = to_plot["color"]
             self.p.add_mesh(a, opacity=b, color=c)
 
-    def add_queue_delauny(self, queue):
+    def add_queue_delaunay(self, queue):
         to_plot=[queue[wlt]["to_plot"] for wlt in range(0, len(queue))]
         a=pv.PolyData(to_plot)
         delaunay_plot=a.delaunay_2d()
