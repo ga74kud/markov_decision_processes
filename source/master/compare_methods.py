@@ -219,6 +219,12 @@ class service_handler(object):
         with_intervention = True
         self.use_scm_for_velocity(obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
 
+    def reset_visuals(self):
+        self.visuals["obj_visual"]= None
+        self.visuals["obj_vectorfield"]=None
+        self.visuals["obj_barplot"] = None
+        plt.close('all')
+
 
 if __name__ == '__main__':
 
@@ -228,6 +234,7 @@ if __name__ == '__main__':
     obj_service = service_handler()
     storyline={"name": "000", "start_node": "0", "rewards": {"24": 10000}, "trajectory": None}
     obj_service.one_algorithmic_cycle(storyline)
+    obj_service.reset_visuals()
     storyline = {"name": "001", "start_node": "0", "rewards": {"20": 10000}, "trajectory": None}
     obj_service.one_algorithmic_cycle(storyline)
 
