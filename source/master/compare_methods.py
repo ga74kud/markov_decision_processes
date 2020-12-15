@@ -189,8 +189,8 @@ class service_handler(object):
         obj_data_handler.set_initial_folder(storyline)
         obj_data_handler.set_initial_json()
         # obj_data_handler.update_json_with_dictionary({"abc": "123"})
-
-        input_file = obj_data_handler.get_input_file()
+        input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/storyline.json"
+        obj_data_handler.set_input_file(input_file)
 
         # visualizer objects for plotting results
         obj_service.get_all_visual_objects()
