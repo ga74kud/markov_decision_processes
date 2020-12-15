@@ -31,11 +31,10 @@ class service_handler(object):
     """
     MDP provides an optimal trajectory and on the trajectory the structural causal model (SCM) computes the velocity
     """
-    def use_scm_on_interpolated_line(self, folder_to_store, interpolated_points, cum_dist, with_intervention):
+    def use_scm_on_interpolated_line(self, x_v_a, folder_to_store, interpolated_points, cum_dist, with_intervention):
         interpolated_points=interpolated_points["quadratic"]
         obj = service_scmMDP(folder_to_store)
         obj.show_graph(folder_to_store)
-        x_v_a=[0, 1, 1.295, 0]
         mean_val_list={"interpolated_point": [], "cum_dist": [], "mean_val": [], "interpol_idx": []}
         intervention_list = {"interpolated_point": [], "cum_dist": [], "mean_val": [], "interpol_idx": []}
         idx=0
@@ -202,24 +201,29 @@ class service_handler(object):
     """
     Structural causal model for velocity computation
     """
-    def use_scm_for_velocity(self, obj_visual, interpolated_points, cum_dist, points, with_intervention, obj_data_handler):
-        mean_val_list, intervention_list = obj_service.use_scm_on_interpolated_line(obj_data_handler.folder_to_store, interpolated_points,
+    def use_scm_for_velocity(self, x_v_a, obj_visual, interpolated_points, cum_dist, points, with_intervention, obj_data_handler):
+        mean_val_list, intervention_list = obj_service.use_scm_on_interpolated_line(x_v_a, obj_data_handler.folder_to_store, interpolated_points,
                                                              cum_dist, with_intervention)
+        mean_vals = mean_val_list["mean_val"]
+        velocs = [wlt[1] for wlt in mean_vals]
+        max_vel=np.max(velocs)
         util_io.plot_traj(intervention_list, obj_visual, interpolated_points, points, obj_data_handler.folder_to_store, mean_val_list, with_intervention)
+        x_v_a[1]=max_vel
+        return x_v_a
 
     #TODO: to comment
     """
     """
-    def one_algorithmic_cycle(self, storyline):
+    def one_algorithmic_cycle(self, x_v_a, storyline):
         obj_data_handler, input_file=self.pre_processing(storyline)
         interpolated_points, cum_dist, points, optimal_path_list=self.use_mdp_optimal_vectorfield(obj_data_handler, input_file, storyline)
         self.use_reach_on_visual(obj_data_handler, input_file, storyline)
         with_intervention=False
-        self.use_scm_for_velocity(obj_visual.figures["interp_traj_no_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
+        x_v_a=self.use_scm_for_velocity(x_v_a, obj_visual.figures["interp_traj_no_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
         with_intervention = True
-        self.use_scm_for_velocity(obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
-        storyline["optimal_path_list"]=optimal_path_list
-        return storyline
+        x_v_a=self.use_scm_for_velocity(x_v_a, obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
+        storyline["trajectory"]=optimal_path_list
+        return x_v_a, storyline
     def reset_visuals(self):
         self.visuals["obj_visual"]= None
         self.visuals["obj_vectorfield"]=None
@@ -228,15 +232,14 @@ class service_handler(object):
 
 
 if __name__ == '__main__':
-
-
+    x_v_a = [0, 1, 1.295, 0]
     obj_visual=visual_handler()
     # object for solver handling
     obj_service = service_handler()
     storyline={"name": "000", "start_node": "0", "rewards": {"24": 10000}, "trajectory": None}
-    storyline=obj_service.one_algorithmic_cycle(storyline)
-    obj_service.reset_visuals()
-    storyline = {"name": "001", "start_node": "8", "rewards": {"0": 10000}, "trajectory": None}
-    storyline=obj_service.one_algorithmic_cycle(storyline)
+    x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline)
+    #obj_service.reset_visuals()
+    storyline = {"name": "001", "start_node": str(storyline["trajectory"]["act_node"][3]), "rewards": {"4": 10000}, "trajectory": None}
+    x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline)
 
 
