@@ -167,7 +167,7 @@ class service_handler(object):
         interpolated_points, points=util_io.get_result_trajectories_mdp(optimal_path_list["act_node"], obj_service.coordinates,
                                         obj_data_handler.folder_to_store)
         cum_dist=util_io.get_cumultative_distance(obj_data_handler.folder_to_store, interpolated_points)
-        return interpolated_points, cum_dist, points
+        return interpolated_points, cum_dist, points, optimal_path_list
 
     """
     Reachability Analysis for visualization on PyVista
@@ -212,13 +212,14 @@ class service_handler(object):
     """
     def one_algorithmic_cycle(self, storyline):
         obj_data_handler, input_file=self.pre_processing(storyline)
-        interpolated_points, cum_dist, points=self.use_mdp_optimal_vectorfield(obj_data_handler, input_file, storyline)
+        interpolated_points, cum_dist, points, optimal_path_list=self.use_mdp_optimal_vectorfield(obj_data_handler, input_file, storyline)
         self.use_reach_on_visual(obj_data_handler, input_file, storyline)
         with_intervention=False
         self.use_scm_for_velocity(obj_visual.figures["interp_traj_no_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
         with_intervention = True
         self.use_scm_for_velocity(obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
-
+        storyline["optimal_path_list"]=optimal_path_list
+        return storyline
     def reset_visuals(self):
         self.visuals["obj_visual"]= None
         self.visuals["obj_vectorfield"]=None
@@ -233,9 +234,9 @@ if __name__ == '__main__':
     # object for solver handling
     obj_service = service_handler()
     storyline={"name": "000", "start_node": "0", "rewards": {"24": 10000}, "trajectory": None}
-    obj_service.one_algorithmic_cycle(storyline)
+    storyline=obj_service.one_algorithmic_cycle(storyline)
     obj_service.reset_visuals()
     storyline = {"name": "001", "start_node": "0", "rewards": {"20": 10000}, "trajectory": None}
-    obj_service.one_algorithmic_cycle(storyline)
+    storyline=obj_service.one_algorithmic_cycle(storyline)
 
 

@@ -66,7 +66,7 @@ class service_data(object):
         points = np.transpose(np.vstack((x, y, z))).tolist()
         for idx, act_point in enumerate(points):
             dict_pnts[str(idx)] = act_point
-        input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/tesi.json"
+        input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/storyline.json"
 
         data_to_json = {"type": "point_list", "points": dict_pnts}
         util_io.write_to_json(input_file, data_to_json)
