@@ -236,7 +236,7 @@ if __name__ == '__main__':
     storyline={"name": "000", "start_node": "0", "rewards": {"24": 10000}, "trajectory": None}
     storyline=obj_service.one_algorithmic_cycle(storyline)
     obj_service.reset_visuals()
-    storyline = {"name": "001", "start_node": "0", "rewards": {"20": 10000}, "trajectory": None}
+    storyline = {"name": "001", "start_node": "8", "rewards": {"0": 10000}, "trajectory": None}
     storyline=obj_service.one_algorithmic_cycle(storyline)
 
 

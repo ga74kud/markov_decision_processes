@@ -166,7 +166,7 @@ class mdp(object):
                 if(wlt>act_value):
                     bool_group.append(True)
                 else:
-                    bool_group.append(False)
+                    bool_group.append(True)
             self.mdp_dict['multi_pi'][act_node]=list()
             for idx, act_bool in enumerate(bool_group):
                 if(act_bool==True):
