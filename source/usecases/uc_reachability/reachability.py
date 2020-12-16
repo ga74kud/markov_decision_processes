@@ -97,7 +97,7 @@ class reachability(object):
         return all_ref
     def get_reach_list(self, start_point, depth):
         reach_list=[]
-        reach_list.append(start_point)
+        reach_list.append([start_point])
         for qrt in range(0, depth):
             all_ref=self.one_reach_cycle(reach_list[-1])
             reach_list.append(all_ref)
