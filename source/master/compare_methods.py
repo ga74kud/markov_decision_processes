@@ -12,6 +12,7 @@ from source.usecases.uc_reachability.uc_reach_main import *
 from source.util.map_loader import *
 from source.util.visualizer import *
 from source.util.visual_handler import *
+from source.util.causal_prob import *
 from input.get_data import *
 
 """
@@ -27,6 +28,8 @@ class service_handler(object):
         self.dict_mdp=None
         # dictionary for reachability analysis results
         self.dict_reach=None
+        # rewards
+        self.dict_rewards=None
 
     """
     MDP provides an optimal trajectory and on the trajectory the structural causal model (SCM) computes the velocity
@@ -99,12 +102,17 @@ class service_handler(object):
     """
     Get environmental information from json-file
     """
-    def get_environmental_information(self, input_file):
+    def get_environmental_information(self, input_file, prob_reward):
 
         # object from environment class
         obj_map = map_loader()
         self.coordinates = obj_map.preprocessing(input_file)
-
+        obj_causal=causal_prob()
+        obj_causal.set_mu(prob_reward["mu"])
+        obj_causal.set_Sigma(prob_reward["Sigma"])
+        probs=obj_causal.get_probabilities_position(self.coordinates)
+        rewards=[{str(idx): wlt*1000} for idx, wlt in enumerate(probs) if wlt*1000>1]
+        return rewards[0]
     """
     Fill the dictionary of MDP with information
     """
@@ -112,9 +120,8 @@ class service_handler(object):
         self.dict_mdp=dict_mdp
 
     """
-        Fill the dictionary of Reachability with information
-        """
-
+    Fill the dictionary of Reachability with information
+    """
     def set_dict_reach(self, dict_reach):
         self.dict_reach = dict_reach
 
@@ -179,24 +186,7 @@ class service_handler(object):
         self.visuals["obj_barplot"].show_plot(obj_data_handler.folder_to_store + "barplot.png")
 
 
-    """ 
-    Function for pre-processing: initial json-files and environmental information
-    """
-    def pre_processing(self, storyline):
-        # object from data handler
-        obj_data_handler = service_data()
-        obj_data_handler.set_initial_folder(storyline)
-        obj_data_handler.set_initial_json()
-        # obj_data_handler.update_json_with_dictionary({"abc": "123"})
-        input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/storyline.json"
-        obj_data_handler.set_input_file(input_file)
 
-        # visualizer objects for plotting results
-        obj_service.get_all_visual_objects()
-
-        # environmental information
-        obj_service.get_environmental_information(input_file)
-        return obj_data_handler, input_file
 
     """
     Structural causal model for velocity computation
@@ -214,8 +204,8 @@ class service_handler(object):
     #TODO: to comment
     """
     """
-    def one_algorithmic_cycle(self, x_v_a, storyline):
-        obj_data_handler, input_file=self.pre_processing(storyline)
+    def one_algorithmic_cycle(self, x_v_a, storyline, obj_data_handler):
+
         interpolated_points, cum_dist, points, optimal_path_list=self.use_mdp_optimal_vectorfield(obj_data_handler, input_file, storyline)
         self.use_reach_on_visual(obj_data_handler, input_file, storyline)
         with_intervention=False
@@ -230,16 +220,46 @@ class service_handler(object):
         self.visuals["obj_barplot"] = None
         plt.close('all')
 
+def pre_processing(storyline, prob_reward):
+    # object from data handler
+    obj_data_handler = service_data()
+    obj_data_handler.set_initial_folder(storyline)
+    obj_data_handler.set_initial_json()
+    # obj_data_handler.update_json_with_dictionary({"abc": "123"})
+    input_file = "/home/michael/PycharmProjects/voting_reinforcement_learning/input/environment/storyline.json"
+    obj_data_handler.set_input_file(input_file)
+
+    # visualizer objects for plotting results
+    obj_service.get_all_visual_objects()
+
+    # environmental information
+    rewards=obj_service.get_environmental_information(input_file, prob_reward)
+    return obj_data_handler, input_file, rewards
+
+
 
 if __name__ == '__main__':
+
     x_v_a = [0, 1, 1.295, 0]
     obj_visual=visual_handler()
     # object for solver handling
     obj_service = service_handler()
-    storyline={"name": "000", "start_node": "0", "rewards": {"24": 10000}, "trajectory": None}
-    x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline)
+    prob_reward={"mu": np.matrix([[0.], [0.]]), "Sigma": np.matrix([[1., 0.], [0, 1.]])}
+    storyline={"name": "000", "start_node": "0", "rewards": None, "trajectory": None}
+    obj_data_handler, input_file, rewards = pre_processing(storyline, prob_reward)
+    storyline["rewards"]=rewards
+    x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline, obj_data_handler)
     #obj_service.reset_visuals()
     storyline = {"name": "001", "start_node": str(storyline["trajectory"]["act_node"][3]), "rewards": {"4": 10000}, "trajectory": None}
-    x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline)
+    prob_reward = {"mu": np.matrix([[4.], [3.]]), "Sigma": np.matrix([[1., 0.], [0, 1.]])}
+    obj_data_handler, input_file, rewards = pre_processing(storyline, prob_reward)
+    storyline["rewards"] = rewards
+    x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline, obj_data_handler)
+
+    """ 
+        Function for pre-processing: initial json-files and environmental information
+        """
+
+
 
 
