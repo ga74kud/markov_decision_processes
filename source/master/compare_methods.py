@@ -247,13 +247,13 @@ if __name__ == '__main__':
     prob_reward={"mu": np.matrix([[0.], [0.]]), "Sigma": np.matrix([[1., 0.], [0, 1.]])}
     storyline={"name": "000", "start_node": "0", "rewards": None, "trajectory": None}
     obj_data_handler, input_file, rewards = pre_processing(storyline, prob_reward)
-    storyline["rewards"]=rewards
+    storyline["rewards"]= {"14": 1000}
     x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline, obj_data_handler)
     #obj_service.reset_visuals()
-    storyline = {"name": "001", "start_node": str(storyline["trajectory"]["act_node"][3]), "rewards": {"4": 10000}, "trajectory": None}
+    storyline = {"name": "001", "start_node": str(storyline["trajectory"]["act_node"][2]), "trajectory": None}
     prob_reward = {"mu": np.matrix([[4.], [3.]]), "Sigma": np.matrix([[1., 0.], [0, 1.]])}
     obj_data_handler, input_file, rewards = pre_processing(storyline, prob_reward)
-    storyline["rewards"] = rewards
+    storyline["rewards"]= {"20": 1000}
     x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline, obj_data_handler)
 
     """ 
