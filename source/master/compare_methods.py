@@ -189,7 +189,7 @@ class service_handler(object):
 
 
     """
-    Structural causal model for velocity computation
+        Structural causal model for velocity computation
     """
     def use_scm_for_velocity(self, x_v_a, obj_visual, interpolated_points, cum_dist, points, with_intervention, obj_data_handler):
         mean_val_list, intervention_list = obj_service.use_scm_on_interpolated_line(x_v_a, obj_data_handler.folder_to_store, interpolated_points,
@@ -201,8 +201,9 @@ class service_handler(object):
         x_v_a[1]=max_vel
         return x_v_a
 
-    #TODO: to comment
+
     """
+        One algorithmic cycle where trajectories are computed by MDP
     """
     def one_algorithmic_cycle(self, x_v_a, storyline, obj_data_handler):
 
@@ -214,12 +215,17 @@ class service_handler(object):
         x_v_a=self.use_scm_for_velocity(x_v_a, obj_visual.figures["interp_traj_with_interv"], interpolated_points, cum_dist, points, with_intervention, obj_data_handler)
         storyline["trajectory"]=optimal_path_list
         return x_v_a, storyline
+    """
+        Reset the visual names (set to None)
+    """
     def reset_visuals(self):
         self.visuals["obj_visual"]= None
         self.visuals["obj_vectorfield"]=None
         self.visuals["obj_barplot"] = None
         plt.close('all')
-
+"""
+    Some preprocessing to store the data appropriate    
+"""
 def pre_processing(storyline, prob_reward):
     # object from data handler
     obj_data_handler = service_data()
@@ -246,8 +252,10 @@ if __name__ == '__main__':
     obj_service = service_handler()
     prob_reward={"mu": np.matrix([[0.], [0.]]), "Sigma": np.matrix([[1., 0.], [0, 1.]])}
     storyline={"name": "000", "start_node": "0", "rewards": None, "trajectory": None}
+    # to generate a folder and store every information
     obj_data_handler, input_file, rewards = pre_processing(storyline, prob_reward)
     storyline["rewards"]= {"14": 1000}
+    # one algorithmic cycle
     x_v_a, storyline=obj_service.one_algorithmic_cycle(x_v_a, storyline, obj_data_handler)
     #obj_service.reset_visuals()
     storyline = {"name": "001", "start_node": str(storyline["trajectory"]["act_node"][2]), "trajectory": None}
