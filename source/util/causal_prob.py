@@ -8,10 +8,21 @@ class causal_prob(object):
     def __init__(self, **kwargs):
         self.ax=None
         self.prob={"mu": None, "Sigma": None}
+
+    '''
+        set mean vector of Gaussian distribution
+    '''
     def set_mu(self, mu):
         self.prob["mu"]=mu
+
+    '''
+        set Covariance matrix
+    '''
     def set_Sigma(self, Sigma):
         self.prob["Sigma"]=Sigma
+    '''
+        get the probabilities for the coordinates
+    '''
     def get_probabilities_position(self, coordinates):
         erg=[]
         for wlt in coordinates:
@@ -77,7 +88,7 @@ class causal_prob(object):
 if __name__ == '__main__':
     mlt.use('Qt5Agg')
     mu = np.matrix([[0.], [0.]])
-    Sigma = np.matrix([[1., 0.], [0, 1.]])
+    Sigma = np.matrix([[1., .3], [0.3, 1.]])
     mu_B=np.matrix([[0.], [0.]])
     Sigma_B = np.matrix([[1., 0.], [0, 1.]])
     obj_causal=causal_prob()

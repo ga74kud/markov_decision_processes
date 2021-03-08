@@ -17,7 +17,8 @@ class problem(object):
         self.obj_solver.set_U()
         self.obj_solver.set_action(self.obj_manifold.manifold["Actions"])
         self.obj_solver.set_init_pi()
-        self.obj_solver.set_T(self.obj_manifold.get_probability_nodes())
+        abc=self.obj_manifold.get_probability_nodes()
+        self.obj_solver.set_T(abc)
     def start_mdp_solver(self, rewards, folder_to_store):
         R_dict = rewards
         self.obj_solver.set_R(R_dict)

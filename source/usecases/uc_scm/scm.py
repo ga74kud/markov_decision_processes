@@ -58,6 +58,9 @@ class scm_class(object):
             all_var.append(variance_scm)
         return all_exp, all_var
 
+    '''
+    mean_input is the 
+    '''
     def get_scm_function_mean(self, input, mean_input):
 
         all_exp=[]

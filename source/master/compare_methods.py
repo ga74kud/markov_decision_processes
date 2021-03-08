@@ -100,16 +100,21 @@ class service_handler(object):
 
 
     """
-    Get environmental information from json-file
+    Get new reward for probability distribution. Idea is the probability distribution over the map is changing
+    over time due to an intervention. TODO: Name of the function is inadequate
     """
     def get_environmental_information(self, input_file, prob_reward):
 
         # object from environment class
         obj_map = map_loader()
+        #get the coordinates of the map
         self.coordinates = obj_map.preprocessing(input_file)
+        #causal prob object
         obj_causal=causal_prob()
+        #Normal distribution of
         obj_causal.set_mu(prob_reward["mu"])
         obj_causal.set_Sigma(prob_reward["Sigma"])
+        # Get the probabilities for the positions
         probs=obj_causal.get_probabilities_position(self.coordinates)
         rewards=[{str(idx): wlt*1000} for idx, wlt in enumerate(probs) if wlt*1000>1]
         return rewards[0]

@@ -160,7 +160,9 @@ def chunks(input, k):
     n=int(np.floor(len(input)/k))
     test=[np.array(input[i:i+n]) for i in range(0, len(input), n)]
     return test
-
+'''
+Get the xy coordinates from the optimal path of the MDP. Interpolate the xy coordinates
+'''
 def get_result_trajectories_mdp(optimal_mdp, coordinates, folder_to_store):
     act_traj=list()
     for wlt in optimal_mdp:
@@ -169,6 +171,9 @@ def get_result_trajectories_mdp(optimal_mdp, coordinates, folder_to_store):
         act_traj.append((x,y))
     interpolated_points, points=interpolate_traj(act_traj)
     return interpolated_points, points
+'''
+    Interpolation of the trajectory in xy coordinates
+'''
 def interpolate_traj(act_traj):
     plt.figure()
     param=get_params()
